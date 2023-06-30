@@ -15,8 +15,6 @@ type Account[T account.Model] struct {
 
 	Status account.Status `json:"status"`
 
-	HashedPassword []byte `json:"-"`
-
 	T any `gorm:"embedded"`
 }
 

@@ -6,9 +6,9 @@ import (
 	"syscall"
 )
 
-func (a *app) Start() {
+func (a *app[acc]) Start() {
 	go func() {
-		if err := a.ginger.Run(); err != nil {
+		if err := a.Ginger.Run(); err != nil {
 			panic(err)
 		}
 	}()

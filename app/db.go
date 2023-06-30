@@ -5,27 +5,27 @@ import (
 	"github.com/ginger-repository/sql"
 )
 
-func (a *app) initializeDatabases() {
+func (a *app[acc]) initializeDatabases() {
 	a.initializeSql()
 	a.initializeRedis()
 	a.initializeCache()
 }
 
-func (a *app) initializeSql() {
-	sqlLogger := a.logger.WithTrace("sql")
-	a.sql = sql.New(sqlLogger, a.registry.ValueOf("sql"))
-	if err := a.sql.Initialize(); err != nil {
+func (a *app[acc]) initializeSql() {
+	sqlLogger := a.Logger.WithTrace("sql")
+	a.Sql = sql.New(sqlLogger, a.Registry.ValueOf("sql"))
+	if err := a.Sql.Initialize(); err != nil {
 		panic(err)
 	}
 }
 
-func (a *app) initializeRedis() {
-	a.redis = redis.NewRepository(a.registry.ValueOf("redis"))
-	if err := a.redis.Initialize(); err != nil {
+func (a *app[acc]) initializeRedis() {
+	a.Redis = redis.NewRepository(a.Registry.ValueOf("redis"))
+	if err := a.Redis.Initialize(); err != nil {
 		panic(err)
 	}
 }
 
-func (a *app) initializeCache() {
-	a.cache = redis.NewCache(a.redis)
+func (a *app[acc]) initializeCache() {
+	a.Cache = redis.NewCache(a.Redis)
 }

@@ -6,7 +6,11 @@ import (
 	"github.com/micro-blonde/auth/account"
 )
 
-type Account[T account.Model] struct {
+type Model interface {
+	account.Model
+}
+
+type Account[T Model] struct {
 	account.Account[T]
 
 	CreatedAt time.Time
@@ -15,6 +19,10 @@ type Account[T account.Model] struct {
 	HashedPassword []byte
 }
 
-func NewAccount[T account.Model]() *Account[T] {
+func NewAccount[T Model]() *Account[T] {
 	return &Account[T]{}
+}
+
+func (m *Account[T]) GetDeliveryResult() any {
+	return nil
 }

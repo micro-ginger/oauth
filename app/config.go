@@ -17,7 +17,7 @@ type config struct {
 	}
 }
 
-func (a *app) loadConfig(configType string) {
+func (a *app[acc]) loadConfig(configType string) {
 	switch configType {
 	case "FILE", "":
 		filePath := os.Getenv("CONFIG_PATH")
@@ -29,7 +29,7 @@ func (a *app) loadConfig(configType string) {
 		if err != nil {
 			panic(err)
 		}
-		a.registry = registry
+		a.Registry = registry
 	case "GIT":
 		baseUrl := os.Getenv("CONFIG_BASE_URL")
 		if baseUrl == "" {
@@ -52,7 +52,7 @@ func (a *app) loadConfig(configType string) {
 		if err != nil {
 			panic(err)
 		}
-		a.registry = registry
+		a.Registry = registry
 	default:
 		panic("invalid config type")
 	}

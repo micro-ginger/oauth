@@ -6,9 +6,9 @@ import (
 	"github.com/BurntSushi/toml"
 )
 
-func (a *app) initializeLanguage() {
-	a.language.RegisterUnmarshalFunc("toml", toml.Unmarshal)
-	for _, lang := range a.config.Gateway.Language.Languages {
-		a.language.MustLoadMessageFile(filepath.Join(a.config.Gateway.Language.Dir, lang))
+func (a *app[acc]) initializeLanguage() {
+	a.Language.RegisterUnmarshalFunc("toml", toml.Unmarshal)
+	for _, lang := range a.Config.Gateway.Language.Languages {
+		a.Language.MustLoadMessageFile(filepath.Join(a.Config.Gateway.Language.Dir, lang))
 	}
 }

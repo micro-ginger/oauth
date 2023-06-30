@@ -1,15 +1,15 @@
 package app
 
 import (
-	"math/rand"
-	"time"
-
 	"github.com/ginger-core/compound/registry"
 	"github.com/ginger-core/gateway"
 	"github.com/ginger-core/log"
 	"github.com/ginger-core/repository"
 	redisRepo "github.com/ginger-repository/redis/repository"
 	"github.com/ginger-repository/sql"
+	"github.com/micro-blonde/auth/authorization"
+	a "github.com/micro-ginger/oauth/account"
+	"github.com/micro-ginger/oauth/account/domain/account"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"golang.org/x/text/language"
 )
@@ -19,36 +19,36 @@ type Application interface {
 	Start()
 }
 
-type app struct {
-	registry registry.Registry
-	config   config
-	logger   log.Handler
-	language *i18n.Bundle
+type app[acc account.Model] struct {
+	Registry registry.Registry
+	Config   config
+	Logger   log.Handler
+	Language *i18n.Bundle
 	/* database */
-	sql   sql.Repository
-	redis redisRepo.Repository
-	cache repository.Cache
+	Sql   sql.Repository
+	Redis redisRepo.Repository
+	Cache repository.Cache
 	/* services */
 	/* modules */
+	Account *a.Module
 	/* server */
-	ginger gateway.Server
+	Authenticator authorization.Authenticator[acc]
+	Ginger        gateway.Server
 }
 
-func New(configType string) Application {
-	a := &app{
-		language: i18n.NewBundle(language.English),
+func New[acc account.Model](configType string) Application {
+	a := &app[acc]{
+		Language: i18n.NewBundle(language.English),
 	}
 	a.loadConfig(configType)
 
-	if err := a.registry.Unmarshal(&a.config); err != nil {
+	if err := a.Registry.Unmarshal(&a.Config); err != nil {
 		panic(err)
 	}
 	return a
 }
 
-func (a *app) Initialize() {
-	rand.Seed(time.Now().UnixNano())
-
+func (a *app[acc]) Initialize() {
 	a.initializeLogger()
 	a.initializeLanguage()
 	a.initializeServer()

@@ -3,17 +3,24 @@ package app
 import (
 	"github.com/ginger-core/gateway"
 	"github.com/ginger-gateway/ginger"
+	"github.com/micro-blonde/auth/authorization"
 )
 
-func (a *app) initializeServer() {
+func (a *app[acc]) initializeServer() {
 	a.initializeGinger()
+	a.initializeAuthenticator()
 }
 
-func (a *app) initializeGinger() {
-	logger := a.logger.WithTrace("ginger")
-	a.ginger = ginger.NewServer(logger, a.registry.ValueOf("gateway.http"))
+func (a *app[acc]) initializeGinger() {
+	logger := a.Logger.WithTrace("ginger")
+	a.Ginger = ginger.NewServer(logger, a.Registry.ValueOf("gateway.http"))
 
-	responder := a.ginger.NewResponder()
-	controller := gateway.NewController(responder).WithLanguageBundle(a.language)
-	a.ginger.SetController(controller)
+	responder := a.Ginger.NewResponder()
+	controller := gateway.NewController(responder).WithLanguageBundle(a.Language)
+	a.Ginger.SetController(controller)
+}
+
+func (a *app[acc]) initializeAuthenticator() {
+	a.Authenticator = authorization.New[acc](
+		a.Ginger, a.Registry.ValueOf("gateway.authorization"))
 }
