@@ -5,9 +5,10 @@ import (
 
 	"github.com/ginger-core/errors"
 	"github.com/ginger-core/query"
+	"github.com/micro-blonde/auth/account"
 )
 
-type UseCase[T any] interface {
+type UseCase[T account.Model] interface {
 	Create(ctx context.Context, account *Account[T]) errors.Error
 
 	Count(ctx context.Context, q query.Query) (uint64, errors.Error)

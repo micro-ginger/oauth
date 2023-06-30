@@ -1,19 +1,20 @@
 package account
 
-import "time"
+import (
+	"time"
 
-type Account[T any] struct {
-	T  T `gorm:"embedded"`
-	Id uint64
+	"github.com/micro-blonde/auth/account"
+)
+
+type Account[T account.Model] struct {
+	account.Account[T]
 
 	CreatedAt time.Time
 	UpdatedAt *time.Time
 
-	Status Status
-
 	HashedPassword []byte
 }
 
-func NewAccount[T any]() *Account[T] {
+func NewAccount[T account.Model]() *Account[T] {
 	return &Account[T]{}
 }

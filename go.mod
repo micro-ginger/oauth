@@ -5,13 +5,18 @@ go 1.20
 require (
 	github.com/BurntSushi/toml v1.3.2
 	github.com/ginger-core/compound/registry v0.0.0-20230608151919-2963b75416c3
+	github.com/ginger-core/errors v0.0.0-20230619094004-4101e77fb55b
 	github.com/ginger-core/gateway v0.0.0-20230608172238-cd4a0958dddc
 	github.com/ginger-core/log v0.0.0-20230608152924-6a358515e498
+	github.com/ginger-core/query v0.0.0-20230608153800-9375f70642d8
 	github.com/ginger-core/repository v0.0.0-20230608165607-87044af67011
 	github.com/ginger-gateway/ginger v0.0.0-20230614111128-e020482a754b
 	github.com/ginger-repository/redis v0.0.0-20230608170101-0b74d866bc2d
 	github.com/ginger-repository/sql v0.0.0-20230610115917-c91b365f8490
+	github.com/micro-blonde/auth v0.0.0-20230630075106-6b44f31319f3
+	github.com/micro-blonde/auth/authorization v0.0.0-20230630082657-5b527d26afce
 	github.com/nicksnyder/go-i18n/v2 v2.2.1
+	golang.org/x/crypto v0.9.0
 	golang.org/x/text v0.9.0
 )
 
@@ -24,8 +29,6 @@ require (
 	github.com/gabriel-vasile/mimetype v1.4.2 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/gin-gonic/gin v1.9.1 // indirect
-	github.com/ginger-core/errors v0.0.0-20230613081709-f70e53f0b12c // indirect
-	github.com/ginger-core/query v0.0.0-20230608153800-9375f70642d8 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/go-playground/validator/v10 v10.14.0 // indirect
@@ -60,7 +63,6 @@ require (
 	go.uber.org/multierr v1.8.0 // indirect
 	go.uber.org/zap v1.24.0 // indirect
 	golang.org/x/arch v0.3.0 // indirect
-	golang.org/x/crypto v0.9.0 // indirect
 	golang.org/x/net v0.10.0 // indirect
 	golang.org/x/sys v0.8.0 // indirect
 	google.golang.org/protobuf v1.30.0 // indirect
