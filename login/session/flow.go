@@ -1,4 +1,4 @@
-package login
+package session
 
 import (
 	"github.com/micro-ginger/oauth/login/flow"

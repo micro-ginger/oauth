@@ -1,4 +1,4 @@
-package login
+package session
 
 type Position struct {
 	StageIndex  int

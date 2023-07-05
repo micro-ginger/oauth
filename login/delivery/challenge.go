@@ -3,9 +3,12 @@ package delivery
 import (
 	"github.com/ginger-core/errors"
 	"github.com/ginger-core/gateway"
+	"github.com/micro-ginger/oauth/login/session"
 )
 
 func (h *lh) challenge(request gateway.Request,
-	challenge string) (any, errors.Error) {
-	return nil, nil
+	challenge string) (*session.Session, any, errors.Error) {
+	// TODO get process
+	// process
+	return nil, nil, nil
 }
