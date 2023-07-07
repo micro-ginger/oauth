@@ -8,4 +8,4 @@ import (
 )
 
 type GetAccountHandlerFunc[T account.Model] func(ctx context.Context,
-	key string) (account.Account[T], errors.Error)
+	key string) (*account.Account[T], errors.Error)

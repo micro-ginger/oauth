@@ -5,7 +5,7 @@ import "github.com/ginger-core/errors"
 var (
 	InvalidCredentialError = errors.Validation().
 				WithId("InvalidCredentialsError").
-				WithMessage("Invalid credentials, Invalid username or password")
+				WithMessage("Invalid credentials.")
 	YourAccountDisabledError = errors.Validation().
 					WithId("YourAccountDisabledError").
 					WithMessage("Your account has been disabled to login, " +

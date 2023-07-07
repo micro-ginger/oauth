@@ -10,21 +10,21 @@ import (
 	"github.com/micro-ginger/oauth/account/usecase"
 )
 
-type Module struct {
-	Repository a.Repository[a.Model]
-	UseCase    a.UseCase[a.Model]
+type Module[T a.Model] struct {
+	Repository a.Repository[T]
+	UseCase    a.UseCase[T]
 
 	GetHandler gateway.Handler
 }
 
-func New(logger log.Logger,
-	baseRepo repository.Repository, responder gateway.Responder) *Module {
-	repo := r.New[a.Model](baseRepo)
+func New[T a.Model](logger log.Logger,
+	baseRepo repository.Repository, responder gateway.Responder) *Module[T] {
+	repo := r.New[T](baseRepo)
 	uc := usecase.New(logger, repo)
-	m := &Module{
+	m := &Module[T]{
 		Repository: repo,
 		UseCase:    uc,
-		GetHandler: delivery.NewGet[a.Model](
+		GetHandler: delivery.NewGet[T](
 			logger.WithTrace("delivery.get"), uc, responder,
 		),
 	}

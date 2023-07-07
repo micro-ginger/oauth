@@ -6,12 +6,12 @@ import (
 	"github.com/micro-blonde/auth/authorization"
 )
 
-func (a *app[acc]) initializeServer() {
+func (a *App[acc]) initializeServer() {
 	a.initializeGinger()
 	a.initializeAuthenticator()
 }
 
-func (a *app[acc]) initializeGinger() {
+func (a *App[acc]) initializeGinger() {
 	logger := a.Logger.WithTrace("ginger")
 	a.Ginger = ginger.NewServer(logger, a.Registry.ValueOf("gateway.http"))
 
@@ -20,7 +20,7 @@ func (a *app[acc]) initializeGinger() {
 	a.Ginger.SetController(controller)
 }
 
-func (a *app[acc]) initializeAuthenticator() {
+func (a *App[acc]) initializeAuthenticator() {
 	a.Authenticator = authorization.New[acc](
 		a.Ginger, a.Registry.ValueOf("gateway.authorization"))
 }

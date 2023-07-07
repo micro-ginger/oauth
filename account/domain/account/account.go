@@ -25,6 +25,10 @@ func NewAccount[T Model]() *Account[T] {
 	return &Account[T]{}
 }
 
+func (m *Account[T]) TableName() string {
+	return "accounts"
+}
+
 func (m *Account[T]) GetDeliveryResult() any {
 	return nil
 }
@@ -34,5 +38,6 @@ func (a *Account[T]) MatchPassword(password string) error {
 		return errors.Validation().
 			WithDesc("password is nil")
 	}
-	return bcrypt.CompareHashAndPassword(a.HashedPassword, []byte(password))
+	return bcrypt.CompareHashAndPassword(
+		a.HashedPassword, []byte(password))
 }

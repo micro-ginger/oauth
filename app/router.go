@@ -1,7 +1,11 @@
 package app
 
-func (a *app[acc]) registerRoutes() {
+func (a *App[acc]) registerRoutes() {
 	rg := a.Ginger.NewRouterGroup("/")
+	//
+	// login
+	loginGroup := rg.Group("/login")
+	loginGroup.Create("", a.Login.Handler)
 	//
 	// accounts
 	accountsGroup := rg.Group("/accounts")

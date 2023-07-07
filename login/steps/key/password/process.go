@@ -1,4 +1,4 @@
-package key
+package password
 
 import (
 	"github.com/ginger-core/errors"
@@ -19,7 +19,8 @@ func (h *handler[T]) Process(request gateway.Request,
 	ctx := request.GetContext()
 	acc, err := h.getAccountHandleFunc(ctx, req.Key)
 	if err != nil {
-		return nil, err.
+		return nil, login.InvalidCredentialError.
+			Clone().WithError(err).
 			WithTrace("getAccountHandleFunc")
 	}
 

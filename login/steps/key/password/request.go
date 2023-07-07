@@ -1,4 +1,4 @@
-package key
+package password
 
 type Request struct {
 	Key      string `json:"key" binding:"required"`

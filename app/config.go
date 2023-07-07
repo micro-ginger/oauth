@@ -17,7 +17,7 @@ type config struct {
 	}
 }
 
-func (a *app[acc]) loadConfig(configType string) {
+func (a *App[acc]) loadConfig(configType string) {
 	switch configType {
 	case "FILE", "":
 		filePath := os.Getenv("CONFIG_PATH")

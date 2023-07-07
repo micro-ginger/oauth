@@ -11,6 +11,11 @@ func (h *lh) process(request gateway.Request,
 	session *session.Session) (any, errors.Error) {
 	s, actionIdx := session.Flow.GetCurrentStep()
 	sh := h.stepHandlers[s.Type]
+	if sh == nil {
+		return nil, errors.Unauthorized().
+			WithTrace("sh=nil").
+			WithDesc("step handler not found")
+	}
 
 	r, err := sh.Process(request,
 		&step.Meta{

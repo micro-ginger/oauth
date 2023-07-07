@@ -9,9 +9,10 @@ import (
 	"github.com/micro-ginger/oauth/login/session"
 )
 
-type Login interface {
+type Handler interface {
 	gateway.Handler
 	Initialize(flows flow.Flows, session session.UseCase)
+	RegisterHandler(t step.Type, sh step.Handler)
 }
 
 type lh struct {
@@ -24,7 +25,7 @@ type lh struct {
 	stepHandlers map[step.Type]step.Handler
 }
 
-func NewLogin(logger log.Logger, responder gateway.Responder) Login {
+func NewLogin(logger log.Logger, responder gateway.Responder) Handler {
 	h := &lh{
 		Responder: responder,
 		logger:    logger,
@@ -33,6 +34,7 @@ func NewLogin(logger log.Logger, responder gateway.Responder) Login {
 }
 
 func (h *lh) Initialize(flows flow.Flows, session session.UseCase) {
+	h.flows = flows
 	h.session = session
 }
 
