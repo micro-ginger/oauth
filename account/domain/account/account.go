@@ -3,7 +3,9 @@ package account
 import (
 	"time"
 
+	"github.com/ginger-core/errors"
 	"github.com/micro-blonde/auth/account"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type Model interface {
@@ -25,4 +27,12 @@ func NewAccount[T Model]() *Account[T] {
 
 func (m *Account[T]) GetDeliveryResult() any {
 	return nil
+}
+
+func (a *Account[T]) MatchPassword(password string) error {
+	if a.HashedPassword == nil {
+		return errors.Validation().
+			WithDesc("password is nil")
+	}
+	return bcrypt.CompareHashAndPassword(a.HashedPassword, []byte(password))
 }
