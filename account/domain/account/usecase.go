@@ -17,6 +17,9 @@ type UseCase[T account.Model] interface {
 
 	Update(ctx context.Context, q query.Query, update *Account[T]) errors.Error
 
+	Upsert(ctx context.Context, q query.Query,
+		account *Account[T]) errors.Error
+
 	VerifyPassword(ctx context.Context,
 		account *Account[T], password string) errors.Error
 }

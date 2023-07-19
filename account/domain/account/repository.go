@@ -12,4 +12,5 @@ type Repository[T account.Model] interface {
 	List(q query.Query) ([]*Account[T], errors.Error)
 	Get(q query.Query) (*Account[T], errors.Error)
 	Update(q query.Query, update *Account[T]) errors.Error
+	Upsert(q query.Query, acc *Account[T]) errors.Error
 }
