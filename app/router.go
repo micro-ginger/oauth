@@ -1,6 +1,6 @@
 package app
 
-func (a *App[acc]) registerRoutes() {
+func (a *App[acc, reg]) registerRoutes() {
 	rg := a.Ginger.NewRouterGroup("/")
 	//
 	// login

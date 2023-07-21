@@ -3,6 +3,7 @@ package register
 import "time"
 
 type Model interface {
+	GetDeliveryResult() any
 }
 
 type Register[T Model] struct {
@@ -15,7 +16,7 @@ type Register[T Model] struct {
 
 	HashedPassword []byte
 
-	T T `gorm:"embedded" json:",inline"`
+	T T `gorm:"embedded"`
 }
 
 func (t *Register[T]) TableName() string {

@@ -15,16 +15,15 @@ type Account[T account.Model] struct {
 
 	Status account.Status `json:"status"`
 
-	T any `gorm:"embedded"`
+	T any `json:",inline"`
 }
 
 func NewAccount[T account.Model](acc *a.Account[T]) *Account[T] {
-	r := &Account[T]{
+	return &Account[T]{
 		Id:        acc.Id,
 		CreatedAt: acc.CreatedAt,
 		UpdatedAt: acc.UpdatedAt,
 		Status:    acc.Status,
+		T:         acc.T.GetDeliveryResult(),
 	}
-	r.T = acc.T.GetDeliveryResult()
-	return r
 }

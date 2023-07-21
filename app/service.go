@@ -1,4 +1,4 @@
 package app
 
-func (a *App[acc]) initializeServices() {
+func (a *App[acc, reg]) initializeServices() {
 }

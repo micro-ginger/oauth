@@ -1,6 +1,7 @@
 package account
 
 import (
+	"github.com/ginger-core/compound/registry"
 	"github.com/ginger-core/gateway"
 	"github.com/ginger-core/log"
 	"github.com/ginger-core/repository"
@@ -17,10 +18,10 @@ type Module[T a.Model] struct {
 	GetHandler gateway.Handler
 }
 
-func New[T a.Model](logger log.Logger,
+func New[T a.Model](logger log.Logger, registry registry.Registry,
 	baseRepo repository.Repository, responder gateway.Responder) *Module[T] {
 	repo := r.New[T](baseRepo)
-	uc := usecase.New(logger, repo)
+	uc := usecase.New(logger, registry, repo)
 	m := &Module[T]{
 		Repository: repo,
 		UseCase:    uc,

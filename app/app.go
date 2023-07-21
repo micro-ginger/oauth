@@ -11,6 +11,8 @@ import (
 	a "github.com/micro-ginger/oauth/account"
 	"github.com/micro-ginger/oauth/account/domain/account"
 	"github.com/micro-ginger/oauth/login"
+	r "github.com/micro-ginger/oauth/register"
+	"github.com/micro-ginger/oauth/register/domain/register"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"golang.org/x/text/language"
 )
@@ -20,7 +22,7 @@ type Application interface {
 	Start()
 }
 
-type App[acc account.Model] struct {
+type App[acc account.Model, reg register.Model] struct {
 	Registry registry.Registry
 	Config   config
 	Logger   log.Handler
@@ -31,15 +33,16 @@ type App[acc account.Model] struct {
 	Cache repository.Cache
 	/* services */
 	/* modules */
-	Account *a.Module[acc]
-	Login   *login.Module
+	Account  *a.Module[acc]
+	Login    *login.Module
+	Register *r.Module[reg, acc]
 	/* server */
 	Authenticator authorization.Authenticator[acc]
 	Ginger        gateway.Server
 }
 
-func New[acc account.Model](configType string) *App[acc] {
-	a := &App[acc]{
+func New[acc account.Model, reg register.Model](configType string) *App[acc, reg] {
+	a := &App[acc, reg]{
 		Language: i18n.NewBundle(language.English),
 	}
 	a.loadConfig(configType)
@@ -50,7 +53,7 @@ func New[acc account.Model](configType string) *App[acc] {
 	return a
 }
 
-func (a *App[acc]) Initialize() {
+func (a *App[acc, reg]) Initialize() {
 	a.initializeLogger()
 	a.initializeLanguage()
 	a.initializeServer()

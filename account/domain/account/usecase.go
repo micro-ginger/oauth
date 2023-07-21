@@ -14,8 +14,11 @@ type UseCase[T account.Model] interface {
 	Count(ctx context.Context, q query.Query) (uint64, errors.Error)
 	List(ctx context.Context, q query.Query) ([]*Account[T], errors.Error)
 	Get(ctx context.Context, q query.Query) (*Account[T], errors.Error)
+	GetById(ctx context.Context, id uint64) (*Account[T], errors.Error)
 
-	Update(ctx context.Context, q query.Query, update *Account[T]) errors.Error
+	Update(ctx context.Context, q query.Query, update *Update[T]) errors.Error
+	UpdateAccount(ctx context.Context,
+		q query.Query, update *Account[T]) errors.Error
 
 	Upsert(ctx context.Context, q query.Query,
 		account *Account[T]) errors.Error

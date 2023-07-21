@@ -33,6 +33,15 @@ func (m *Account[T]) GetDeliveryResult() any {
 	return nil
 }
 
+func HashPassword(password string) ([]byte, errors.Error) {
+	hashedPassword, err := bcrypt.GenerateFromPassword(
+		[]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return hashedPassword, errors.New(err)
+	}
+	return hashedPassword, nil
+}
+
 func (a *Account[T]) MatchPassword(password string) error {
 	if a.HashedPassword == nil {
 		return errors.Validation().

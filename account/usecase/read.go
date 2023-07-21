@@ -22,3 +22,9 @@ func (uc *useCase[T]) Get(ctx context.Context,
 	query query.Query) (*account.Account[T], errors.Error) {
 	return uc.repo.Get(query)
 }
+
+func (uc *useCase[T]) GetById(ctx context.Context,
+	id uint64) (*account.Account[T], errors.Error) {
+	q := query.NewFilter(query.New(ctx)).WithId(id)
+	return uc.repo.Get(q)
+}
