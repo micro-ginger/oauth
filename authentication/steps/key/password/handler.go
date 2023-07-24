@@ -1,13 +1,13 @@
-package input
+package password
 
 import (
 	"github.com/ginger-core/compound/registry"
 	"github.com/ginger-core/log"
 	"github.com/ginger-core/repository"
 	"github.com/micro-ginger/oauth/account/domain/account"
-	"github.com/micro-ginger/oauth/authentication/handler/base"
-	"github.com/micro-ginger/oauth/authentication/handler/handler"
 	"github.com/micro-ginger/oauth/authentication/info"
+	"github.com/micro-ginger/oauth/authentication/steps/base"
+	"github.com/micro-ginger/oauth/authentication/steps/handler"
 	v "github.com/micro-ginger/oauth/validator"
 	"github.com/micro-ginger/oauth/validator/domain/validator"
 )

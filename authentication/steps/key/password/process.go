@@ -1,4 +1,4 @@
-package input
+package password
 
 import (
 	"context"
@@ -10,9 +10,9 @@ import (
 	"github.com/ginger-core/query"
 	"github.com/micro-blonde/auth/account"
 	a "github.com/micro-ginger/oauth/account/domain/account"
-	"github.com/micro-ginger/oauth/authentication/handler/handler"
 	"github.com/micro-ginger/oauth/authentication/info"
 	"github.com/micro-ginger/oauth/authentication/response"
+	"github.com/micro-ginger/oauth/authentication/steps/handler"
 	"github.com/micro-ginger/oauth/validator/domain/validator"
 )
 

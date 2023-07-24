@@ -1,4 +1,4 @@
-package verify
+package password
 
 type config struct {
 	Debug bool

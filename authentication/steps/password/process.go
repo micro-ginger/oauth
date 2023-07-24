@@ -1,4 +1,4 @@
-package verify
+package password
 
 import (
 	"context"

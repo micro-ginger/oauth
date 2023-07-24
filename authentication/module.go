@@ -5,17 +5,17 @@ import (
 	"github.com/ginger-core/log"
 	"github.com/ginger-repository/redis"
 	"github.com/micro-ginger/oauth/account/domain/account"
-	"github.com/micro-ginger/oauth/authentication/handler"
 	"github.com/micro-ginger/oauth/authentication/info"
+	"github.com/micro-ginger/oauth/authentication/steps"
 	"github.com/micro-ginger/oauth/login/session"
 )
 
 type Module[acc account.Model] struct {
-	Info    info.Handler[acc]
-	Handler *handler.Module[acc]
+	Info  info.Handler[acc]
+	Steps *steps.Module[acc]
 }
 
-func Initialize[acc account.Model](logger log.Logger, registry registry.Registry,
+func New[acc account.Model](logger log.Logger, registry registry.Registry,
 	account account.UseCase[acc], session session.UseCase) *Module[acc] {
 	m := &Module[acc]{}
 
@@ -31,6 +31,6 @@ func Initialize[acc account.Model](logger log.Logger, registry registry.Registry
 		cache,
 	)
 
-	m.Handler = handler.New[acc](logger.WithTrace("handlers"))
+	m.Steps = steps.New[acc](logger.WithTrace("handlers"))
 	return m
 }

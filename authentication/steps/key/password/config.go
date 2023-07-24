@@ -1,4 +1,4 @@
-package input
+package password
 
 type config struct {
 	Debug bool

@@ -2,10 +2,10 @@ package refresh
 
 import (
 	"github.com/ginger-core/log"
-	"github.com/micro-ginger/oauth/authentication/handler/base"
-	"github.com/micro-ginger/oauth/authentication/handler/handler"
-	"github.com/micro-ginger/oauth/authentication/handler/mobile/account"
 	"github.com/micro-ginger/oauth/authentication/info"
+	"github.com/micro-ginger/oauth/authentication/steps/base"
+	"github.com/micro-ginger/oauth/authentication/steps/handler"
+	"github.com/micro-ginger/oauth/authentication/steps/mobile/account"
 	"github.com/micro-ginger/oauth/session/domain/session"
 )
 

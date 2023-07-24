@@ -8,7 +8,7 @@ import (
 	"github.com/ginger-core/errors"
 	"github.com/micro-blonde/auth/account"
 	a "github.com/micro-ginger/oauth/account/domain/account"
-	"github.com/micro-ginger/oauth/authentication/handler/handler"
+	"github.com/micro-ginger/oauth/authentication/steps/handler"
 )
 
 func (h *Handler[acc]) CheckVerifyAccount(

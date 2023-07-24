@@ -4,6 +4,7 @@ go 1.20
 
 require (
 	github.com/BurntSushi/toml v1.3.2
+	github.com/ginger-core/compound v0.0.0-20230608151919-2963b75416c3
 	github.com/ginger-core/compound/registry v0.0.0-20230608151919-2963b75416c3
 	github.com/ginger-core/errors v0.0.0-20230619094004-4101e77fb55b
 	github.com/ginger-core/gateway v0.0.0-20230608172238-cd4a0958dddc
@@ -29,7 +30,6 @@ require (
 	github.com/gabriel-vasile/mimetype v1.4.2 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/gin-gonic/gin v1.9.1 // indirect
-	github.com/ginger-core/compound v0.0.0-20230608151919-2963b75416c3 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/go-playground/validator/v10 v10.14.0 // indirect
