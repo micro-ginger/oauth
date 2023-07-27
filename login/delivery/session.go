@@ -9,7 +9,7 @@ import (
 
 const DefaultSection = "DEFAULT"
 
-func (h *lh) newSession(request gateway.Request,
+func (h *lh[acc]) newSession(request gateway.Request,
 	req *login.Request) (*session.Session, errors.Error) {
 	if req.Section == "" {
 		req.Section = DefaultSection

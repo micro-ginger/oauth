@@ -2,8 +2,8 @@ package session
 
 import (
 	"github.com/ginger-core/errors"
+	"github.com/micro-ginger/oauth/login/authentication/step"
 	"github.com/micro-ginger/oauth/login/flow"
-	"github.com/micro-ginger/oauth/login/flow/stage/step"
 )
 
 type GenerateRequest struct {

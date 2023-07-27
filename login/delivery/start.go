@@ -7,7 +7,7 @@ import (
 	"github.com/micro-ginger/oauth/login/session"
 )
 
-func (h *lh) start(request gateway.Request) (*session.Session, any, errors.Error) {
+func (h *lh[acc]) start(request gateway.Request) (*session.Session, any, errors.Error) {
 	req := new(ldd.Request)
 	if err := request.ProcessQueries(req); err != nil {
 		return nil, nil, errors.

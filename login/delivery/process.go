@@ -3,13 +3,12 @@ package delivery
 import (
 	"github.com/ginger-core/errors"
 	"github.com/ginger-core/gateway"
-	"github.com/micro-ginger/oauth/login/flow/stage/step"
-	"github.com/micro-ginger/oauth/login/session"
+	"github.com/micro-ginger/oauth/login/authentication/info"
 )
 
-func (h *lh) process(request gateway.Request,
-	session *session.Session) (any, errors.Error) {
-	s, actionIdx := session.Flow.GetCurrentStep()
+func (h *lh[acc]) process(request gateway.Request,
+	info *info.Info[acc]) (any, errors.Error) {
+	s, actionIdx := info.Session.Flow.GetCurrentStep()
 	sh := h.stepHandlers[s.Type]
 	if sh == nil {
 		return nil, errors.Unauthorized().
@@ -17,10 +16,7 @@ func (h *lh) process(request gateway.Request,
 			WithDesc("step handler not found")
 	}
 
-	r, err := sh.Process(request,
-		&step.Meta{
-			ActionIndex: actionIdx,
-		})
+	r, err := sh.Process(request, info)
 	if err != nil {
 		return nil, err.
 			WithDetail(errors.NewDetail().
@@ -29,16 +25,16 @@ func (h *lh) process(request gateway.Request,
 			WithTrace("sh.Process")
 	}
 	// next
-	session.Next()
-	if session.IsDone() {
-		err = h.session.Delete(request.GetContext(), session)
+	info.Session.Next()
+	if info.Session.IsDone() {
+		err = h.session.Delete(request.GetContext(), info.Session)
 		if err != nil {
 			return nil, err.WithTrace("session.Delete")
 		}
 		return nil, nil
 	}
 	// store session
-	err = h.session.Store(request.GetContext(), session)
+	err = h.session.Store(request.GetContext(), info.Session)
 	if err != nil {
 		return nil, err.WithTrace("session.Store")
 	}

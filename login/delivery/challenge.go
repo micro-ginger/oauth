@@ -6,7 +6,7 @@ import (
 	"github.com/micro-ginger/oauth/login/session"
 )
 
-func (h *lh) challenge(request gateway.Request,
+func (h *lh[acc]) challenge(request gateway.Request,
 	challenge string) (*session.Session, any, errors.Error) {
 	// TODO get process
 	// process

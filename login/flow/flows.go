@@ -2,7 +2,7 @@ package flow
 
 import (
 	"github.com/ginger-core/compound/registry"
-	"github.com/micro-ginger/oauth/authentication/steps"
+	"github.com/micro-ginger/oauth/login/authentication/steps"
 )
 
 type Flows map[Section]*Flow
