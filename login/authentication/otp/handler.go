@@ -13,13 +13,17 @@ import (
 )
 
 type Handler interface {
-	// RegisterCodeGenerator registers custom code generator for custom code generation
+	// RegisterCodeGenerator registers custom
+	// code generator for custom code generation
 	RegisterCodeGenerator(generator func() string)
 
-	Generate(ctx context.Context, key any, challenge string, otpType string) (*Otp, time.Duration, errors.Error)
+	Generate(ctx context.Context, key any, o *Otp,
+		otpType string) (*Otp, time.Duration, errors.Error)
 	// Verify verifies the challenge with code.
-	// metaRef is reference of meta existing in otp, which will be filled while loading the otp
-	Verify(ctx context.Context, challenge string, otpType string, code string) (*Otp, errors.Error)
+	// metaRef is reference of meta existing in otp,
+	// which will be filled while loading the otp
+	Verify(ctx context.Context, otp *Otp,
+		otpType string, code string) errors.Error
 }
 
 type handler[acc account.Model] struct {
@@ -29,9 +33,11 @@ type handler[acc account.Model] struct {
 	session session.Handler[acc]
 
 	codeGenerator func() string
-	// sessionValidator is otp validation which is being validated in each login session
+	// sessionValidator is otp validation which is being
+	// validated in each login session
 	sessionValidator validator.UseCase
-	// globalValidator is validation for entity globally to handle validation of all actions of current entity type
+	// globalValidator is validation for entity globally to
+	// handle validation of all actions of current entity type
 	globalValidator validator.UseCase
 }
 

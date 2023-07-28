@@ -2,9 +2,12 @@ package authentication
 
 import (
 	"github.com/ginger-core/compound/registry"
+	"github.com/ginger-core/log"
 	"github.com/ginger-core/log/logger"
+	"github.com/ginger-core/repository"
 	"github.com/micro-ginger/oauth/login/authentication/otp"
 	sbase "github.com/micro-ginger/oauth/login/authentication/steps/base"
+	"github.com/micro-ginger/oauth/login/authentication/steps/mobile/account"
 	mobileAcc "github.com/micro-ginger/oauth/login/authentication/steps/mobile/account"
 	mobileOtp "github.com/micro-ginger/oauth/login/authentication/steps/mobile/otp"
 	mobileVerify "github.com/micro-ginger/oauth/login/authentication/steps/mobile/verify"
@@ -15,11 +18,15 @@ import (
 
 type MobileModule[acc mobileAcc.Model] struct {
 	*Base[acc]
+
+	mobileMasker account.MaskerFunc
 }
 
-func NewMobile[acc mobileAcc.Model](base *Base[acc]) *MobileModule[acc] {
+func NewMobile[acc mobileAcc.Model](base *Base[acc],
+	mobileMasker account.MaskerFunc) *MobileModule[acc] {
 	m := &MobileModule[acc]{
-		Base: base,
+		Base:         base,
+		mobileMasker: mobileMasker,
 	}
 	return m
 }
@@ -36,21 +43,13 @@ func (m *MobileModule[acc]) initializeHandlers() {
 	}
 	for key, cfg := range config.Steps {
 		m.initializeHandler(
-			m.registry.ValueOf(key), cfg.Type,
+			m.registry.ValueOf("steps."+key), cfg.Type,
 		)
 	}
 }
 
-func (m *MobileModule[acc]) initializeHandler(
-	registry registry.Registry, handlerType step.Type) {
-	baseHandler := sbase.New(
-		m.logger.WithTrace("base"),
-		m.registry.ValueOf("base"),
-		m.loginSession,
-		m.cache,
-	)
-	baseHandler.WithType(handlerType)
-
+func (m *MobileModule[acc]) getValidators(logger log.Logger,
+	registry registry.Registry, cache repository.Cache) (*validator.Module, *validator.Module) {
 	sessionValidator := validator.New(
 		m.logger.WithTrace("validators.session"),
 		registry.ValueOf("validators.session"),
@@ -61,9 +60,23 @@ func (m *MobileModule[acc]) initializeHandler(
 		registry.ValueOf("validators.global"),
 		m.cache,
 	)
+	return sessionValidator, globalValidator
+}
+
+func (m *MobileModule[acc]) initializeHandler(
+	registry registry.Registry, handlerType step.Type) {
+	baseHandler := sbase.New(
+		m.logger.WithTrace("base"),
+		registry.ValueOf("base"),
+		m.loginSession,
+		m.cache,
+	)
+	baseHandler.WithType(handlerType)
 	var h handler.Handler[acc]
 	switch handlerType {
 	case mobileOtp.Type:
+		sessionValidator, globalValidator := m.getValidators(
+			m.logger, registry, m.cache)
 		otp := otp.New(
 			m.logger.WithTrace("mobileOtp.otp"),
 			registry,
@@ -74,9 +87,12 @@ func (m *MobileModule[acc]) initializeHandler(
 		h = mobileOtp.New(
 			m.logger.WithTrace("mobileOtp"),
 			registry,
+			m.mobileMasker,
 			baseHandler, otp,
 		)
 	case mobileVerify.Type:
+		sessionValidator, globalValidator := m.getValidators(
+			m.logger, registry, m.cache)
 		otp := otp.New(
 			m.logger.WithTrace("mobileVerify.otp"),
 			registry,
@@ -87,6 +103,7 @@ func (m *MobileModule[acc]) initializeHandler(
 		h = mobileVerify.New(
 			m.logger.WithTrace("mobileVerify"),
 			registry,
+			m.mobileMasker,
 			baseHandler, otp,
 		)
 	default:

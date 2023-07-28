@@ -16,15 +16,20 @@ type Model[acc account.Model] interface {
 	GetStepHandlers() map[step.Type]handler.Handler[acc]
 }
 
-type Module[acc account.Model] struct {
+type Module[acc account.Model] interface {
 	Model[acc]
+	GetBase() *Base[acc]
+}
+
+type module[acc account.Model] struct {
+	*Base[acc]
 }
 
 func New[acc account.Model](logger log.Logger, registry registry.Registry,
 	loginSession loginSession.Handler[acc], cache repository.Cache,
-	account account.UseCase[acc], session session.UseCase) Model[acc] {
-	m := &Module[acc]{
-		Model: NewBase(logger, registry,
+	account account.UseCase[acc], session session.UseCase) Module[acc] {
+	m := &module[acc]{
+		Base: NewBase(logger, registry,
 			loginSession, cache, account, session),
 	}
 

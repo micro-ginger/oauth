@@ -44,6 +44,10 @@ func NewBase[acc account.Model](logger log.Logger, registry registry.Registry,
 	return m
 }
 
+func (m *Base[acc]) GetBase() *Base[acc] {
+	return m
+}
+
 func (m *Base[acc]) Initialize() {
 	m.steps = steps.New[acc](m.logger.WithTrace("handlers"))
 

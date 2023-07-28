@@ -1,8 +1,6 @@
 package info
 
 import (
-	"encoding/json"
-
 	"github.com/micro-ginger/oauth/account/domain/account"
 )
 
@@ -17,15 +15,6 @@ type Info[acc account.Model] struct {
 	// AccountStatus uint64
 
 	Temp map[string]any
-}
-
-func (i Info[acc]) MarshalBinary() (data []byte, err error) {
-	var bytes []byte
-	bytes, err = json.Marshal(i)
-	if err != nil {
-		return nil, err
-	}
-	return bytes, nil
 }
 
 func (i *Info[acc]) PopulateAccount(a *account.Account[acc]) {

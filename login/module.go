@@ -17,7 +17,7 @@ import (
 type Module[acc account.Model] struct {
 	Logger         log.Logger
 	Session        s.Handler[acc]
-	Authentication authentication.Model[acc]
+	Authentication authentication.Module[acc]
 	Handler        delivery.Handler[acc]
 }
 

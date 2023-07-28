@@ -4,61 +4,29 @@ import (
 	"context"
 
 	"github.com/ginger-core/errors"
-	"github.com/ginger-core/log/logger"
 	"github.com/micro-ginger/oauth/validator/domain/validator"
 )
 
 func (h *handler[acc]) Verify(ctx context.Context,
-	challenge string, otpType string, code string) (*Otp, errors.Error) {
-	o := new(Otp)
-	err := h.session.GetItem(ctx, challenge, otpType, o)
-	if err != nil {
-		return nil, InvalidCodeError.Clone().WithError(err)
-	}
-
+	o *Otp, otpType string, code string) errors.Error {
 	v, err := h.globalValidator.BeginVerify(ctx, o.Key)
 	if err != nil {
 		if err == validator.RequestExpiredError {
-			return nil, CodeExpiredError
+			return CodeExpiredError
 		}
-		return nil, err
+		return err.WithTrace("globalValidator.BeginVerify")
 	}
 	if err := h.sessionValidator.ValidateVerify(ctx, o.Validation); err != nil {
 		if err == validator.RequestExpiredError {
-			return nil, CodeExpiredError
+			return CodeExpiredError
 		}
-		return nil, err
+		return err.WithTrace("sessionValidator.ValidateVerify")
 	}
 
-	storeSessionOtp := true
-	defer func(key string, otpType string, otp *Otp) {
-		h.globalValidator.EndVerify(ctx, v)
-		if storeSessionOtp {
-			// decrease verification remaining count
-			if err := h.session.Set(ctx, key, otpType, otp); err != nil {
-				h.logger.
-					With(logger.Field{
-						"error": err.Error(),
-					}).
-					WithTrace("Verify.StoreChallengeErr").
-					Warnf("error while updating otp remaining verify count")
-			}
-		}
-	}(challenge, otpType, o)
+	defer h.globalValidator.EndVerify(ctx, v)
 	// check code
 	if o.Code != code {
-		return nil, InvalidCodeError
+		return InvalidCodeError
 	}
-	// remove code
-	if err := h.session.DeleteItem(ctx, challenge, otpType); err != nil {
-		h.logger.
-			With(logger.Field{
-				"error": err.Error(),
-			}).
-			WithTrace("Verify.UnsetItemErr").
-			Warnf("error while clearing otp code")
-		return nil, errors.Internal(err)
-	}
-	storeSessionOtp = false
-	return o, nil
+	return nil
 }

@@ -17,14 +17,18 @@ type _handler[acc account.Model] struct {
 	config config
 
 	otp otp.Handler
+
+	masker account.MaskerFunc
 }
 
-func New[acc account.Model](logger log.Logger, registry registry.Registry,
+func New[acc account.Model](logger log.Logger,
+	registry registry.Registry, masker account.MaskerFunc,
 	base *base.Handler[acc], otp otp.Handler) handler.Handler[acc] {
 	h := &_handler[acc]{
 		Handler: base,
 		logger:  logger,
 		otp:     otp,
+		masker:  masker,
 	}
 	if err := registry.Unmarshal(&h.config); err != nil {
 		panic(err)

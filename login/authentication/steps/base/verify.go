@@ -11,20 +11,29 @@ import (
 	"github.com/micro-ginger/oauth/login/authentication/steps/handler"
 )
 
-func (h *Handler[acc]) CheckVerifyAccount(
-	ctx context.Context, a *a.Account[acc]) errors.Error {
+func (h *Handler[acc]) CheckVerifyKey(
+	ctx context.Context, key string) errors.Error {
 	_verfied := ctx.Value(handler.VerifiedKey)
-	verfied := _verfied.(*bool)
-	if *verfied {
-		return nil
+	if _verfied != nil {
+		if *_verfied.(*bool) {
+			return nil
+		}
 	}
-	*verfied = true
 
-	validation, err := h.SuspendValidator.BeginRequest(ctx, fmt.Sprint(a.Id))
+	validation, err := h.SuspendValidator.BeginRequest(ctx, key)
 	if err != nil {
 		return err.WithTrace("v.BeginRequest")
 	}
 	go h.SuspendValidator.EndRequest(cctx.NewBackgroundContext(ctx), validation)
+
+	return nil
+}
+
+func (h *Handler[acc]) CheckVerifyAccount(
+	ctx context.Context, a *a.Account[acc]) errors.Error {
+	if err := h.CheckVerifyKey(ctx, fmt.Sprint(a.Id)); err != nil {
+		return err.WithTrace("CheckVerifyKey")
+	}
 
 	if a.Status.Is(account.StatusBlocked) {
 		return handler.YourAccountBlockedError

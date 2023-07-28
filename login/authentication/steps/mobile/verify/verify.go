@@ -5,6 +5,7 @@ import (
 
 	"github.com/ginger-core/errors"
 	"github.com/ginger-core/gateway"
+	"github.com/micro-ginger/oauth/login/authentication/otp"
 	"github.com/micro-ginger/oauth/login/authentication/response"
 	"github.com/micro-ginger/oauth/login/session/domain/session"
 )
@@ -16,9 +17,16 @@ func (h *_handler[acc]) verify(ctx context.Context, request gateway.Request,
 		return nil, err
 	}
 
-	_, err := h.otp.Verify(ctx, sess.Challenge, otpType, body.Code)
+	_otp, err := h.getOtp(sess)
 	if err != nil {
-		return nil, err
+		return nil, err.WithTrace("getOtp")
+	}
+	if _otp == nil {
+		return nil, otp.InvalidCodeError
+	}
+	err = h.otp.Verify(ctx, _otp, otpType, body.Code)
+	if err != nil {
+		return nil, err.WithTrace("otp.Verify")
 	}
 
 	if body.NationalCode != "" {

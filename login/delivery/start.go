@@ -15,21 +15,23 @@ func (h *lh[acc]) start(request gateway.Request) (*session.Session[acc], any, er
 			WithTrace("request.ProcessQueries")
 	}
 
-	session, err := h.newSession(request, req)
+	sess, err := h.newSession(request, req)
 	if err != nil {
 		return nil, nil, err.WithTrace("newSession")
 	}
 
-	r, err := h.process(request, session)
+	r, err := h.process(request, sess)
 	if err != nil {
 		return nil, nil, err.
 			WithTrace("process")
 	}
 
-	err = h.loginSession.Save(request.GetContext(), session)
-	if err != nil {
-		return nil, nil, err.
-			WithTrace("session.Store")
+	if !sess.IsDone() {
+		err = h.loginSession.Save(request.GetContext(), sess)
+		if err != nil {
+			return nil, nil, err.
+				WithTrace("session.Store")
+		}
 	}
-	return session, r, err
+	return sess, r, err
 }

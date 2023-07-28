@@ -8,16 +8,14 @@ import (
 )
 
 func (h *handler[acc]) Generate(ctx context.Context,
-	key any, challenge string, otpType string) (*Otp, time.Duration, errors.Error) {
+	key any, o *Otp, otpType string) (*Otp, time.Duration, errors.Error) {
 	v, err := h.globalValidator.BeginRequest(ctx, key)
 	if err != nil {
 		return nil, 0, err
 	}
 
-	var o = new(Otp)
-	err = h.session.GetItem(ctx, challenge, otpType, o)
-	if err != nil && !err.IsType(errors.TypeNotFound) {
-		return nil, 0, err
+	if o == nil {
+		o = new(Otp)
 	}
 	if o.Key == 0 || o.Key == nil {
 		v := h.sessionValidator.NewTemplate()
@@ -38,10 +36,6 @@ func (h *handler[acc]) Generate(ctx context.Context,
 		return nil, 0, err
 	}
 	h.sessionValidator.Requested(ctx, o.Validation)
-
-	if err := h.session.Set(ctx, challenge, otpType, o); err != nil {
-		return nil, 0, err
-	}
 
 	h.globalValidator.EndRequest(ctx, v)
 

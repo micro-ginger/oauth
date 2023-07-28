@@ -1,6 +1,8 @@
 package session
 
 import (
+	"encoding/json"
+
 	"github.com/micro-ginger/oauth/account/domain/account"
 	"github.com/micro-ginger/oauth/login/session/domain/flow"
 	"github.com/micro-ginger/oauth/login/session/domain/info"
@@ -11,6 +13,15 @@ type Session[acc account.Model] struct {
 	Challenge string
 	Flow      flow.Flow
 	Info      *info.Info[acc]
+}
+
+func (s Session[acc]) MarshalBinary() (data []byte, err error) {
+	var bytes []byte
+	bytes, err = json.Marshal(s)
+	if err != nil {
+		return nil, err
+	}
+	return bytes, nil
 }
 
 func (s *Session[acc]) GetKey() string {

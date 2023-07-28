@@ -2,6 +2,7 @@ package verify
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/ginger-core/errors"
 	"github.com/ginger-core/gateway"
@@ -12,9 +13,18 @@ import (
 
 func (h *_handler[acc]) request(ctx context.Context, request gateway.Request,
 	sess *session.Session[acc]) (response.Response, errors.Error) {
-	o, remaining, err := h.otp.Generate(ctx, sess.Key, sess.Challenge, otpType)
+	_otp, err := h.getOtp(sess)
+	if err != nil {
+		return nil, err.WithTrace("getOtp")
+	}
+	o, remaining, err := h.otp.Generate(ctx, sess.Key, _otp, otpType)
 	if err != nil {
 		return nil, err
+	}
+	otpStr, mErr := json.Marshal(o)
+	if mErr != nil {
+		return nil, errors.New(mErr).
+			WithTrace("json.Marshal(o)")
 	}
 
 	a, err := h.GetAccount(ctx, sess.Info, request, nil)
@@ -49,6 +59,14 @@ func (h *_handler[acc]) request(ctx context.Context, request gateway.Request,
 			WithTrace("otp.request.empty.mobile")
 	}
 
+	if a == nil {
+		// account was nil
+		// validate with key
+		if err := h.CheckVerifyKey(ctx, mobile); err != nil {
+			return nil, err
+		}
+	}
+
 	// if !h.config.Debug {
 	// 	// TODO send otp
 	// 	msg := &message.Message{
@@ -71,6 +89,8 @@ func (h *_handler[acc]) request(ctx context.Context, request gateway.Request,
 	// }
 	h.logger.With(logger.Field{"otp": o}).Debugf("generated otp")
 
+	sess.Info.SetTemp(otpType, string(otpStr))
+
 	detail := make(map[string]any)
 	resp := &response.BaseResponse{
 		State:     response.StateOtpSent,
@@ -78,8 +98,9 @@ func (h *_handler[acc]) request(ctx context.Context, request gateway.Request,
 		Remaining: uint(remaining.Seconds()),
 		Detail:    detail,
 	}
-	if mobile := sess.Info.GetTemp("mobile"); mobile != nil {
-		detail["mobile"] = a.T.MaskMobile()
+
+	if h.masker != nil {
+		detail["mobile"] = h.masker(mobile)
 	}
 
 	return resp, nil
