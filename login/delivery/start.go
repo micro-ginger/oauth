@@ -25,13 +25,5 @@ func (h *lh[acc]) start(request gateway.Request) (*session.Session[acc], any, er
 		return nil, nil, err.
 			WithTrace("process")
 	}
-
-	if !sess.IsDone() {
-		err = h.loginSession.Save(request.GetContext(), sess)
-		if err != nil {
-			return nil, nil, err.
-				WithTrace("session.Store")
-		}
-	}
-	return sess, r, err
+	return sess, r, nil
 }

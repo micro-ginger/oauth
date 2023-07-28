@@ -13,6 +13,7 @@ func (h *handler[acc]) Get(ctx context.Context,
 	if err := h.cache.Load(ctx, challenge, sess); err != nil {
 		return nil, err
 	}
+	sess.AddState(session.StateFromDB)
 	sess.Challenge = challenge
 	return sess, nil
 }

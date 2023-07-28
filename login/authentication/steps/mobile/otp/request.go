@@ -29,11 +29,5 @@ func (h *_handler[acc]) request(ctx context.Context, request gateway.Request,
 		return nil, err.
 			WithTrace("Handler.Process")
 	}
-
-	if err := h.Base.Session.Save(ctx, sess); err != nil {
-		return nil, err.
-			WithTrace("Base.Session.Save")
-	}
-
 	return r, nil
 }

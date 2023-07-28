@@ -11,6 +11,7 @@ import (
 	keyPw "github.com/micro-ginger/oauth/login/authentication/steps/key/password"
 	"github.com/micro-ginger/oauth/login/authentication/steps/password"
 	"github.com/micro-ginger/oauth/login/authentication/steps/refresh"
+	"github.com/micro-ginger/oauth/login/flow"
 	"github.com/micro-ginger/oauth/login/flow/stage/step"
 	"github.com/micro-ginger/oauth/login/flow/stage/step/handler"
 	loginSession "github.com/micro-ginger/oauth/login/session/domain/session"
@@ -48,12 +49,14 @@ func (m *Base[acc]) GetBase() *Base[acc] {
 	return m
 }
 
-func (m *Base[acc]) Initialize() {
+func (m *Base[acc]) InitializeSteps(flows flow.Flows) {
 	m.steps = steps.New[acc](m.logger.WithTrace("handlers"))
-
-	m.initializeHandlers()
+	m.steps.Initialize(flows)
 }
 
+func (m *Base[acc]) Initialize() {
+	m.initializeHandlers()
+}
 func (m *Base[acc]) initializeHandlers() {
 	config := new(config)
 	if err := m.registry.Unmarshal(config); err != nil {

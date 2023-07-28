@@ -28,9 +28,11 @@ func (h *lh[acc]) process(request gateway.Request,
 	// next
 	sess.Next()
 	if sess.IsDone() {
-		err = h.loginSession.Delete(ctx, sess.Challenge)
-		if err != nil {
-			return nil, err.WithTrace("session.Delete")
+		if sess.IsFromDB() {
+			err = h.loginSession.Delete(ctx, sess.Challenge)
+			if err != nil {
+				return nil, err.WithTrace("session.Delete")
+			}
 		}
 		return nil, nil
 	}
@@ -39,5 +41,6 @@ func (h *lh[acc]) process(request gateway.Request,
 	if err != nil {
 		return nil, err.WithTrace("session.Store")
 	}
+	r.SetChallenge(sess.Challenge)
 	return r, nil
 }

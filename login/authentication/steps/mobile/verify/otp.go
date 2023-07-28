@@ -9,7 +9,7 @@ import (
 )
 
 func (h *_handler[acc]) getOtp(sess *session.Session[acc]) (*otp.Otp, errors.Error) {
-	var _otp *otp.Otp
+	_otp := new(otp.Otp)
 	otpM := sess.Info.GetTemp(otpType)
 	if otpM != nil {
 		otpStr := otpM.(string)

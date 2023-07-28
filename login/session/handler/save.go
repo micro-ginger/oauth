@@ -7,15 +7,6 @@ import (
 	"github.com/micro-ginger/oauth/login/session/domain/session"
 )
 
-func (h *handler[acc]) Set(ctx context.Context,
-	challenge, key string, value any) errors.Error {
-	if err := h.cache.SetItem(ctx,
-		h.getChallengeKey(challenge), key, value); err != nil {
-		return err
-	}
-	return nil
-}
-
 func (h *handler[acc]) Save(ctx context.Context,
 	sess *session.Session[acc]) errors.Error {
 	challenge, err := h.challengeGenerator(
@@ -26,7 +17,7 @@ func (h *handler[acc]) Save(ctx context.Context,
 		return err
 	}
 
-	if sess.Challenge != "" {
+	if sess.IsFromDB() {
 		err := h.cache.Rename(ctx,
 			h.getChallengeKey(sess.Challenge),
 			h.getChallengeKey(challenge))

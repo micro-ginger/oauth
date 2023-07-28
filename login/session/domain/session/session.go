@@ -13,15 +13,28 @@ type Session[acc account.Model] struct {
 	Challenge string
 	Flow      flow.Flow
 	Info      *info.Info[acc]
+
+	// state states of session
+	// 0 new
+	// 1 old
+	state State
 }
 
-func (s Session[acc]) MarshalBinary() (data []byte, err error) {
+func (s *Session[acc]) MarshalBinary() (data []byte, err error) {
 	var bytes []byte
 	bytes, err = json.Marshal(s)
 	if err != nil {
 		return nil, err
 	}
 	return bytes, nil
+}
+
+func (s *Session[acc]) AddState(state State) {
+	s.state.Add(state)
+}
+
+func (s *Session[acc]) IsFromDB() bool {
+	return s.state.Has(StateFromDB)
 }
 
 func (s *Session[acc]) GetKey() string {

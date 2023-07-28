@@ -10,7 +10,7 @@ import (
 func (h *_handler[acc]) Process(request gateway.Request,
 	sess *session.Session[acc]) (response.Response, errors.Error) {
 	ctx := request.GetContext()
-	if sess.Flow.Pos.StepIndex == 0 {
+	if sess.Flow.Pos.ActionIndex == 0 {
 		return h.request(ctx, request, sess)
 	}
 	return h.Handler.Process(request, sess)

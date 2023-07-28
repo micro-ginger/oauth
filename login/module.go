@@ -50,6 +50,7 @@ func New[acc account.Model](logger log.Logger, registry registry.Registry,
 }
 
 func (m *Module[acc]) Initialize(flows flow.Flows, session session.UseCase) {
+	m.Authentication.GetBase().InitializeSteps(flows)
 	m.Authentication.Initialize()
 	m.Handler.Initialize(m.Session, flows, session)
 

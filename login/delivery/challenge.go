@@ -8,7 +8,16 @@ import (
 
 func (h *lh[acc]) challenge(request gateway.Request,
 	challenge string) (*session.Session[acc], any, errors.Error) {
-	// TODO get process
-	// process
-	return nil, nil, nil
+	sess, err := h.loginSession.Get(request.GetContext(), challenge)
+	if err != nil {
+		return nil, nil, errors.Unauthorized(err).
+			WithTrace("loginSession.Get")
+	}
+
+	r, err := h.process(request, sess)
+	if err != nil {
+		return nil, nil, err.
+			WithTrace("process")
+	}
+	return sess, r, nil
 }
