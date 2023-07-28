@@ -13,6 +13,7 @@ import (
 	"github.com/micro-ginger/oauth/login"
 	r "github.com/micro-ginger/oauth/register"
 	"github.com/micro-ginger/oauth/register/domain/register"
+	"github.com/micro-ginger/oauth/session"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"golang.org/x/text/language"
 )
@@ -34,7 +35,8 @@ type App[acc account.Model, reg register.Model] struct {
 	/* services */
 	/* modules */
 	Account  *a.Module[acc]
-	Login    *login.Module
+	Session  *session.Module
+	Login    *login.Module[acc]
 	Register *r.Module[reg, acc]
 	/* server */
 	Authenticator authorization.Authenticator[acc]

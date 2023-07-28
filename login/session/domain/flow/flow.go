@@ -1,8 +1,8 @@
-package session
+package flow
 
 import (
-	"github.com/micro-ginger/oauth/login/authentication/step"
 	"github.com/micro-ginger/oauth/login/flow"
+	"github.com/micro-ginger/oauth/login/flow/stage/step"
 )
 
 type Flow struct {

@@ -20,11 +20,11 @@ func (h *Handler[acc]) CheckVerifyAccount(
 	}
 	*verfied = true
 
-	v, err := h.SuspendValidator.BeginRequest(ctx, fmt.Sprint(a.Id))
+	validation, err := h.SuspendValidator.BeginRequest(ctx, fmt.Sprint(a.Id))
 	if err != nil {
-		return err
+		return err.WithTrace("v.BeginRequest")
 	}
-	go h.SuspendValidator.EndRequest(cctx.NewBackgroundContext(ctx), v)
+	go h.SuspendValidator.EndRequest(cctx.NewBackgroundContext(ctx), validation)
 
 	if a.Status.Is(account.StatusBlocked) {
 		return handler.YourAccountBlockedError
@@ -32,5 +32,6 @@ func (h *Handler[acc]) CheckVerifyAccount(
 	if a.Status.Is(account.StatusDisabled) {
 		return handler.YourAccountDisabledError
 	}
+
 	return nil
 }

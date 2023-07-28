@@ -1,18 +1,17 @@
 package otp
 
 import (
-	"context"
-
 	"github.com/ginger-core/errors"
 	"github.com/ginger-core/gateway"
-	"github.com/micro-ginger/oauth/login/authentication/info"
 	"github.com/micro-ginger/oauth/login/authentication/response"
+	"github.com/micro-ginger/oauth/login/session/domain/session"
 )
 
-func (h *_handler[acc]) Process(ctx context.Context, request gateway.Request,
-	info *info.Info[acc]) (response.Response, errors.Error) {
-	if info.StepInd == 0 {
-		return h.request(ctx, request, info)
+func (h *_handler[acc]) Process(request gateway.Request,
+	sess *session.Session[acc]) (response.Response, errors.Error) {
+	ctx := request.GetContext()
+	if sess.Flow.Pos.StepIndex == 0 {
+		return h.request(ctx, request, sess)
 	}
-	return h.Handler.Process(ctx, request, info)
+	return h.Handler.Process(request, sess)
 }

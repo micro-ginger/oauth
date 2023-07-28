@@ -1,8 +1,8 @@
 package refresh
 
 import (
-	"github.com/micro-ginger/oauth/login/authentication/step"
-	"github.com/micro-ginger/oauth/login/authentication/step/action"
+	"github.com/micro-ginger/oauth/login/flow/stage/step"
+	"github.com/micro-ginger/oauth/login/flow/stage/step/action"
 )
 
 const Type step.Type = "REFRESH"

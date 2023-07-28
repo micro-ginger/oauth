@@ -6,8 +6,8 @@ import (
 	"github.com/ginger-core/errors"
 	"github.com/ginger-core/gateway"
 	"github.com/micro-ginger/oauth/account/domain/account"
-	"github.com/micro-ginger/oauth/login/authentication/info"
 	"github.com/micro-ginger/oauth/login/authentication/request"
+	"github.com/micro-ginger/oauth/login/session/domain/info"
 )
 
 func (h *Handler[acc]) GetAccount(ctx context.Context,

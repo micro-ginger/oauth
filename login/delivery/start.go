@@ -4,10 +4,10 @@ import (
 	"github.com/ginger-core/errors"
 	"github.com/ginger-core/gateway"
 	ldd "github.com/micro-ginger/oauth/login/domain/delivery/login"
-	"github.com/micro-ginger/oauth/login/session"
+	"github.com/micro-ginger/oauth/login/session/domain/session"
 )
 
-func (h *lh[acc]) start(request gateway.Request) (*session.Session, any, errors.Error) {
+func (h *lh[acc]) start(request gateway.Request) (*session.Session[acc], any, errors.Error) {
 	req := new(ldd.Request)
 	if err := request.ProcessQueries(req); err != nil {
 		return nil, nil, errors.
@@ -21,5 +21,15 @@ func (h *lh[acc]) start(request gateway.Request) (*session.Session, any, errors.
 	}
 
 	r, err := h.process(request, session)
+	if err != nil {
+		return nil, nil, err.
+			WithTrace("process")
+	}
+
+	err = h.loginSession.Save(request.GetContext(), session)
+	if err != nil {
+		return nil, nil, err.
+			WithTrace("session.Store")
+	}
 	return session, r, err
 }

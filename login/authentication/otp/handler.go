@@ -8,7 +8,7 @@ import (
 	"github.com/ginger-core/errors"
 	"github.com/ginger-core/log"
 	"github.com/micro-ginger/oauth/account/domain/account"
-	"github.com/micro-ginger/oauth/login/authentication/info"
+	"github.com/micro-ginger/oauth/login/session/domain/session"
 	"github.com/micro-ginger/oauth/validator/domain/validator"
 )
 
@@ -26,7 +26,7 @@ type handler[acc account.Model] struct {
 	logger log.Logger
 	config config
 
-	info info.Handler[acc]
+	session session.Handler[acc]
 
 	codeGenerator func() string
 	// sessionValidator is otp validation which is being validated in each login session
@@ -36,11 +36,11 @@ type handler[acc account.Model] struct {
 }
 
 func New[acc account.Model](logger log.Logger, registry registry.Registry,
-	info info.Handler[acc], sessionValidator validator.UseCase,
+	session session.Handler[acc], sessionValidator validator.UseCase,
 	globalValidator validator.UseCase) Handler {
 	h := &handler[acc]{
 		logger:           logger,
-		info:             info,
+		session:          session,
 		sessionValidator: sessionValidator,
 		globalValidator:  globalValidator,
 	}

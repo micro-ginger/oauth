@@ -1,4 +1,4 @@
-package session
+package handler
 
 import (
 	"crypto/rand"
@@ -6,15 +6,8 @@ import (
 	"github.com/ginger-core/errors"
 )
 
-type ChallengeGenerator func() (string, errors.Error)
-
-func (uc *useCase) generateChallenge() (string, errors.Error) {
-	return uc.newChallenge(
-		uc.config.Challenge.Characters,
-		uc.config.Challenge.Length)
-}
-
-func (uc *useCase) newChallenge(chars string, length int) (string, errors.Error) {
+func (h *handler[acc]) GenerateChallenge(chars string,
+	length int) (string, errors.Error) {
 	charLen := len(chars)
 	maxCharInd := 255 - (256 % charLen)
 	b := make([]byte, length)

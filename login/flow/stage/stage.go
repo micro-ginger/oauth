@@ -1,6 +1,6 @@
 package stage
 
-import "github.com/micro-ginger/oauth/login/authentication/step"
+import "github.com/micro-ginger/oauth/login/flow/stage/step"
 
 type Stage struct {
 	Steps []*step.Step

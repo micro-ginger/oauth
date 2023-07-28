@@ -15,7 +15,7 @@ func (h *handler[acc]) Generate(ctx context.Context,
 	}
 
 	var o = new(Otp)
-	err = h.info.GetItem(ctx, challenge, otpType, o)
+	err = h.session.GetItem(ctx, challenge, otpType, o)
 	if err != nil && !err.IsType(errors.TypeNotFound) {
 		return nil, 0, err
 	}
@@ -39,7 +39,7 @@ func (h *handler[acc]) Generate(ctx context.Context,
 	}
 	h.sessionValidator.Requested(ctx, o.Validation)
 
-	if err := h.info.Set(ctx, challenge, otpType, o); err != nil {
+	if err := h.session.Set(ctx, challenge, otpType, o); err != nil {
 		return nil, 0, err
 	}
 

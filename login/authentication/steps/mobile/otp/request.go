@@ -5,8 +5,8 @@ import (
 
 	"github.com/ginger-core/errors"
 	"github.com/ginger-core/gateway"
-	"github.com/micro-ginger/oauth/login/authentication/info"
 	"github.com/micro-ginger/oauth/login/authentication/response"
+	"github.com/micro-ginger/oauth/login/session/domain/session"
 )
 
 type body struct {
@@ -14,18 +14,20 @@ type body struct {
 }
 
 func (h *_handler[acc]) request(ctx context.Context, request gateway.Request,
-	inf *info.Info[acc]) (response.Response, errors.Error) {
+	sess *session.Session[acc]) (response.Response, errors.Error) {
 	body := new(body)
 	if err := request.ProcessBody(body); err != nil {
-		return nil, err
+		return nil, err.
+			WithTrace("request.ProcessBody")
 	}
 	if body.Mobile != nil && len(*body.Mobile) > 0 {
-		inf.SetTemp("mobile", *body.Mobile)
+		sess.Info.SetTemp("mobile", *body.Mobile)
 	}
 
-	if err := h.Base.Info.Save(ctx, inf); err != nil {
-		return nil, err
+	if err := h.Base.Session.Save(ctx, sess); err != nil {
+		return nil, err.
+			WithTrace("Base.Session.Save")
 	}
 
-	return h.Handler.Process(ctx, request, inf)
+	return h.Handler.Process(request, sess)
 }

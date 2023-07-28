@@ -1,12 +1,12 @@
 package steps
 
 import (
-	"github.com/micro-ginger/oauth/login/authentication/step"
 	keyPw "github.com/micro-ginger/oauth/login/authentication/steps/key/password"
 	mobileOtp "github.com/micro-ginger/oauth/login/authentication/steps/mobile/otp"
 	mobileVerify "github.com/micro-ginger/oauth/login/authentication/steps/mobile/verify"
 	"github.com/micro-ginger/oauth/login/authentication/steps/password"
 	"github.com/micro-ginger/oauth/login/authentication/steps/refresh"
+	"github.com/micro-ginger/oauth/login/flow/stage/step"
 )
 
 func GetByType(t step.Type) *step.Step {

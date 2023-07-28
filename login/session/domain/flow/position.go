@@ -1,4 +1,4 @@
-package session
+package flow
 
 type Position struct {
 	StageIndex  int

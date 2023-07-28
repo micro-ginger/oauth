@@ -14,7 +14,7 @@ type Module struct {
 	UseCase    rd.UseCase
 }
 
-func Initialize(logger log.Logger,
+func New(logger log.Logger,
 	registry registry.Registry, cache repository.Cache) *Module {
 	repo := r.New(cache)
 	uc := usecase.New(logger, registry, repo)

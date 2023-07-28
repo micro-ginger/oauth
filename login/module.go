@@ -5,34 +5,56 @@ import (
 	"github.com/ginger-core/gateway"
 	"github.com/ginger-core/log"
 	"github.com/ginger-core/repository"
+	"github.com/micro-ginger/oauth/account/domain/account"
+	"github.com/micro-ginger/oauth/login/authentication"
 	"github.com/micro-ginger/oauth/login/delivery"
 	"github.com/micro-ginger/oauth/login/flow"
-	"github.com/micro-ginger/oauth/login/session"
+	s "github.com/micro-ginger/oauth/login/session/domain/session"
+	sessionHandler "github.com/micro-ginger/oauth/login/session/handler"
+	"github.com/micro-ginger/oauth/session/domain/session"
 )
 
-type Module struct {
-	Logger  log.Logger
-	Session session.UseCase
-	Handler delivery.Handler
+type Module[acc account.Model] struct {
+	Logger         log.Logger
+	Session        s.Handler[acc]
+	Authentication authentication.Model[acc]
+	Handler        delivery.Handler[acc]
 }
 
-func New(logger log.Logger, registry registry.Registry,
-	cache repository.Cache, responder gateway.Responder) *Module {
-	sess := session.New(
+func New[acc account.Model](logger log.Logger, registry registry.Registry,
+	account account.UseCase[acc], session session.UseCase,
+	cache repository.Cache, responder gateway.Responder) *Module[acc] {
+	sess := sessionHandler.New[acc](
 		logger.WithTrace("session"),
 		registry.ValueOf("session"),
 		cache,
 	)
-	m := &Module{
-		Logger:  logger,
-		Session: sess,
-		Handler: delivery.NewLogin(
-			logger.WithTrace("delivery.get"), responder,
+	auth := authentication.New(
+		logger.WithTrace("authentication"),
+		registry,
+		sess,
+		cache,
+		account,
+		session,
+	)
+	m := &Module[acc]{
+		Logger:         logger,
+		Session:        sess,
+		Authentication: auth,
+		Handler: delivery.NewLogin[acc](
+			logger.WithTrace("delivery.login"),
+			responder,
 		),
 	}
 	return m
 }
 
-func (m *Module) Initialize(flows flow.Flows) {
-	m.Handler.Initialize(flows, m.Session)
+func (m *Module[acc]) Initialize(flows flow.Flows, session session.UseCase) {
+	m.Authentication.Initialize()
+	m.Handler.Initialize(m.Session, flows, session)
+
+	stepHandlers := m.Authentication.GetStepHandlers()
+	for _, h := range stepHandlers {
+		m.Handler.RegisterHandler(h.GetType(), h)
+	}
 }

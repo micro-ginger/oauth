@@ -4,27 +4,17 @@ import (
 	"encoding/json"
 
 	"github.com/micro-ginger/oauth/account/domain/account"
-	"github.com/micro-ginger/oauth/login/session"
 )
 
 type Info[acc account.Model] struct {
-	Key any
-
-	Challenge string `json:"-"`
-
-	Account *account.Account[acc] `json:"-"`
-
 	AccountId uint64
+	Account   *account.Account[acc] `json:"-"`
 
 	Roles  []string
 	Scopes []string
 
-	Section       string
-	AccountStatus uint64
-	HandlerInd    int
-	StepInd       int
-
-	Session *session.Session
+	Section string
+	// AccountStatus uint64
 
 	Temp map[string]any
 }
@@ -39,17 +29,21 @@ func (i Info[acc]) MarshalBinary() (data []byte, err error) {
 }
 
 func (i *Info[acc]) PopulateAccount(a *account.Account[acc]) {
-	i.Account = a
 	i.AccountId = a.Id
-	i.AccountStatus = a.Status.Uint64()
+	i.Account = a
+	// i.AccountStatus = a.Status.Uint64()
 }
 
 func NewFromAccount[acc account.Model](a *account.Account[acc]) *Info[acc] {
 	return &Info[acc]{
-		Account:       a,
-		AccountId:     a.Id,
-		AccountStatus: a.Status.Uint64(),
+		AccountId: a.Id,
+		Account:   a,
+		// AccountStatus: a.Status.Uint64(),
 	}
+}
+
+func New[acc account.Model]() *Info[acc] {
+	return &Info[acc]{}
 }
 
 func (i *Info[acc]) SetTemp(key string, value any) {

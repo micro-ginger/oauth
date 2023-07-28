@@ -1,4 +1,4 @@
-package info
+package handler
 
 import (
 	"context"
@@ -10,6 +10,8 @@ func (h *handler[acc]) Delete(ctx context.Context, challenge string) errors.Erro
 	return h.cache.Delete(ctx, h.getChallengeKey(challenge))
 }
 
-func (h *handler[acc]) DeleteItem(ctx context.Context, challenge, key string) errors.Error {
-	return h.cache.UnsetItem(ctx, h.getChallengeKey(challenge), key)
+func (h *handler[acc]) DeleteItem(ctx context.Context,
+	challenge, key string) errors.Error {
+	return h.cache.UnsetItem(ctx,
+		h.getChallengeKey(challenge), key)
 }

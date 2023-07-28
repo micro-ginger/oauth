@@ -1,9 +1,10 @@
-package info
+package handler
 
 import (
 	"context"
 
 	"github.com/ginger-core/errors"
+	"github.com/micro-ginger/oauth/login/session/domain/session"
 )
 
 func (h *handler[acc]) GetItem(ctx context.Context,
@@ -16,11 +17,11 @@ func (h *handler[acc]) GetItem(ctx context.Context,
 }
 
 func (h *handler[acc]) Get(ctx context.Context,
-	challenge string) (*Info[acc], errors.Error) {
-	inf := new(Info[acc])
-	if err := h.GetItem(ctx, challenge, root, inf); err != nil {
+	challenge string) (*session.Session[acc], errors.Error) {
+	sess := new(session.Session[acc])
+	if err := h.GetItem(ctx, challenge, root, sess); err != nil {
 		return nil, err
 	}
-	inf.Challenge = challenge
-	return inf, nil
+	sess.Challenge = challenge
+	return sess, nil
 }

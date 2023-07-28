@@ -11,7 +11,7 @@ import (
 func (h *handler[acc]) Verify(ctx context.Context,
 	challenge string, otpType string, code string) (*Otp, errors.Error) {
 	o := new(Otp)
-	err := h.info.GetItem(ctx, challenge, otpType, o)
+	err := h.session.GetItem(ctx, challenge, otpType, o)
 	if err != nil {
 		return nil, InvalidCodeError.Clone().WithError(err)
 	}
@@ -35,7 +35,7 @@ func (h *handler[acc]) Verify(ctx context.Context,
 		h.globalValidator.EndVerify(ctx, v)
 		if storeSessionOtp {
 			// decrease verification remaining count
-			if err := h.info.Set(ctx, key, otpType, otp); err != nil {
+			if err := h.session.Set(ctx, key, otpType, otp); err != nil {
 				h.logger.
 					With(logger.Field{
 						"error": err.Error(),
@@ -50,7 +50,7 @@ func (h *handler[acc]) Verify(ctx context.Context,
 		return nil, InvalidCodeError
 	}
 	// remove code
-	if err := h.info.DeleteItem(ctx, challenge, otpType); err != nil {
+	if err := h.session.DeleteItem(ctx, challenge, otpType); err != nil {
 		h.logger.
 			With(logger.Field{
 				"error": err.Error(),

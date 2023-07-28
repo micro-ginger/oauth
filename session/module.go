@@ -14,7 +14,7 @@ type Module struct {
 	UseCase    session.UseCase
 }
 
-func Initialize(logger log.Logger, registry registry.Registry,
+func New(logger log.Logger, registry registry.Registry,
 	cache repository.Cache) *Module {
 	repoLogger := logger.WithTrace("repo")
 	repo := r.New(repoLogger, cache)

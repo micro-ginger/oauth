@@ -1,26 +1,25 @@
 package password
 
 import (
-	"context"
-
 	"github.com/ginger-core/errors"
 	"github.com/ginger-core/gateway"
-	"github.com/micro-ginger/oauth/login/authentication/info"
 	"github.com/micro-ginger/oauth/login/authentication/response"
+	"github.com/micro-ginger/oauth/login/session/domain/session"
 )
 
 type body struct {
 	Password string `json:"password" binding:"required"`
 }
 
-func (h *h[acc]) Process(ctx context.Context, request gateway.Request,
-	inf *info.Info[acc]) (response.Response, errors.Error) {
+func (h *h[acc]) Process(request gateway.Request,
+	sess *session.Session[acc]) (response.Response, errors.Error) {
+	ctx := request.GetContext()
 	body := new(body)
 	if err := request.ProcessBody(body); err != nil {
 		return nil, err
 	}
 
-	a, err := h.GetAccount(ctx, inf, request, nil)
+	a, err := h.GetAccount(ctx, sess.Info, request, nil)
 	if err != nil {
 		return nil, err
 	}

@@ -5,7 +5,7 @@ import (
 	"github.com/ginger-core/log"
 	"github.com/ginger-core/repository"
 	"github.com/micro-ginger/oauth/account/domain/account"
-	"github.com/micro-ginger/oauth/login/authentication/info"
+	"github.com/micro-ginger/oauth/login/session/domain/session"
 	"github.com/micro-ginger/oauth/validator"
 )
 
@@ -17,19 +17,20 @@ type Module struct {
 }
 
 func Initialize[acc account.Model](logger log.Logger, registry registry.Registry,
-	cache repository.Cache, info info.Handler[acc]) *Module {
-	sessionValidator := validator.Initialize(
+	cache repository.Cache, session session.Handler[acc]) *Module {
+	sessionValidator := validator.New(
 		logger.WithTrace("validators.session"),
 		registry.ValueOf("validators.session"),
 		cache,
 	)
-	globalValidator := validator.Initialize(
+	globalValidator := validator.New(
 		logger.WithTrace("validators.global"),
 		registry.ValueOf("validators.global"),
 		cache,
 	)
 	m := &Module{
-		Handler:           New(logger, registry, info, sessionValidator.UseCase, globalValidator.UseCase),
+		Handler: New(logger, registry, session,
+			sessionValidator.UseCase, globalValidator.UseCase),
 		SessionValidation: sessionValidator,
 		GlobalValidation:  globalValidator,
 	}

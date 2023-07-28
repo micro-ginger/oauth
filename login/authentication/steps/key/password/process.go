@@ -10,9 +10,9 @@ import (
 	"github.com/ginger-core/query"
 	"github.com/micro-blonde/auth/account"
 	a "github.com/micro-ginger/oauth/account/domain/account"
-	"github.com/micro-ginger/oauth/login/authentication/info"
 	"github.com/micro-ginger/oauth/login/authentication/response"
 	"github.com/micro-ginger/oauth/login/authentication/steps/handler"
+	"github.com/micro-ginger/oauth/login/session/domain/session"
 	"github.com/micro-ginger/oauth/validator/domain/validator"
 )
 
@@ -21,14 +21,16 @@ type body struct {
 	Password string `json:"password" form:"password" binding:"required"`
 }
 
-func (h *h[acc]) Process(ctx context.Context,
-	req gateway.Request, inf *info.Info[acc]) (response.Response, errors.Error) {
+func (h *h[acc]) Process(request gateway.Request,
+	sess *session.Session[acc]) (response.Response, errors.Error) {
+	ctx := request.GetContext()
 	body := new(body)
-	if err := req.ProcessBody(body); err != nil {
+	if err := request.ProcessBody(body); err != nil {
 		return nil, err
 	}
+	sess.Info.SetTemp("key", body.Key)
 
-	a, err := h.GetAccount(ctx, inf, req, nil)
+	a, err := h.GetAccount(ctx, sess.Info, request, nil)
 	if err != nil {
 		return nil, handler.InvalidCredentialError.
 			Clone().WithError(err)
@@ -46,7 +48,7 @@ func (h *h[acc]) Process(ctx context.Context,
 		return nil, handler.InvalidCredentialError.Clone().WithError(err)
 	}
 	//
-	inf.PopulateAccount(a)
+	sess.Info.PopulateAccount(a)
 	return nil, nil
 }
 

@@ -6,18 +6,18 @@ import (
 	"github.com/ginger-core/errors"
 	"github.com/ginger-core/gateway"
 	"github.com/ginger-core/log/logger"
-	"github.com/micro-ginger/oauth/login/authentication/info"
 	"github.com/micro-ginger/oauth/login/authentication/response"
+	"github.com/micro-ginger/oauth/login/session/domain/session"
 )
 
-func (h *_handler[acc]) request(ctx context.Context,
-	request gateway.Request, inf *info.Info[acc]) (response.Response, errors.Error) {
-	o, remaining, err := h.otp.Generate(ctx, inf.Key, inf.Challenge, otpType)
+func (h *_handler[acc]) request(ctx context.Context, request gateway.Request,
+	sess *session.Session[acc]) (response.Response, errors.Error) {
+	o, remaining, err := h.otp.Generate(ctx, sess.Key, sess.Challenge, otpType)
 	if err != nil {
 		return nil, err
 	}
 
-	a, err := h.GetAccount(ctx, inf, request, nil)
+	a, err := h.GetAccount(ctx, sess.Info, request, nil)
 	if err != nil && !err.IsType(errors.TypeNotFound) {
 		return nil, err
 	}
@@ -28,7 +28,7 @@ func (h *_handler[acc]) request(ctx context.Context,
 		}
 	}
 
-	msgType := inf.GetTemp("msgType")
+	msgType := sess.Info.GetTemp("msgType")
 	if msgType == nil {
 		msgType = h.config.NotificationMessageType
 	}
@@ -36,9 +36,9 @@ func (h *_handler[acc]) request(ctx context.Context,
 	var mobile string
 	if a != nil && a.T.GetMobile() != nil {
 		mobile = *a.T.GetMobile()
-		inf.SetTemp("mobile", mobile)
+		sess.Info.SetTemp("mobile", mobile)
 	} else {
-		mob := inf.GetTemp("mobile")
+		mob := sess.Info.GetTemp("mobile")
 		if mob != nil {
 			mobile = mob.(string)
 		}
@@ -54,7 +54,7 @@ func (h *_handler[acc]) request(ctx context.Context,
 	// 	msg := &message.Message{
 	// 		Type: fmt.Sprint(msgType),
 	// 		Receiver: &message.Receiver{
-	// 			Id:     inf.AccountId,
+	// 			Id:     sess.Info.AccountId,
 	// 			Mobile: mobile,
 	// 		},
 	// 		Meta: map[string]*message.Meta{
@@ -74,11 +74,11 @@ func (h *_handler[acc]) request(ctx context.Context,
 	detail := make(map[string]any)
 	resp := &response.BaseResponse{
 		State:     response.StateOtpSent,
-		Challenge: inf.Challenge,
+		Challenge: sess.Challenge,
 		Remaining: uint(remaining.Seconds()),
 		Detail:    detail,
 	}
-	if mobile := inf.GetTemp("mobile"); mobile != nil {
+	if mobile := sess.Info.GetTemp("mobile"); mobile != nil {
 		detail["mobile"] = a.T.MaskMobile()
 	}
 
