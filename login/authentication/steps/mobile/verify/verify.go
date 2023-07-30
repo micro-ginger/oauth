@@ -33,6 +33,6 @@ func (h *_handler[acc]) verify(ctx context.Context, request gateway.Request,
 		sess.Info.SetTemp("nationalCode", body.NationalCode)
 	}
 
-	sess.Flow.Pos.StepIndex++
+	sess.Flow.Pos.ActionIndex++
 	return nil, nil
 }

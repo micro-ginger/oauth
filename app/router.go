@@ -1,5 +1,7 @@
 package app
 
+import "github.com/micro-ginger/oauth/global"
+
 func (a *App[acc, reg]) registerRoutes() {
 	rg := a.Ginger.NewRouterGroup("/")
 	//
@@ -17,8 +19,15 @@ func (a *App[acc, reg]) registerRoutes() {
 	// account
 	accountGroup := rg.Group("/account")
 	accountGroup.Read("",
-		a.Authenticator.MustAuthenticate(),
+		a.Authenticator.MustNotHaveScope(global.ScopeReadAccount),
 		a.Account.GetHandler,
+	)
+	//
+	// register
+	registerGroup := rg.Group("/register")
+	registerGroup.Read("",
+		a.Authenticator.MustNotHaveScope(global.ScopeRegister),
+		a.Register.RegisterHandler,
 	)
 	//
 }
