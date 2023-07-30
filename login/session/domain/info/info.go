@@ -8,11 +8,8 @@ type Info[acc account.Model] struct {
 	AccountId uint64
 	Account   *account.Account[acc] `json:"-"`
 
-	Roles  []string
-	Scopes []string
-
-	Section string
-	// AccountStatus uint64
+	RequestedRoles []string
+	Section        string
 
 	Temp map[string]any
 }

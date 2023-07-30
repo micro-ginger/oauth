@@ -9,10 +9,14 @@ type CreateConfig struct {
 
 	AccessTokenLength  int
 	RefreshTokenLength int
+	// DefaultRoles defines default roles to give to
+	// logged-in account if not passed the required roles
+	DefaultRoles []string
 	// AdditionalScopes is scopes that must be added to user permission anyways
 	AdditionalScopes []string
-	// IsAnonymousOK check if requested account must exist in our system or not
-	IsAnonymousOK bool
+	// IncludeRoles containes roles to assign to
+	// account after login if has permission
+	IncludeRoles []string
 }
 
 func (c *CreateConfig) Initialize() {

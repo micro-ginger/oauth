@@ -6,6 +6,8 @@ type Session struct {
 	Id        string
 	CreatedAt time.Time
 
+	Key string
+
 	AccessToken    string
 	AccessTokenExp time.Duration
 

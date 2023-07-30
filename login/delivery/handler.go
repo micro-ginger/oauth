@@ -5,6 +5,7 @@ import (
 	"github.com/ginger-core/gateway"
 	"github.com/ginger-core/log"
 	"github.com/micro-ginger/oauth/account/domain/account"
+	ld "github.com/micro-ginger/oauth/login/domain/delivery/login"
 	"github.com/micro-ginger/oauth/login/flow"
 	"github.com/micro-ginger/oauth/login/flow/stage/step"
 	"github.com/micro-ginger/oauth/login/flow/stage/step/handler"
@@ -69,7 +70,36 @@ func (h *lh[acc]) Handle(request gateway.Request) (r any, err errors.Error) {
 		}
 	}
 	if sess.IsDone() {
-		// TODO login
+		// login
+		sessions := make([]*session.CreateRequest, len(sess.Flow.Login.Sessions))
+		for i, s := range sess.Flow.Login.Sessions {
+			sessions[i] = new(session.CreateRequest)
+			sessions[i].CreateConfig = s
+			// add requested roles
+			if len(sess.Info.RequestedRoles) > 0 {
+				if sessions[i].CreateConfig.IncludeRoles == nil {
+					sessions[i].CreateConfig.IncludeRoles = make([]string, 0)
+				}
+				sessions[i].CreateConfig.IncludeRoles =
+					append(sessions[i].CreateConfig.IncludeRoles,
+						sess.Info.RequestedRoles...)
+			}
+		}
+
+		resp := ld.Response{
+			Sessions: make(map[string]*ld.Session),
+		}
+
+		for _, s := range sessions {
+			session, err := h.session.Create(request.GetContext(), s)
+			if err != nil {
+				return nil, err.WithTrace("session.Create")
+			}
+			resp.Sessions[session.Key] =
+				ld.NewSession(session)
+		}
+
+		h.Respond(request, gateway.StatusOK, resp)
 		return nil, nil
 	}
 	return r, err

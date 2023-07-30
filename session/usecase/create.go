@@ -31,7 +31,6 @@ func (uc *useCase) Create(ctx context.Context,
 		if len(request.RequestedRoles) > 0 {
 			s.Roles = append(s.Roles, request.RequestedRoles...)
 		}
-		s.Scopes = append(s.Scopes, conf.AdditionalScopes...)
 		// call handlers
 		for _, h := range uc.handlerFuncs {
 			if err := h(ctx, s); err != nil {
@@ -43,6 +42,7 @@ func (uc *useCase) Create(ctx context.Context,
 	}
 	//
 	s.Id = uc.randomId()
+	s.Key = conf.Key
 	s.AccessToken = uc.generateToken(conf.AccessTokenLength)
 
 	exp := conf.RefreshTokenExp
