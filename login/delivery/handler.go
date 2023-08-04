@@ -89,6 +89,8 @@ func (h *lh[acc]) Handle(request gateway.Request) (r any, err errors.Error) {
 		for i, s := range sess.Flow.Login.Sessions {
 			sessions[i] = new(session.CreateRequest)
 			sessions[i].CreateConfig = s
+			// populate account
+			sessions[i].Account.Id = sess.Info.AccountId
 			// add requested roles
 			if len(sess.Info.RequestedRoles) > 0 {
 				if sessions[i].CreateConfig.IncludeRoles == nil {
@@ -104,6 +106,14 @@ func (h *lh[acc]) Handle(request gateway.Request) (r any, err errors.Error) {
 			Sessions: make(map[string]*ld.Session),
 		}
 
+		if h.manager != nil {
+			// before session create
+			if err = h.manager.BeforeSessionCreate(
+				request, sess, sessions); err != nil {
+				return nil, err.
+					WithTrace("manager.BeforeSessionCreate")
+			}
+		}
 		for _, s := range sessions {
 			session, err := h.session.Create(request.GetContext(), s)
 			if err != nil {
@@ -112,9 +122,11 @@ func (h *lh[acc]) Handle(request gateway.Request) (r any, err errors.Error) {
 			resp.Sessions[session.Key] = ld.NewSession(session)
 		}
 		if h.manager != nil {
-			// after login
-			if err = h.manager.AfterLogin(request, sess, resp); err != nil {
-				return nil, err.WithTrace("manager.AfterLogin")
+			// after session create
+			if err = h.manager.AfterSessionCreate(
+				request, sess, resp); err != nil {
+				return nil, err.
+					WithTrace("manager.AfterSessionCreate")
 			}
 		}
 

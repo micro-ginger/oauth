@@ -11,7 +11,7 @@ type Info[acc account.Model] struct {
 	RequestedRoles []string
 	Section        string
 
-	Temp map[string]any
+	Temp Temp
 }
 
 func (i *Info[acc]) PopulateAccount(a *account.Account[acc]) {
@@ -29,19 +29,21 @@ func NewFromAccount[acc account.Model](a *account.Account[acc]) *Info[acc] {
 }
 
 func New[acc account.Model]() *Info[acc] {
-	return &Info[acc]{}
+	return &Info[acc]{
+		Temp: make(Temp),
+	}
 }
 
 func (i *Info[acc]) SetTemp(key string, value any) {
 	if i.Temp == nil {
 		i.Temp = make(map[string]any)
 	}
-	i.Temp[key] = value
+	i.Temp.Set(key, value)
 }
 
 func (i *Info[acc]) GetTemp(key string) any {
 	if i.Temp == nil {
 		return nil
 	}
-	return i.Temp[key]
+	return i.Temp.Get(key)
 }
