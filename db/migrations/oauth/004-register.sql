@@ -1,12 +1,14 @@
--- accounts
-create table accounts
+-- registers
+create table registers
 (
     id              bigint unsigned not null primary key AUTO_INCREMENT,
     created_at      datetime        not null default CURRENT_TIMESTAMP,
     updated_at      datetime        null on update CURRENT_TIMESTAMP,
-    status          bigint unsigned not null,
-    hashed_password binary(72)      null,
+    account_id      bigint unsigned not null,
+    hashed_password varchar(72)     null,
+    constraint registers_accounts_id_fk
+        foreign key (account_id) references accounts (id),
     index accounts_created_at_index (created_at),
     index accounts_updated_at_index (updated_at),
-    index accounts_status_index (status)
+    unique index accounts_account_id_uindex (account_id)
 );

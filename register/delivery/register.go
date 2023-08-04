@@ -10,19 +10,26 @@ import (
 	"github.com/micro-blonde/auth/authorization"
 	a "github.com/micro-ginger/oauth/account/domain/account"
 	"github.com/micro-ginger/oauth/global"
-	rg "github.com/micro-ginger/oauth/register/domain/delivery/register"
+	rdd "github.com/micro-ginger/oauth/register/domain/delivery/register"
 	"github.com/micro-ginger/oauth/register/domain/register"
 )
 
-type handler[T register.Model, acc account.Model] struct {
+type Handler[R rdd.RequestModel, T register.Model, acc account.Model] interface {
+	gateway.Handler
+	SetRequestModelHandler(reqHandler rdd.RequestModelHandler[R, T, acc])
+}
+
+type handler[R rdd.RequestModel, T register.Model, acc account.Model] struct {
 	gateway.Responder
 	logger log.Logger
 	uc     register.UseCase[T, acc]
+
+	reqHandler rdd.RequestModelHandler[R, T, acc]
 }
 
-func NewRegister[T register.Model, acc account.Model](logger log.Logger,
-	uc register.UseCase[T, acc], responder gateway.Responder) gateway.Handler {
-	h := &handler[T, acc]{
+func NewRegister[R rdd.RequestModel, T register.Model, acc account.Model](logger log.Logger,
+	uc register.UseCase[T, acc], responder gateway.Responder) Handler[R, T, acc] {
+	h := &handler[R, T, acc]{
 		Responder: responder,
 		logger:    logger,
 		uc:        uc,
@@ -30,7 +37,12 @@ func NewRegister[T register.Model, acc account.Model](logger log.Logger,
 	return h
 }
 
-func (h *handler[T, acc]) Handle(request gateway.Request) (any, errors.Error) {
+func (h *handler[R, T, acc]) SetRequestModelHandler(
+	reqHandler rdd.RequestModelHandler[R, T, acc]) {
+	h.reqHandler = reqHandler
+}
+
+func (h *handler[R, T, acc]) Handle(request gateway.Request) (any, errors.Error) {
 	ctx := request.GetContext()
 
 	auth := request.GetAuthorization().(authorization.Authorization[acc])
@@ -49,6 +61,21 @@ func (h *handler[T, acc]) Handle(request gateway.Request) (any, errors.Error) {
 		}
 		accId = id
 	}
+	var err errors.Error
+
+	body := h.reqHandler.New()
+	if err = request.ProcessBody(body); err != nil {
+		return nil, err.
+			WithTrace("request.ProcessBody")
+	}
+	var hashedPassword []byte
+	if body.Password != nil {
+		hashedPassword, err = a.HashPassword(*body.Password)
+		if err != nil {
+			return nil, err.
+				WithTrace("a.HashPassword")
+		}
+	}
 
 	req := &register.Request[T, acc]{
 		Account: &a.Account[acc]{
@@ -57,16 +84,22 @@ func (h *handler[T, acc]) Handle(request gateway.Request) (any, errors.Error) {
 					Id: accId,
 				},
 			},
+			HashedPassword: hashedPassword,
 		},
 		Register: &register.Register[T]{
-			AccountId: accId,
+			AccountId:      accId,
+			HashedPassword: hashedPassword,
 		},
 	}
 
-	err := h.uc.Register(ctx, req)
+	if err = h.reqHandler.PopulateRequest(body, req); err != nil {
+		return nil, err.WithTrace("reqHandler.PopulateRequest")
+	}
+
+	err = h.uc.Register(ctx, req)
 	if err != nil {
 		return nil, err
 	}
 
-	return rg.NewRegister(req.Register), nil
+	return rdd.NewResponse(req.Register), nil
 }

@@ -7,14 +7,16 @@ import (
 	"github.com/micro-ginger/oauth/session"
 )
 
-func (a *App[acc, reg]) initializeModules() {
+func (a *App[acc, regReq, reg]) initializeModules() {
 	a.initiateAccount()
 	a.initiateSession()
 	a.initiateLogin()
 	a.initiateRegister()
+	//
+	a.Register.Initialize(a.Account.UseCase)
 }
 
-func (a *App[acc, reg]) initiateAccount() {
+func (a *App[acc, regReq, reg]) initiateAccount() {
 	a.Account = account.New[acc](
 		a.Logger.WithTrace("account"),
 		a.Registry.ValueOf("account"),
@@ -22,7 +24,7 @@ func (a *App[acc, reg]) initiateAccount() {
 	)
 }
 
-func (a *App[acc, reg]) initiateSession() {
+func (a *App[acc, regReq, reg]) initiateSession() {
 	a.Session = session.New(
 		a.Logger.WithTrace("session"),
 		a.Registry.ValueOf("session"),
@@ -30,7 +32,7 @@ func (a *App[acc, reg]) initiateSession() {
 	)
 }
 
-func (a *App[acc, reg]) initiateLogin() {
+func (a *App[acc, regReq, reg]) initiateLogin() {
 	a.Login = login.New(
 		a.Logger.WithTrace("login"),
 		a.Registry.ValueOf("login"),
@@ -41,8 +43,8 @@ func (a *App[acc, reg]) initiateLogin() {
 	)
 }
 
-func (a *App[acc, reg]) initiateRegister() {
-	a.Register = register.New[reg, acc](
+func (a *App[acc, regReq, reg]) initiateRegister() {
+	a.Register = register.New[regReq, reg, acc](
 		a.Logger.WithTrace("register"),
 		a.Sql, a.Ginger.GetController(),
 	)

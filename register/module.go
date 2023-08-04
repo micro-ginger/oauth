@@ -7,28 +7,34 @@ import (
 	"github.com/micro-ginger/oauth/account/domain/account"
 	"github.com/micro-ginger/oauth/register/delivery"
 	"github.com/micro-ginger/oauth/register/domain"
+	ra "github.com/micro-ginger/oauth/register/domain/account"
+	rdd "github.com/micro-ginger/oauth/register/domain/delivery/register"
 	"github.com/micro-ginger/oauth/register/domain/register"
 	r "github.com/micro-ginger/oauth/register/repository"
 	"github.com/micro-ginger/oauth/register/usecase"
 )
 
-type Module[T register.Model, acc account.Model] struct {
+type Module[R rdd.RequestModel, T register.Model, acc account.Model] struct {
 	Repository register.Repository[T]
 	UseCase    domain.UseCase[T, acc]
 
-	RegisterHandler gateway.Handler
+	RegisterHandler delivery.Handler[R, T, acc]
 }
 
-func New[T register.Model, acc account.Model](logger log.Logger,
-	baseRepo repository.Transational, responder gateway.Responder) *Module[T, acc] {
+func New[R rdd.RequestModel, T register.Model, acc account.Model](logger log.Logger,
+	baseRepo repository.Transational, responder gateway.Responder) *Module[R, T, acc] {
 	repo := r.New[T](baseRepo)
 	uc := usecase.New[T, acc](logger, repo)
-	m := &Module[T, acc]{
+	m := &Module[R, T, acc]{
 		Repository: repo,
 		UseCase:    uc,
-		RegisterHandler: delivery.NewRegister[T, acc](
+		RegisterHandler: delivery.NewRegister[R, T, acc](
 			logger.WithTrace("delivery.register"), uc, responder,
 		),
 	}
 	return m
+}
+
+func (m *Module[R, T, acc]) Initialize(account ra.UseCase[acc]) {
+	m.UseCase.Initialize(account)
 }

@@ -7,12 +7,12 @@ import (
 )
 
 func (repo *repo[T]) Upsert(q query.Query,
-	update *account.Account[T]) errors.Error {
+	obj *account.Account[T]) errors.Error {
 	q = query.NewModelQuery(q).
 		WithModelHandlerFunc(func() any {
 			return account.NewAccount[T]()
 		})
-	if err := repo.Repository.Upsert(q, update); err != nil {
+	if err := repo.Repository.Upsert(q, obj); err != nil {
 		return err
 	}
 	return nil

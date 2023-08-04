@@ -12,6 +12,7 @@ import (
 	"github.com/micro-ginger/oauth/account/domain/account"
 	"github.com/micro-ginger/oauth/login"
 	r "github.com/micro-ginger/oauth/register"
+	rdd "github.com/micro-ginger/oauth/register/domain/delivery/register"
 	"github.com/micro-ginger/oauth/register/domain/register"
 	"github.com/micro-ginger/oauth/session"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
@@ -23,7 +24,7 @@ type Application interface {
 	Start()
 }
 
-type App[acc account.Model, reg register.Model] struct {
+type App[acc account.Model, regReq rdd.RequestModel, reg register.Model] struct {
 	Registry registry.Registry
 	Config   config
 	Logger   log.Handler
@@ -37,14 +38,15 @@ type App[acc account.Model, reg register.Model] struct {
 	Account  *a.Module[acc]
 	Session  *session.Module
 	Login    *login.Module[acc]
-	Register *r.Module[reg, acc]
+	Register *r.Module[regReq, reg, acc]
 	/* server */
 	Authenticator authorization.Authenticator[acc]
 	Ginger        gateway.Server
 }
 
-func New[acc account.Model, reg register.Model](configType string) *App[acc, reg] {
-	a := &App[acc, reg]{
+func New[acc account.Model, regReq rdd.RequestModel, reg register.Model](
+	configType string) *App[acc, regReq, reg] {
+	a := &App[acc, regReq, reg]{
 		Language: i18n.NewBundle(language.English),
 	}
 	a.loadConfig(configType)
@@ -55,7 +57,7 @@ func New[acc account.Model, reg register.Model](configType string) *App[acc, reg
 	return a
 }
 
-func (a *App[acc, reg]) Initialize() {
+func (a *App[acc, regReq, reg]) Initialize() {
 	a.initializeLogger()
 	a.initializeLanguage()
 	a.initializeServer()

@@ -5,12 +5,13 @@ import (
 
 	"github.com/ginger-core/errors"
 	"github.com/ginger-core/query"
+	sqlQuery "github.com/ginger-repository/sql/query"
 	"github.com/micro-ginger/oauth/register/domain/register"
 )
 
 func (uc *useCase[T, acc]) Register(ctx context.Context,
 	request *register.Request[T, acc]) (err errors.Error) {
-	q := query.New(ctx)
+	q := sqlQuery.New(query.New(ctx), nil)
 
 	err = uc.repo.Begin(q)
 	if err != nil {

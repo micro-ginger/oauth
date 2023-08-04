@@ -13,7 +13,7 @@ type Model interface {
 }
 
 type Account[T Model] struct {
-	account.Account[T]
+	account.Account[T] `gorm:"embedded" json:",inline"`
 
 	CreatedAt time.Time
 	UpdatedAt *time.Time
@@ -22,7 +22,7 @@ type Account[T Model] struct {
 }
 
 func NewAccount[T Model]() *Account[T] {
-	return &Account[T]{}
+	return new(Account[T])
 }
 
 func (m *Account[T]) TableName() string {

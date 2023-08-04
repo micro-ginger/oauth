@@ -26,7 +26,7 @@ values ((select id from roles where name = 'user-base'),
         (select id from scopes where name = 'api.auth.account.profile.read'));
 
 insert ignore into role_scopes(role_id, scope_id)
-       ((select id from roles where name = 'user'),
-        (select id from scopes where name = 'api.auth.account.read')),
 values ((select id from roles where name = 'user'),
+        (select id from scopes where name = 'api.auth.account.read')),
+       ((select id from roles where name = 'user'),
         (select id from scopes where name = 'api.auth.account.profile.update'));
