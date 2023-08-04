@@ -29,9 +29,8 @@ func (h *_handler[acc]) verify(ctx context.Context, request gateway.Request,
 		return nil, err.WithTrace("otp.Verify")
 	}
 
-	if body.NationalCode != "" {
-		sess.Info.SetTemp("nationalCode", body.NationalCode)
-	}
+	_otp.Code = ""
+	h.setOtp(sess, _otp)
 
 	sess.Flow.Pos.ActionIndex++
 	return nil, nil

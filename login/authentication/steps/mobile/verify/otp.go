@@ -20,3 +20,13 @@ func (h *_handler[acc]) getOtp(sess *session.Session[acc]) (*otp.Otp, errors.Err
 	}
 	return _otp, nil
 }
+
+func (h *_handler[acc]) setOtp(sess *session.Session[acc], o *otp.Otp) errors.Error {
+	otpStr, mErr := json.Marshal(o)
+	if mErr != nil {
+		return errors.New(mErr).
+			WithTrace("json.Marshal(o)")
+	}
+	sess.Info.SetTemp(otpType, string(otpStr))
+	return nil
+}

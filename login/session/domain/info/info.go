@@ -47,3 +47,10 @@ func (i *Info[acc]) GetTemp(key string) any {
 	}
 	return i.Temp.Get(key)
 }
+
+func (i *Info[acc]) DelTemp(key string) {
+	if i.Temp == nil {
+		return
+	}
+	i.Temp.Del(key)
+}

@@ -29,7 +29,8 @@ func (h *handler[acc]) Save(ctx context.Context,
 
 	sess.Challenge = challenge
 
-	err = h.cache.Store(ctx, challenge, sess, h.config.Expiration)
+	err = h.cache.Store(ctx,
+		h.getChallengeKey(challenge), sess, h.config.Expiration)
 	if err != nil {
 		return err.WithTrace("Set")
 	}

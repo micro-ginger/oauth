@@ -2,7 +2,6 @@ package verify
 
 import (
 	"context"
-	"encoding/json"
 
 	"github.com/ginger-core/errors"
 	"github.com/ginger-core/gateway"
@@ -20,11 +19,6 @@ func (h *_handler[acc]) request(ctx context.Context, request gateway.Request,
 	o, remaining, err := h.otp.Generate(ctx, sess.Key, _otp, otpType)
 	if err != nil {
 		return nil, err
-	}
-	otpStr, mErr := json.Marshal(o)
-	if mErr != nil {
-		return nil, errors.New(mErr).
-			WithTrace("json.Marshal(o)")
 	}
 
 	a, err := h.GetAccount(ctx, sess.Info, request, nil)
@@ -89,7 +83,9 @@ func (h *_handler[acc]) request(ctx context.Context, request gateway.Request,
 	// }
 	h.logger.With(logger.Field{"otp": o}).Debugf("generated otp")
 
-	sess.Info.SetTemp(otpType, string(otpStr))
+	if err := h.setOtp(sess, o); err != nil {
+		return nil, err.WithTrace("setOtp")
+	}
 
 	detail := make(map[string]any)
 	resp := &response.BaseResponse{

@@ -8,8 +8,7 @@ import (
 )
 
 type verifyBody struct {
-	Code         string `json:"code" binding:"required"`
-	NationalCode string `json:"nationalCode"`
+	Code string `json:"code" binding:"required"`
 }
 
 func (h *_handler[acc]) Process(request gateway.Request,
