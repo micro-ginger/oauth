@@ -14,7 +14,7 @@ require (
 	github.com/ginger-gateway/ginger v0.0.0-20230614111128-e020482a754b
 	github.com/ginger-repository/redis v0.0.0-20230608170101-0b74d866bc2d
 	github.com/ginger-repository/sql v0.0.0-20230610115917-c91b365f8490
-	github.com/micro-blonde/auth v0.0.0-20230630075106-6b44f31319f3
+	github.com/micro-blonde/auth v0.0.0-20230804164356-42d4cccb64f5
 	github.com/micro-blonde/auth/authorization v0.0.0-20230630082657-5b527d26afce
 	github.com/nicksnyder/go-i18n/v2 v2.2.1
 	golang.org/x/crypto v0.9.0
@@ -74,4 +74,4 @@ require (
 	gorm.io/gorm v1.25.1 // indirect
 )
 
-replace github.com/micro-blonde/auth => ../../micro-blonde/auth
+// replace github.com/micro-blonde/auth => ../../micro-blonde/auth
