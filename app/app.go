@@ -24,7 +24,8 @@ type Application interface {
 	Start()
 }
 
-type App[acc account.Model, regReq rdd.RequestModel, reg register.Model] struct {
+type App[acc account.Model,
+	regReq rdd.RequestModel, reg register.Model] struct {
 	Registry registry.Registry
 	Config   config
 	Logger   log.Handler

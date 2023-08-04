@@ -5,6 +5,7 @@ import (
 	"github.com/ginger-core/gateway"
 	"github.com/ginger-core/log"
 	"github.com/micro-ginger/oauth/account/domain/account"
+	"github.com/micro-ginger/oauth/login/authorization"
 	ld "github.com/micro-ginger/oauth/login/domain/delivery/login"
 	"github.com/micro-ginger/oauth/login/flow"
 	"github.com/micro-ginger/oauth/login/flow/stage/step"
@@ -17,6 +18,7 @@ type Handler[acc account.Model] interface {
 	gateway.Handler
 	Initialize(loginSession s.Handler[acc],
 		flows flow.Flows, session session.UseCase)
+	SetManager(manager authorization.Manager[acc])
 	RegisterHandler(t step.Type, sh handler.Handler[acc])
 }
 
@@ -30,6 +32,8 @@ type lh[acc account.Model] struct {
 	session session.UseCase
 
 	stepHandlers map[step.Type]handler.Handler[acc]
+
+	manager authorization.Manager[acc]
 }
 
 func NewLogin[acc account.Model](
@@ -46,6 +50,10 @@ func (h *lh[acc]) Initialize(loginSession s.Handler[acc],
 	h.loginSession = loginSession
 	h.flows = flows
 	h.session = session
+}
+
+func (h *lh[acc]) SetManager(manager authorization.Manager[acc]) {
+	h.manager = manager
 }
 
 func (h *lh[acc]) RegisterHandler(t step.Type, sh handler.Handler[acc]) {
@@ -70,6 +78,12 @@ func (h *lh[acc]) Handle(request gateway.Request) (r any, err errors.Error) {
 		}
 	}
 	if sess.IsDone() {
+		if h.manager != nil {
+			// before login
+			if err = h.manager.BeforeLogin(request, sess); err != nil {
+				return nil, err.WithTrace("manager.BeforeLogin")
+			}
+		}
 		// login
 		sessions := make([]*session.CreateRequest, len(sess.Flow.Login.Sessions))
 		for i, s := range sess.Flow.Login.Sessions {
@@ -86,7 +100,7 @@ func (h *lh[acc]) Handle(request gateway.Request) (r any, err errors.Error) {
 			}
 		}
 
-		resp := ld.Response{
+		resp := &ld.Response{
 			Sessions: make(map[string]*ld.Session),
 		}
 
@@ -95,8 +109,13 @@ func (h *lh[acc]) Handle(request gateway.Request) (r any, err errors.Error) {
 			if err != nil {
 				return nil, err.WithTrace("session.Create")
 			}
-			resp.Sessions[session.Key] =
-				ld.NewSession(session)
+			resp.Sessions[session.Key] = ld.NewSession(session)
+		}
+		if h.manager != nil {
+			// after login
+			if err = h.manager.AfterLogin(request, sess, resp); err != nil {
+				return nil, err.WithTrace("manager.AfterLogin")
+			}
 		}
 
 		h.Respond(request, gateway.StatusOK, resp)

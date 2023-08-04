@@ -2,12 +2,21 @@ package flow
 
 import (
 	"github.com/ginger-core/compound/registry"
+	"github.com/micro-ginger/oauth/login/flow/stage"
 )
 
 type Flows map[Section]*Flow
 
-func (f Flows) Get(s Section) *Flow {
-	return f[s]
+func (f Flows) Get(s Section, stg int) *Flow {
+	flw := f[s]
+	if stg >= len(flw.Stages) {
+		return nil
+	}
+	return &Flow{
+		Section: flw.Section,
+		Stages:  []stage.Stage{flw.Stages[stg]},
+		Login:   flw.Login,
+	}
 }
 
 func NewFlows(registry registry.Registry) Flows {

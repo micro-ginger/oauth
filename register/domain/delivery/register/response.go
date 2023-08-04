@@ -5,7 +5,7 @@ import "github.com/micro-ginger/oauth/register/domain/register"
 type Response[T register.Model] struct {
 	Id uint64 `json:"id"`
 
-	T any `json:",inline"`
+	T any `json:"meta,inline"`
 }
 
 func NewResponse[T register.Model](reg *register.Register[T]) *Response[T] {

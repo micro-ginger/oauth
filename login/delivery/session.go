@@ -14,7 +14,7 @@ func (h *lh[acc]) newSession(request gateway.Request,
 	if req.Section == "" {
 		req.Section = DefaultSection
 	}
-	flow := h.flows.Get(req.Section)
+	flow := h.flows.Get(req.Section, req.Stage)
 	if flow == nil {
 		return nil, errors.Unauthorized().
 			WithTrace("flows.Get.nil")
