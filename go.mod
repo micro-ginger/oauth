@@ -14,11 +14,13 @@ require (
 	github.com/ginger-gateway/ginger v0.0.0-20230614111128-e020482a754b
 	github.com/ginger-repository/redis v0.0.0-20230608170101-0b74d866bc2d
 	github.com/ginger-repository/sql v0.0.0-20230610115917-c91b365f8490
+	github.com/go-sql-driver/mysql v1.7.1
 	github.com/micro-blonde/auth v0.0.0-20230804164356-42d4cccb64f5
 	github.com/micro-blonde/auth/authorization v0.0.0-20230630082657-5b527d26afce
 	github.com/nicksnyder/go-i18n/v2 v2.2.1
 	golang.org/x/crypto v0.9.0
 	golang.org/x/text v0.9.0
+	gorm.io/gorm v1.25.1
 )
 
 require (
@@ -34,7 +36,6 @@ require (
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/go-playground/validator/v10 v10.14.0 // indirect
 	github.com/go-redis/redis/v8 v8.11.5 // indirect
-	github.com/go-sql-driver/mysql v1.7.1 // indirect
 	github.com/goccy/go-json v0.10.2 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
@@ -71,7 +72,6 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	gorm.io/driver/mysql v1.5.1 // indirect
 	gorm.io/driver/postgres v1.5.2 // indirect
-	gorm.io/gorm v1.25.1 // indirect
 )
 
 // replace github.com/micro-blonde/auth => ../../micro-blonde/auth

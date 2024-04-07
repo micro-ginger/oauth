@@ -11,6 +11,7 @@ import (
 	a "github.com/micro-ginger/oauth/account"
 	"github.com/micro-ginger/oauth/account/domain/account"
 	"github.com/micro-ginger/oauth/login"
+	"github.com/micro-ginger/oauth/permission"
 	r "github.com/micro-ginger/oauth/register"
 	rdd "github.com/micro-ginger/oauth/register/domain/delivery/register"
 	"github.com/micro-ginger/oauth/register/domain/register"
@@ -36,10 +37,11 @@ type App[acc account.Model,
 	Cache repository.Cache
 	/* services */
 	/* modules */
-	Account  *a.Module[acc]
-	Session  *session.Module
-	Login    *login.Module[acc]
-	Register *r.Module[regReq, reg, acc]
+	Account    *a.Module[acc]
+	permission *permission.Module
+	Session    *session.Module
+	Login      *login.Module[acc]
+	Register   *r.Module[regReq, reg, acc]
 	/* server */
 	Authenticator authorization.Authenticator[acc]
 	Ginger        gateway.Server

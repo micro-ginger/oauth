@@ -3,15 +3,22 @@ package app
 import (
 	"github.com/micro-ginger/oauth/account"
 	"github.com/micro-ginger/oauth/login"
+	"github.com/micro-ginger/oauth/permission"
 	"github.com/micro-ginger/oauth/register"
 	"github.com/micro-ginger/oauth/session"
 )
 
 func (a *App[acc, regReq, reg]) initializeModules() {
 	a.initiateAccount()
+	a.initializePermission()
 	a.initiateSession()
 	a.initiateLogin()
 	a.initiateRegister()
+	//
+	// session create handlers
+	a.Session.UseCase.RegisterSessionHandlers(
+		a.permission.AccountScope.UseCase.SessionAddRequestedRoleScopes,
+		a.permission.AccountScope.UseCase.SessionRemoveUnauthorized)
 	//
 	a.Register.Initialize(a.Account.UseCase)
 }
@@ -21,6 +28,13 @@ func (a *App[acc, regReq, reg]) initiateAccount() {
 		a.Logger.WithTrace("account"),
 		a.Registry.ValueOf("account"),
 		a.Sql, a.Ginger.GetController(),
+	)
+}
+
+func (a *App[acc, regReq, reg]) initializePermission() {
+	a.permission = permission.Initialize(
+		a.Logger.WithTrace("permission"),
+		a.Sql,
 	)
 }
 

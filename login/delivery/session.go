@@ -1,6 +1,8 @@
 package delivery
 
 import (
+	"strings"
+
 	"github.com/ginger-core/errors"
 	"github.com/ginger-core/gateway"
 	"github.com/micro-ginger/oauth/login/domain/delivery/login"
@@ -23,8 +25,9 @@ func (h *lh[acc]) newSession(request gateway.Request,
 	stepQ, _ := request.GetQuery("step")
 
 	genReq := &session.GenerateRequest{
-		Flow: flow,
-		Step: stepQ,
+		Flow:  flow,
+		Step:  stepQ,
+		Roles: strings.Split(req.Roles, ","),
 	}
 	session, err := h.loginSession.Generate(request.GetContext(), genReq)
 	if err != nil {

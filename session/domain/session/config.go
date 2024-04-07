@@ -9,13 +9,13 @@ type CreateConfig struct {
 
 	AccessTokenLength  int
 	RefreshTokenLength int
-	// DefaultRoles defines default roles to give to
-	// logged-in account if not passed the required roles
+	// DefaultRoles defines default roles to assign to account
+	// if the required roles parameter is missing
 	DefaultRoles []string
 	// AdditionalScopes is scopes that must be added to user permission anyways
 	AdditionalScopes []string
 	// IncludeRoles containes roles to assign to
-	// account after login if has permission
+	// account if has permission
 	IncludeRoles []string
 }
 
