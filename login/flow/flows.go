@@ -9,6 +9,9 @@ type Flows map[Section]*Flow
 
 func (f Flows) Get(s Section, stg int) *Flow {
 	flw := f[s]
+	if flw == nil {
+		return nil
+	}
 	if stg >= len(flw.Stages) {
 		return nil
 	}

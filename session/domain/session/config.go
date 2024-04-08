@@ -1,9 +1,11 @@
 package session
 
-import "time"
+import (
+	"time"
+)
 
 type CreateConfig struct {
-	Key             string
+	Section         string
 	AccessTokenExp  time.Duration
 	RefreshTokenExp time.Duration
 
@@ -19,12 +21,24 @@ type CreateConfig struct {
 	IncludeRoles []string
 }
 
+func NewCreateConfigFromSession(s *Session) *CreateConfig {
+	r := &CreateConfig{
+		Section:            s.Section,
+		AccessTokenExp:     s.AccessTokenExp,
+		RefreshTokenExp:    s.RefreshTokenExp,
+		AccessTokenLength:  len(s.AccessToken),
+		RefreshTokenLength: len(s.RefreshToken),
+		IncludeRoles:       s.Roles,
+	}
+	return r
+}
+
 func (c *CreateConfig) Initialize() {
 	if c == nil {
 		return
 	}
-	if c.Key == "" {
-		c.Key = "DEFAULT"
+	if c.Section == "" {
+		c.Section = "DEFAULT"
 	}
 	if c.AccessTokenExp == 0 {
 		c.AccessTokenExp = time.Hour

@@ -11,19 +11,17 @@ import (
 func (uc *useCase) Create(ctx context.Context,
 	request *session.CreateRequest) (*session.Session, errors.Error) {
 	conf := uc.config.Create
-	if request.CreateConfig.Key != "" {
-		conf = request.CreateConfig
+	if request.CreateConfig != nil {
+		conf = *request.CreateConfig
 	}
 	s := request.Old
 	if s == nil {
 		s = &session.Session{
-
 			CreatedAt:      time.Now().UTC(),
 			AccessTokenExp: conf.AccessTokenExp,
-
-			Account: request.Account,
-			Roles:   make([]string, 0),
-			Scopes:  make([]string, 0),
+			Account:        request.Account,
+			Roles:          make([]string, 0),
+			Scopes:         make([]string, 0),
 		}
 		if len(request.RequestedScopes) > 0 {
 			s.Scopes = append(s.Scopes, request.RequestedScopes...)
@@ -42,7 +40,7 @@ func (uc *useCase) Create(ctx context.Context,
 	}
 	//
 	s.Id = uc.randomId()
-	s.Key = conf.Key
+	s.Section = conf.Section
 	s.AccessToken = uc.generateToken(conf.AccessTokenLength)
 
 	exp := conf.RefreshTokenExp

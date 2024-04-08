@@ -24,6 +24,8 @@ type Base[acc account.Model] struct {
 
 	cache repository.Cache
 
+	account account.UseCase[acc]
+
 	loginSession loginSession.Handler[acc]
 
 	steps *steps.Module[acc]
@@ -39,6 +41,7 @@ func NewBase[acc account.Model](logger log.Logger, registry registry.Registry,
 		registry:     registry,
 		loginSession: loginSession,
 		cache:        cache,
+		account:      account,
 		session:      session,
 	}
 
@@ -77,7 +80,9 @@ func (m *Base[acc]) initializeHandler(
 		m.loginSession,
 		m.cache,
 	)
-	baseHandler.WithType(handlerType)
+	baseHandler.
+		WithType(handlerType).
+		WithAccount(m.account)
 
 	var h handler.Handler[acc]
 	switch handlerType {

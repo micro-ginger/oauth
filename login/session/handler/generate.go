@@ -30,6 +30,7 @@ func (h *handler[acc]) Generate(ctx context.Context,
 		Info: info.New[acc](),
 	}
 	sess.Info.RequestedRoles = request.Roles
+	sess.Info.Section = string(request.Flow.Section)
 
 	if request.Step != "" {
 		stepInd := sess.Flow.Stages[sess.Flow.Pos.StageIndex].

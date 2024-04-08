@@ -89,6 +89,7 @@ func (h *lh[acc]) Handle(request gateway.Request) (r any, err errors.Error) {
 		for i, s := range sess.Flow.Login.Sessions {
 			sessions[i] = new(session.CreateRequest)
 			sessions[i].CreateConfig = s
+			sessions[i].CreateConfig.Section = sess.Info.Section
 			// populate account
 			sessions[i].Account.Id = sess.Info.AccountId
 			// add requested roles
@@ -100,6 +101,15 @@ func (h *lh[acc]) Handle(request gateway.Request) (r any, err errors.Error) {
 					append(sessions[i].CreateConfig.IncludeRoles,
 						sess.Info.RequestedRoles...)
 			}
+		}
+		if s := sess.Info.GetTemp("session"); s != nil {
+			sess := s.(*session.Session)
+			sessions = append(sessions,
+				&session.CreateRequest{
+					CreateConfig: session.NewCreateConfigFromSession(sess),
+					Old:          sess,
+				},
+			)
 		}
 
 		resp := &ld.Response{
@@ -119,7 +129,7 @@ func (h *lh[acc]) Handle(request gateway.Request) (r any, err errors.Error) {
 			if err != nil {
 				return nil, err.WithTrace("session.Create")
 			}
-			resp.Sessions[session.Key] = ld.NewSession(session)
+			resp.Sessions[session.Section] = ld.NewSession(session)
 		}
 		if h.manager != nil {
 			// after session create

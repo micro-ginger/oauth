@@ -3,7 +3,7 @@ package session
 type CreateRequest struct {
 	Account Account
 
-	CreateConfig CreateConfig
+	CreateConfig *CreateConfig
 	Old          *Session
 	// RequestedScopes is scopes that user requested for. and
 	// must be checked before giving the permission
