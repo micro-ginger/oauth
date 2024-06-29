@@ -45,6 +45,7 @@ type App[acc account.Model,
 	/* server */
 	Authenticator authorization.Authenticator[acc]
 	Ginger        gateway.Server
+	GRPC          GrpcServer
 }
 
 func New[acc account.Model, regReq rdd.RequestModel, reg register.Model](
@@ -67,5 +68,6 @@ func (a *App[acc, regReq, reg]) Initialize() {
 	a.initializeServices()
 	a.initializeDatabases()
 	a.initializeModules()
+	a.initializeGrpc()
 	a.registerRoutes()
 }

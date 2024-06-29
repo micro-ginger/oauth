@@ -6,6 +6,7 @@ import (
 	"github.com/ginger-core/log"
 	"github.com/ginger-core/repository"
 	"github.com/micro-ginger/oauth/account/delivery"
+	"github.com/micro-ginger/oauth/account/delivery/grpc"
 	a "github.com/micro-ginger/oauth/account/domain/account"
 	r "github.com/micro-ginger/oauth/account/repository"
 	"github.com/micro-ginger/oauth/account/usecase"
@@ -16,6 +17,9 @@ type Module[T a.Model] struct {
 	UseCase    a.UseCase[T]
 
 	GetHandler gateway.Handler
+
+	GrpcGetHandler  a.GrpcAccountGetter
+	GrpcListHandler a.GrpcAccountsGetter
 }
 
 func New[T a.Model](logger log.Logger, registry registry.Registry,
@@ -28,6 +32,8 @@ func New[T a.Model](logger log.Logger, registry registry.Registry,
 		GetHandler: delivery.NewGet[T](
 			logger.WithTrace("delivery.get"), uc, responder,
 		),
+		GrpcGetHandler:  grpc.NewGet(logger.WithTrace("grpcGet"), uc),
+		GrpcListHandler: grpc.NewList(logger.WithTrace("grpcList"), uc),
 	}
 	return m
 }
