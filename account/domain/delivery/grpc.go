@@ -11,14 +11,12 @@ import (
 func GetGrpcAccount[T account.Model](a *account.Account[T]) (*acc.Account, errors.Error) {
 	var v *structpb.Struct
 	var t any = a.T
-	if t != nil {
-		if vg, ok := t.(blondeAcc.StructValueGetter); ok {
-			var err error
-			v, err = structpb.NewStruct(vg.GetValues())
-			if err != nil {
-				return nil, errors.New(err).
-					WithTrace("structpb.NewStruct")
-			}
+	if vg, ok := t.(blondeAcc.StructValueGetter); ok {
+		var err error
+		v, err = structpb.NewStruct(vg.GetValues())
+		if err != nil {
+			return nil, errors.New(err).
+				WithTrace("structpb.NewStruct")
 		}
 	}
 	r := &acc.Account{
@@ -35,7 +33,7 @@ func GetGrpcAccounts[T account.Model](a []*account.Account[T]) (*acc.Accounts, e
 	}
 	var err errors.Error
 	for i, itm := range a {
-		r.Items[i], err = GetGrpcAccount[T](itm)
+		r.Items[i], err = GetGrpcAccount(itm)
 		if err != nil {
 			return nil, err.WithTrace("GetGrpcAccount")
 		}
