@@ -5,35 +5,43 @@ import (
 	"github.com/ginger-core/gateway"
 	"github.com/ginger-core/log"
 	"github.com/ginger-core/repository"
+	"github.com/micro-blonde/auth/profile"
 	"github.com/micro-ginger/oauth/account/delivery"
 	"github.com/micro-ginger/oauth/account/delivery/grpc"
 	a "github.com/micro-ginger/oauth/account/domain/account"
+	p "github.com/micro-ginger/oauth/account/profile"
 	r "github.com/micro-ginger/oauth/account/repository"
 	"github.com/micro-ginger/oauth/account/usecase"
 )
 
-type Module[T a.Model] struct {
-	Repository a.Repository[T]
-	UseCase    a.UseCase[T]
+type Module[Acc a.Model, Prof profile.Model] struct {
+	Repository a.Repository[Acc]
+	UseCase    a.UseCase[Acc]
 
 	GetHandler gateway.Handler
 
 	GrpcGetHandler  a.GrpcAccountGetter
 	GrpcListHandler a.GrpcAccountsGetter
+
+	Profile *p.Module[Prof]
 }
 
-func New[T a.Model](logger log.Logger, registry registry.Registry,
-	baseRepo repository.Repository, responder gateway.Responder) *Module[T] {
-	repo := r.New[T](baseRepo)
+func New[Acc a.Model, Prof profile.Model](logger log.Logger, registry registry.Registry,
+	baseRepo repository.Repository, responder gateway.Responder) *Module[Acc, Prof] {
+	repo := r.New[Acc](baseRepo)
 	uc := usecase.New(logger, registry, repo)
-	m := &Module[T]{
+	m := &Module[Acc, Prof]{
 		Repository: repo,
 		UseCase:    uc,
-		GetHandler: delivery.NewGet[T](
+		GetHandler: delivery.NewGet(
 			logger.WithTrace("delivery.get"), uc, responder,
 		),
 		GrpcGetHandler:  grpc.NewGet(logger.WithTrace("grpcGet"), uc),
 		GrpcListHandler: grpc.NewList(logger.WithTrace("grpcList"), uc),
+		Profile: p.New[Prof](
+			logger.WithTrace("profile"),
+			baseRepo, responder,
+		),
 	}
 	return m
 }
