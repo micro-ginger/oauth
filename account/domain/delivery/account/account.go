@@ -15,7 +15,7 @@ type Account[T account.Model] struct {
 
 	Status account.Status `json:"status"`
 
-	T any `json:",inline"`
+	T any `json:"detail"`
 }
 
 func NewAccount[T account.Model](acc *a.Account[T]) *Account[T] {
