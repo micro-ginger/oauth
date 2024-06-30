@@ -7,7 +7,7 @@ import (
 
 type Profile[T profile.Model] struct {
 	Id uint64 `json:"id"`
-	T  T      `json:",inline"`
+	T  any    `json:",inline"`
 }
 
 func NewProfile[T profile.Model](prof *p.Profile[T]) *Profile[T] {
@@ -16,7 +16,7 @@ func NewProfile[T profile.Model](prof *p.Profile[T]) *Profile[T] {
 	}
 	return &Profile[T]{
 		Id: prof.Id,
-		T:  prof.T,
+		T:  prof.T.GetDeliveryResult(),
 	}
 }
 
