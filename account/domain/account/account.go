@@ -1,6 +1,8 @@
 package account
 
 import (
+	"database/sql/driver"
+	"encoding/json"
 	"time"
 
 	"github.com/ginger-core/errors"
@@ -23,6 +25,31 @@ type Account[T Model] struct {
 
 func NewAccount[T Model]() *Account[T] {
 	return new(Account[T])
+}
+
+func (m Account[T]) Value() (driver.Value, error) {
+	bytes, err := json.Marshal(m)
+	if err != nil {
+		return nil, err
+	}
+	return bytes, nil
+}
+
+func (m *Account[T]) Scan(src any) error {
+	if src == nil {
+		return nil
+	}
+	data, ok := src.([]byte)
+	if !ok {
+		return nil
+	}
+	d := new(Account[T])
+	err := json.Unmarshal(data, d)
+	if err != nil {
+		return err
+	}
+	*m = *d
+	return nil
 }
 
 func (m *Account[T]) TableName() string {

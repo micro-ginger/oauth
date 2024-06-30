@@ -217,12 +217,12 @@ github.com/magiconair/properties v1.8.7 h1:IeQXZAiQcpL9mgcAe1Nu6cX9LLw6ExEHKjN0V
 github.com/magiconair/properties v1.8.7/go.mod h1:Dhd985XPs7jluiymwWYZ0G4Z61jb3vdS329zhj2hYo0=
 github.com/mattn/go-isatty v0.0.19 h1:JITubQf0MOLdlGRuRq+jtsDlekdYPia9ZFsB8h/APPA=
 github.com/mattn/go-isatty v0.0.19/go.mod h1:W+V8PltTTMOvKvAeJH7IuucS94S2C6jfK/D7dTCTo3Y=
-github.com/micro-blonde/auth v0.0.0-20240629221919-76d0ca96d82f h1:C9ZZGWUKbB5WUOZYBTMd3vzhrzIyG6RiyTWaSguiinE=
-github.com/micro-blonde/auth v0.0.0-20240629221919-76d0ca96d82f/go.mod h1:hSQOiebbhRDwAxRTQQB0FTMEIbAUdr18Vhv9seZ/B0k=
+github.com/micro-blonde/auth v0.0.0-20240630160756-7507351db186 h1:NHfqu9dVb0aPFr5A4WO8fhBaxT/h8gMXtmzRrl6sPP0=
+github.com/micro-blonde/auth v0.0.0-20240630160756-7507351db186/go.mod h1:hSQOiebbhRDwAxRTQQB0FTMEIbAUdr18Vhv9seZ/B0k=
 github.com/micro-blonde/auth/authorization v0.0.0-20230630082657-5b527d26afce h1:41McCN6ebcAToHnRyWqT83pCRcuhiao7Ld+ZKNlCPgQ=
 github.com/micro-blonde/auth/authorization v0.0.0-20230630082657-5b527d26afce/go.mod h1:Mtg1IDwyB4DR4MAtPnUB2tTLpEkJmAC1nBGIRFlOQHs=
-github.com/micro-blonde/auth/proto v0.0.0-20240629221919-76d0ca96d82f h1:lkHX/w3U/0O3ZRj1uugr81WHmO1oCQcyItq/y0LLuf4=
-github.com/micro-blonde/auth/proto v0.0.0-20240629221919-76d0ca96d82f/go.mod h1:tBXk1RkeEMBVi32FpwoEZkAT3Qs7ha1ooakRmLFGQ/U=
+github.com/micro-blonde/auth/proto v0.0.0-20240630160756-7507351db186 h1:I7PV0g835t0G/h90soxu/E0EtmRxbp1/duk1wBf/t2Q=
+github.com/micro-blonde/auth/proto v0.0.0-20240630160756-7507351db186/go.mod h1:tBXk1RkeEMBVi32FpwoEZkAT3Qs7ha1ooakRmLFGQ/U=
 github.com/mitchellh/mapstructure v1.5.0 h1:jeMsZIYE/09sWLaz43PL7Gy6RuMjD2eJVyuac5Z2hdY=
 github.com/mitchellh/mapstructure v1.5.0/go.mod h1:bFUtVrKA4DC2yAKiSyO/QUcy7e+RRV2QTWOzhPopBRo=
 github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421/go.mod h1:6dJC0mAP4ikYIbvyc7fijjWJddQyLn8Ig3JB5CqoB9Q=

@@ -6,6 +6,7 @@ import (
 	"github.com/ginger-core/repository"
 	"github.com/micro-blonde/auth/profile"
 	"github.com/micro-ginger/oauth/account/profile/delivery"
+	"github.com/micro-ginger/oauth/account/profile/delivery/grpc"
 	p "github.com/micro-ginger/oauth/account/profile/domain/profile"
 	r "github.com/micro-ginger/oauth/account/profile/repository"
 	"github.com/micro-ginger/oauth/account/profile/usecase"
@@ -16,6 +17,9 @@ type Module[T profile.Model] struct {
 	UseCase    p.UseCase[T]
 
 	GetHandler gateway.Handler
+
+	GrpcListHandler p.GrpcProfilesGetter
+	GrpcGetHandler  p.GrpcProfileGetter
 }
 
 func New[T profile.Model](logger log.Logger,
@@ -28,6 +32,8 @@ func New[T profile.Model](logger log.Logger,
 		GetHandler: delivery.NewGet(
 			logger.WithTrace("delivery.get"), uc, responder,
 		),
+		GrpcListHandler: grpc.NewList(logger.WithTrace("grpcList"), uc),
+		GrpcGetHandler:  grpc.NewGet(logger.WithTrace("grpcGet"), uc),
 	}
 	return m
 }

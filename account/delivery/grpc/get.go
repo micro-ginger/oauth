@@ -9,7 +9,7 @@ import (
 	"github.com/ginger-core/log/logger"
 	acc "github.com/micro-blonde/auth/proto/auth/account"
 	"github.com/micro-ginger/oauth/account/domain/account"
-	"github.com/micro-ginger/oauth/account/domain/delivery"
+	accDlv "github.com/micro-ginger/oauth/account/domain/delivery/account"
 )
 
 type get[T account.Model] struct {
@@ -40,7 +40,7 @@ func (h *get[T]) getAccount(ctx context.Context,
 		return r, errors.Validation().
 			WithMessage("no reference given")
 	}
-	r, err = delivery.GetGrpcAccount[T](a)
+	r, err = accDlv.GetGrpcAccount[T](a)
 	if err != nil {
 		return nil, err.
 			WithTrace("delivery.GetGrpcAccount")

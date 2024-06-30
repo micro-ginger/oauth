@@ -5,7 +5,7 @@ import (
 	"github.com/ginger-core/gateway"
 	"github.com/ginger-core/log"
 	"github.com/micro-blonde/auth/profile"
-	pd "github.com/micro-ginger/oauth/account/profile/domain/delivery"
+	pd "github.com/micro-ginger/oauth/account/profile/domain/delivery/profile"
 	p "github.com/micro-ginger/oauth/account/profile/domain/profile"
 )
 

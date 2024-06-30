@@ -1,4 +1,4 @@
-package delivery
+package account
 
 import (
 	"github.com/ginger-core/errors"
@@ -8,7 +8,8 @@ import (
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
-func GetGrpcAccount[T account.Model](a *account.Account[T]) (*acc.Account, errors.Error) {
+func GetGrpcAccount[T account.Model](
+	a *account.Account[T]) (*acc.Account, errors.Error) {
 	var v *structpb.Struct
 	var t any = a.T
 	if vg, ok := t.(blondeAcc.StructValueGetter); ok {
@@ -27,7 +28,8 @@ func GetGrpcAccount[T account.Model](a *account.Account[T]) (*acc.Account, error
 	return r, nil
 }
 
-func GetGrpcAccounts[T account.Model](a []*account.Account[T]) (*acc.Accounts, errors.Error) {
+func GetGrpcAccounts[T account.Model](
+	a []*account.Account[T]) (*acc.Accounts, errors.Error) {
 	r := &acc.Accounts{
 		Items: make([]*acc.Account, len(a)),
 	}

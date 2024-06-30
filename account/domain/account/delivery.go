@@ -14,6 +14,4 @@ type GrpcAccountGetter interface {
 type GrpcAccountsGetter interface {
 	ListAccounts(ctx context.Context,
 		request *account.ListRequest) (*account.Accounts, error)
-	ListAccountProfiles(ctx context.Context,
-		request *account.ListRequest) (*account.AccountProfiles, error)
 }

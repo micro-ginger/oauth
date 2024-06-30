@@ -10,7 +10,7 @@ import (
 	"github.com/ginger-core/query"
 	acc "github.com/micro-blonde/auth/proto/auth/account"
 	"github.com/micro-ginger/oauth/account/domain/account"
-	"github.com/micro-ginger/oauth/account/domain/delivery"
+	accDlv "github.com/micro-ginger/oauth/account/domain/delivery/account"
 )
 
 type list[T account.Model] struct {
@@ -48,7 +48,7 @@ func (h *list[T]) listAccounts(ctx context.Context,
 		return r, errors.Validation().
 			WithMessage("no reference given")
 	}
-	r, err = delivery.GetGrpcAccounts(a)
+	r, err = accDlv.GetGrpcAccounts(a)
 	if err != nil {
 		return nil, err.
 			WithTrace("delivery.GetGrpcAccounts")
@@ -76,9 +76,4 @@ func (h *list[T]) ListAccounts(ctx context.Context,
 		}).
 		Infof("accounts request")
 	return r, nil
-}
-
-func (h *list[T]) ListAccountProfiles(ctx context.Context,
-	request *acc.ListRequest) (*acc.AccountProfiles, error) {
-	return nil, nil
 }

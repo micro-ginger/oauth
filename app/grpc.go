@@ -20,8 +20,9 @@ type GrpcServer interface {
 
 type grpcServer struct {
 	auth.UnsafeAuthServer
-	account.GrpcAccountGetter
 	account.GrpcAccountsGetter
+	account.GrpcAccountGetter
+	profile.GrpcProfilesGetter
 	profile.GrpcProfileGetter
 	logger log.Logger
 	config struct {
@@ -34,9 +35,10 @@ type grpcServer struct {
 func (a *App[acc, prof, regReq, reg]) newGrpc(registry registry.Registry) GrpcServer {
 	s := &grpcServer{
 		logger:             a.Logger.WithTrace("grpc"),
-		GrpcAccountGetter:  a.Account.GrpcGetHandler,
 		GrpcAccountsGetter: a.Account.GrpcListHandler,
-		// GrpcProfileGetter:  a.Account.Profile.GrpcGetHandler,
+		GrpcAccountGetter:  a.Account.GrpcGetHandler,
+		GrpcProfilesGetter: a.Account.Profile.GrpcListHandler,
+		GrpcProfileGetter:  a.Account.Profile.GrpcGetHandler,
 	}
 	if err := registry.Unmarshal(&s.config); err != nil {
 		panic(err)
