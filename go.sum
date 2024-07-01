@@ -221,8 +221,8 @@ github.com/micro-blonde/auth v0.0.0-20240630160756-7507351db186 h1:NHfqu9dVb0aPF
 github.com/micro-blonde/auth v0.0.0-20240630160756-7507351db186/go.mod h1:hSQOiebbhRDwAxRTQQB0FTMEIbAUdr18Vhv9seZ/B0k=
 github.com/micro-blonde/auth/authorization v0.0.0-20230630082657-5b527d26afce h1:41McCN6ebcAToHnRyWqT83pCRcuhiao7Ld+ZKNlCPgQ=
 github.com/micro-blonde/auth/authorization v0.0.0-20230630082657-5b527d26afce/go.mod h1:Mtg1IDwyB4DR4MAtPnUB2tTLpEkJmAC1nBGIRFlOQHs=
-github.com/micro-blonde/auth/proto v0.0.0-20240630160756-7507351db186 h1:I7PV0g835t0G/h90soxu/E0EtmRxbp1/duk1wBf/t2Q=
-github.com/micro-blonde/auth/proto v0.0.0-20240630160756-7507351db186/go.mod h1:tBXk1RkeEMBVi32FpwoEZkAT3Qs7ha1ooakRmLFGQ/U=
+github.com/micro-blonde/auth/proto v0.0.0-20240701181138-90b49c4c7d21 h1:8uGn1enaDlmh1OYV9wzmsJcTDr6QuFKMl/QlXRttR7c=
+github.com/micro-blonde/auth/proto v0.0.0-20240701181138-90b49c4c7d21/go.mod h1:tBXk1RkeEMBVi32FpwoEZkAT3Qs7ha1ooakRmLFGQ/U=
 github.com/mitchellh/mapstructure v1.5.0 h1:jeMsZIYE/09sWLaz43PL7Gy6RuMjD2eJVyuac5Z2hdY=
 github.com/mitchellh/mapstructure v1.5.0/go.mod h1:bFUtVrKA4DC2yAKiSyO/QUcy7e+RRV2QTWOzhPopBRo=
 github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421/go.mod h1:6dJC0mAP4ikYIbvyc7fijjWJddQyLn8Ig3JB5CqoB9Q=

@@ -7,6 +7,7 @@ import (
 	"github.com/ginger-core/errors/grpc"
 	"github.com/ginger-core/log"
 	"github.com/ginger-core/log/logger"
+	"github.com/ginger-core/query"
 	acc "github.com/micro-blonde/auth/proto/auth/account"
 	"github.com/micro-ginger/oauth/account/domain/account"
 	accDlv "github.com/micro-ginger/oauth/account/domain/delivery/account"
@@ -33,6 +34,17 @@ func (h *get[T]) getAccount(ctx context.Context,
 	r := new(acc.Account)
 	if request.Id > 0 {
 		a, err = h.uc.GetById(ctx, request.Id)
+		if err != nil {
+			return r, err
+		}
+	} else if request.Key != "" {
+		q := query.NewFilter(query.New(ctx)).
+			WithMatch(&query.Match{
+				Key:      request.Key,
+				Operator: query.Equal,
+				Value:    request.Val,
+			})
+		a, err = h.uc.Get(ctx, q)
 		if err != nil {
 			return r, err
 		}

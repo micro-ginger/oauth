@@ -29,7 +29,7 @@ func (h *get[T]) Handle(request gateway.Request) (any, errors.Error) {
 	ctx := request.GetContext()
 
 	accId := request.GetAuthorization().GetApplicantId().(uint64)
-	prof, err := h.uc.Get(ctx, accId)
+	prof, err := h.uc.GetById(ctx, accId)
 	if err != nil {
 		if err.IsType(errors.TypeNotFound) {
 			prof = new(p.Profile[T])

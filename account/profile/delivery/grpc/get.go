@@ -7,6 +7,7 @@ import (
 	"github.com/ginger-core/errors/grpc"
 	"github.com/ginger-core/log"
 	"github.com/ginger-core/log/logger"
+	"github.com/ginger-core/query"
 	"github.com/micro-blonde/auth/profile"
 	prof "github.com/micro-blonde/auth/proto/auth/account/profile"
 	profDlv "github.com/micro-ginger/oauth/account/profile/domain/delivery/profile"
@@ -51,9 +52,34 @@ func (h *get[T]) getProfile(ctx context.Context,
 	var p *p.Profile[T]
 	r := new(prof.Profile)
 	if request.Id > 0 {
-		p, err = h.uc.Get(ctx, request.Id)
+		p, err = h.uc.GetById(ctx, request.Id)
 		if err != nil {
-			return r, err
+			return r, err.
+				WithTrace("uc.GetById")
+		}
+	} else if request.Key != "" {
+		q := query.NewFilter(query.New(ctx)).
+			WithMatch(&query.Match{
+				Key:      request.Key,
+				Operator: query.Equal,
+				Value:    request.Val,
+			})
+		p, err = h.uc.Get(ctx, q)
+		if err != nil {
+			return r, err.
+				WithTrace("uc.Get")
+		}
+	} else if request.AccountKey != "" {
+		q := query.NewFilter(query.New(ctx)).
+			WithMatch(&query.Match{
+				Key:      request.AccountKey,
+				Operator: query.Equal,
+				Value:    request.AccountVal,
+			})
+		p, err = h.uc.GetAggregated(ctx, q)
+		if err != nil {
+			return r, err.
+				WithTrace("uc.Get")
 		}
 	} else {
 		return r, errors.Validation().
