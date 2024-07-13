@@ -5,6 +5,11 @@ import "github.com/micro-ginger/oauth/global"
 func (a *App[acc, prof, regReq, reg]) registerRoutes() {
 	rg := a.Ginger.NewRouterGroup("/")
 	//
+	// chaptcha
+	if a.Captcha != nil {
+		rg.Create("/captcha/generate", a.Captcha.GenerateHandler)
+	}
+	//
 	// login
 	loginGroup := rg.Group("/login")
 	loginGroup.Create("", a.Login.Handler)

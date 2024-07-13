@@ -11,6 +11,7 @@ import (
 	"github.com/micro-blonde/auth/profile"
 	a "github.com/micro-ginger/oauth/account"
 	"github.com/micro-ginger/oauth/account/domain/account"
+	"github.com/micro-ginger/oauth/captcha"
 	"github.com/micro-ginger/oauth/login"
 	"github.com/micro-ginger/oauth/permission"
 	r "github.com/micro-ginger/oauth/register"
@@ -38,6 +39,7 @@ type App[acc account.Model, prof profile.Model,
 	Cache repository.Cache
 	/* services */
 	/* modules */
+	Captcha    *captcha.Module
 	Account    *a.Module[acc, prof]
 	permission *permission.Module
 	Session    *session.Module

@@ -6,7 +6,7 @@ require (
 	github.com/BurntSushi/toml v1.3.2
 	github.com/ginger-core/compound v0.0.0-20230608151919-2963b75416c3
 	github.com/ginger-core/compound/registry v0.0.0-20230608151919-2963b75416c3
-	github.com/ginger-core/errors v0.0.0-20230619094004-4101e77fb55b
+	github.com/ginger-core/errors v0.0.0-20230703084505-b10c3f9cedfb
 	github.com/ginger-core/errors/grpc v0.0.0-20230703084505-b10c3f9cedfb
 	github.com/ginger-core/gateway v0.0.0-20230608172238-cd4a0958dddc
 	github.com/ginger-core/log v0.0.0-20240629145652-3b2876535940
@@ -16,7 +16,7 @@ require (
 	github.com/ginger-repository/redis v0.0.0-20230608170101-0b74d866bc2d
 	github.com/ginger-repository/sql v0.0.0-20230610115917-c91b365f8490
 	github.com/go-sql-driver/mysql v1.7.1
-	github.com/micro-blonde/auth v0.0.0-20240630160756-7507351db186
+	github.com/micro-blonde/auth v0.0.0-20240713222042-2f2249ea75cf
 	github.com/micro-blonde/auth/authorization v0.0.0-20230630082657-5b527d26afce
 	github.com/micro-blonde/auth/proto v0.0.0-20240701181138-90b49c4c7d21
 	github.com/nicksnyder/go-i18n/v2 v2.2.1

@@ -2,6 +2,7 @@ package app
 
 import (
 	"github.com/micro-ginger/oauth/account"
+	"github.com/micro-ginger/oauth/captcha"
 	"github.com/micro-ginger/oauth/login"
 	"github.com/micro-ginger/oauth/permission"
 	"github.com/micro-ginger/oauth/register"
@@ -9,6 +10,7 @@ import (
 )
 
 func (a *App[acc, prof, regReq, reg]) initializeModules() {
+	a.initiateCaptcha()
 	a.initiateAccount()
 	a.initializePermission()
 	a.initiateSession()
@@ -21,6 +23,13 @@ func (a *App[acc, prof, regReq, reg]) initializeModules() {
 		a.permission.AccountScope.UseCase.SessionRemoveUnauthorized)
 	//
 	a.Register.Initialize(a.Account.UseCase)
+}
+
+func (a *App[acc, prof, regReq, reg]) initiateCaptcha() {
+	a.Captcha = captcha.New(
+		a.Logger.WithTrace("captcha"),
+		a.Registry.ValueOf("captcha"),
+		a.Ginger.GetController())
 }
 
 func (a *App[acc, prof, regReq, reg]) initiateAccount() {

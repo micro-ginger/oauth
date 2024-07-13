@@ -84,8 +84,8 @@ github.com/ginger-core/compound v0.0.0-20230608151919-2963b75416c3 h1:2c+nHExV9I
 github.com/ginger-core/compound v0.0.0-20230608151919-2963b75416c3/go.mod h1:LrbpmjjAXXV8C43EioiLtKhrFy2uLrHRp+Hjin2a+Fc=
 github.com/ginger-core/compound/registry v0.0.0-20230608151919-2963b75416c3 h1:9vWOswN0GKYE2bOOB/LeB1/WBdR0N+4eh9odxv6/Vxk=
 github.com/ginger-core/compound/registry v0.0.0-20230608151919-2963b75416c3/go.mod h1:iGQS/Lk9CnjRmMnRlEM4mQNnndpa+h+u9aVj0Fjyuoo=
-github.com/ginger-core/errors v0.0.0-20230619094004-4101e77fb55b h1:gQVAOLZpMbOfF0Dp2GrXk6s5gMJVpW2vH03RiGdn6ZE=
-github.com/ginger-core/errors v0.0.0-20230619094004-4101e77fb55b/go.mod h1:cWRsvoY6zQYQoDdg/8NqUC5r47R4tUs+uLEugCbCjqo=
+github.com/ginger-core/errors v0.0.0-20230703084505-b10c3f9cedfb h1:akBGMOMV7nOA5GAiav1HCQ9+fg4SmJKDlORYzgXBw8Q=
+github.com/ginger-core/errors v0.0.0-20230703084505-b10c3f9cedfb/go.mod h1:cWRsvoY6zQYQoDdg/8NqUC5r47R4tUs+uLEugCbCjqo=
 github.com/ginger-core/errors/grpc v0.0.0-20230703084505-b10c3f9cedfb h1:0CQsO/MKgQmne0MuS5UOAOODkRFpYP5xogKoTdPUdy4=
 github.com/ginger-core/errors/grpc v0.0.0-20230703084505-b10c3f9cedfb/go.mod h1:JkEdcv4N8oXQuNRM8/CyxOAItdUg/07lB0ZmKxxUKRk=
 github.com/ginger-core/gateway v0.0.0-20230608172238-cd4a0958dddc h1:8Ir+dJJB0A8fmSdsi3cd+x80d+Btg/Y3+R4NBSWfR1k=
@@ -217,8 +217,8 @@ github.com/magiconair/properties v1.8.7 h1:IeQXZAiQcpL9mgcAe1Nu6cX9LLw6ExEHKjN0V
 github.com/magiconair/properties v1.8.7/go.mod h1:Dhd985XPs7jluiymwWYZ0G4Z61jb3vdS329zhj2hYo0=
 github.com/mattn/go-isatty v0.0.19 h1:JITubQf0MOLdlGRuRq+jtsDlekdYPia9ZFsB8h/APPA=
 github.com/mattn/go-isatty v0.0.19/go.mod h1:W+V8PltTTMOvKvAeJH7IuucS94S2C6jfK/D7dTCTo3Y=
-github.com/micro-blonde/auth v0.0.0-20240630160756-7507351db186 h1:NHfqu9dVb0aPFr5A4WO8fhBaxT/h8gMXtmzRrl6sPP0=
-github.com/micro-blonde/auth v0.0.0-20240630160756-7507351db186/go.mod h1:hSQOiebbhRDwAxRTQQB0FTMEIbAUdr18Vhv9seZ/B0k=
+github.com/micro-blonde/auth v0.0.0-20240713222042-2f2249ea75cf h1:V4fNvYAIZemy0B6iXS90PrSpSYWV3pecU/JYrrO6JIo=
+github.com/micro-blonde/auth v0.0.0-20240713222042-2f2249ea75cf/go.mod h1:IFCqPinBG4A2NT9y+/bfeG1K7a4flq2nxSUh5gGHuJ4=
 github.com/micro-blonde/auth/authorization v0.0.0-20230630082657-5b527d26afce h1:41McCN6ebcAToHnRyWqT83pCRcuhiao7Ld+ZKNlCPgQ=
 github.com/micro-blonde/auth/authorization v0.0.0-20230630082657-5b527d26afce/go.mod h1:Mtg1IDwyB4DR4MAtPnUB2tTLpEkJmAC1nBGIRFlOQHs=
 github.com/micro-blonde/auth/proto v0.0.0-20240701181138-90b49c4c7d21 h1:8uGn1enaDlmh1OYV9wzmsJcTDr6QuFKMl/QlXRttR7c=
