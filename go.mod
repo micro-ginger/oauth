@@ -8,11 +8,11 @@ require (
 	github.com/ginger-core/compound/registry v0.0.0-20230608151919-2963b75416c3
 	github.com/ginger-core/errors v0.0.0-20230703084505-b10c3f9cedfb
 	github.com/ginger-core/errors/grpc v0.0.0-20230703084505-b10c3f9cedfb
-	github.com/ginger-core/gateway v0.0.0-20230608172238-cd4a0958dddc
+	github.com/ginger-core/gateway v0.0.0-20240714075215-1abe62a341df
 	github.com/ginger-core/log v0.0.0-20240629145652-3b2876535940
 	github.com/ginger-core/query v0.0.0-20230608153800-9375f70642d8
 	github.com/ginger-core/repository v0.0.0-20230608165607-87044af67011
-	github.com/ginger-gateway/ginger v0.0.0-20230614111128-e020482a754b
+	github.com/ginger-gateway/ginger v0.0.0-20240714075354-a5fc4c40e8fc
 	github.com/ginger-repository/redis v0.0.0-20230608170101-0b74d866bc2d
 	github.com/ginger-repository/sql v0.0.0-20230610115917-c91b365f8490
 	github.com/go-sql-driver/mysql v1.7.1

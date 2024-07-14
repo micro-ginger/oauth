@@ -43,6 +43,7 @@ func (h *generateHandler) Handle(request gateway.Request) (any, errors.Error) {
 	}
 
 	response := gateway.NewResponse().
+		WithContentType(gateway.ContentTypeJson).
 		WithStatus(gateway.StatusOK).
 		WithHeader("Cache-Control", "no-cache, no-store, must-revalidate").
 		WithHeader("Pragma", "no-cache").
