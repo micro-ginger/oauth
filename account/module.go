@@ -20,7 +20,8 @@ type Module[Acc a.Model, Prof profile.Model, File file.Model] struct {
 	Repository a.Repository[Acc]
 	UseCase    a.UseCase[Acc]
 
-	GetHandler gateway.Handler
+	GetHandler    gateway.Handler
+	UpdateHandler gateway.Handler
 
 	GrpcGetHandler  a.GrpcAccountGetter
 	GrpcListHandler a.GrpcAccountsGetter
@@ -38,6 +39,9 @@ func New[Acc a.Model, Prof profile.Model, File file.Model](logger log.Logger,
 		UseCase:    uc,
 		GetHandler: delivery.NewGet(
 			logger.WithTrace("delivery.get"), uc, responder,
+		),
+		UpdateHandler: delivery.NewUpdate(
+			logger.WithTrace("delivery.update"), uc, responder,
 		),
 		GrpcGetHandler:  grpc.NewGet(logger.WithTrace("grpcGet"), uc),
 		GrpcListHandler: grpc.NewList(logger.WithTrace("grpcList"), uc),

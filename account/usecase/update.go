@@ -11,6 +11,7 @@ import (
 
 func (uc *useCase[T]) Update(ctx context.Context,
 	q query.Query, update *a.Update[T]) errors.Error {
+	changed := false
 	fq := query.NewUpdate(q)
 	// internal status
 	var internalStatuses account.InternalStatus = 0
@@ -18,34 +19,42 @@ func (uc *useCase[T]) Update(ctx context.Context,
 	if update.UpdateStatus != nil {
 		if update.UpdateStatus.AddStatus > 0 {
 			fq.WithOr("status", update.UpdateStatus.AddStatus)
+			changed = true
 		}
 		if update.UpdateStatus.DelStatus > 0 {
 			fq.WithNot("status", update.UpdateStatus.DelStatus)
+			changed = true
 		}
 		if update.UpdateStatus.AddStatus.Is(account.StatusRegistered) {
 			// registered
 			internalStatuses |= account.InternalStatusRegistered
+			changed = true
 		}
 		if update.UpdateStatus.AddStatus.Is(account.StatusVerified) {
 			// verified
 			internalStatuses |= account.InternalStatusVerified
+			changed = true
 		}
 		if update.UpdateStatus.AddStatus.Is(account.StatusRejected) {
 			// rejected
 			internalStatuses |= account.InternalStatusRejected
+			changed = true
 		}
 	}
 
 	if update.UpdateInternalStatus != nil {
 		if update.UpdateInternalStatus.AddStatus > 0 {
 			internalStatuses |= update.UpdateInternalStatus.AddStatus
+			changed = true
 		}
 		if update.UpdateInternalStatus.DelStatus > 0 {
 			fq.WithNot("internal_status", update.UpdateInternalStatus.DelStatus)
+			changed = true
 		}
 	}
 	if internalStatuses > 0 {
 		fq.WithOr("internal_status", internalStatuses)
+		changed = true
 	}
 
 	if update.UpdatePassword != nil {
@@ -57,10 +66,12 @@ func (uc *useCase[T]) Update(ctx context.Context,
 			return err
 		}
 		fq.WithSet("hashed_password", hashedPassword)
+		changed = true
 	}
-
-	if err := uc.repo.Update(q, nil); err != nil {
-		return err.WithTrace("repo.Update")
+	if changed {
+		if err := uc.repo.Update(q, nil); err != nil {
+			return err.WithTrace("repo.Update")
+		}
 	}
 	// if update.UpdatePassword != nil {
 	// 	// changed password
@@ -71,7 +82,6 @@ func (uc *useCase[T]) Update(ctx context.Context,
 			return err.WithTrace("UpdateAccount")
 		}
 	}
-	return nil
 	return nil
 }
 

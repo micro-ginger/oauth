@@ -27,6 +27,10 @@ func (a *App[acc, prof, regReq, reg, f]) registerRoutes() {
 		a.Authenticator.MustHaveScope(global.ScopeReadAccount),
 		a.Account.GetHandler,
 	)
+	accountGroup.Update("",
+		a.Authenticator.MustHaveScope(global.ScopeUpdateProfile),
+		a.Account.UpdateHandler,
+	)
 	// profile
 	profileGroup := accountGroup.Group("/profile")
 	profileGroup.Read("",
