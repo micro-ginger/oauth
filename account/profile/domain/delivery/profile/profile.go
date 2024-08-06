@@ -6,9 +6,9 @@ import (
 )
 
 type Profile[T profile.Model] struct {
-	Id    uint64 `json:"id"`
-	Photo string `json:"photo"`
-	T     any    `json:"detail"`
+	Id    uint64  `json:"id"`
+	Photo *string `json:"photo"`
+	T     any     `json:"detail"`
 }
 
 func NewProfile[T profile.Model](prof *p.Profile[T]) *Profile[T] {
@@ -22,15 +22,13 @@ func NewProfile[T profile.Model](prof *p.Profile[T]) *Profile[T] {
 	}
 }
 
-type ProfilePhoto[T profile.Model] struct {
+type ProfilePhoto struct {
 	Photo string `json:"photo"`
 }
 
-func NewProfilePhoto[T profile.Model](prof *p.Profile[T]) *ProfilePhoto[T] {
-	if prof == nil {
-		return new(ProfilePhoto[T])
+func NewProfilePhoto(photo string) *ProfilePhoto {
+	r := &ProfilePhoto{
+		Photo: photo,
 	}
-	return &ProfilePhoto[T]{
-		Photo: prof.Photo,
-	}
+	return r
 }

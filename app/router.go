@@ -33,6 +33,10 @@ func (a *App[acc, prof, regReq, reg, f]) registerRoutes() {
 		a.Authenticator.MustHaveScope(global.ScopeReadProfile),
 		a.Account.Profile.GetHandler,
 	)
+	profileGroup.Update("",
+		a.Authenticator.MustHaveScope(global.ScopeUpdateProfile),
+		a.Account.Profile.UpdateHandler,
+	)
 	profileGroup.Create("/photo",
 		a.Authenticator.MustHaveScope(global.ScopeUpdateProfile),
 		a.Account.Profile.PhotoUpdateHandler,

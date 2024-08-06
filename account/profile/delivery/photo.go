@@ -7,7 +7,6 @@ import (
 	"github.com/ginger-core/errors"
 	"github.com/ginger-core/gateway"
 	"github.com/ginger-core/log/logger"
-	"github.com/micro-blonde/auth/profile"
 	"github.com/micro-blonde/file"
 	fileClient "github.com/micro-blonde/file/client"
 	pd "github.com/micro-ginger/oauth/account/profile/domain/delivery/profile"
@@ -79,12 +78,5 @@ func (h *photo[T]) Handle(request gateway.Request) (any, errors.Error) {
 		return nil, err.
 			WithTrace("UpdatePhoto")
 	}
-	profile := &p.Profile[T]{
-		Profile: profile.Profile[T]{
-			Base: profile.Base{
-				Photo: resp.Url,
-			},
-		},
-	}
-	return pd.NewProfilePhoto(profile), nil
+	return pd.NewProfilePhoto(resp.Url), nil
 }

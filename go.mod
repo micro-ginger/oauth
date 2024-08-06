@@ -15,9 +15,9 @@ require (
 	github.com/ginger-core/repository v0.0.0-20230608165607-87044af67011
 	github.com/ginger-gateway/ginger v0.0.0-20240714075354-a5fc4c40e8fc
 	github.com/ginger-repository/redis v0.0.0-20230608170101-0b74d866bc2d
-	github.com/ginger-repository/sql v0.0.0-20230610115917-c91b365f8490
+	github.com/ginger-repository/sql v0.0.0-20240806160111-7365d88b4d19
 	github.com/go-sql-driver/mysql v1.7.1
-	github.com/micro-blonde/auth v0.0.0-20240806091223-b7cd750156a2
+	github.com/micro-blonde/auth v0.0.0-20240806160221-ff62016f96b5
 	github.com/micro-blonde/auth/authorization v0.0.0-20230630082657-5b527d26afce
 	github.com/micro-blonde/auth/proto v0.0.0-20240701181138-90b49c4c7d21
 	github.com/micro-blonde/file v0.0.0-20240805212943-31734ed43a25
@@ -82,4 +82,5 @@ require (
 )
 
 // replace github.com/micro-blonde/auth => ../../micro-blonde/auth
+// replace github.com/ginger-repository/sql => ../../../github.com/ginger-repository/sql
 // replace github.com/micro-blonde/auth/proto => ../../micro-blonde/auth/proto

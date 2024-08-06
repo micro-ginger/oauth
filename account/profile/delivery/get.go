@@ -50,8 +50,8 @@ func (h *get[T, F]) Handle(request gateway.Request) (any, errors.Error) {
 		}
 		return nil, err
 	}
-	if prof.Photo != "" {
-		url, err := h.file.GetDownloadUrlByKey(prof.Photo)
+	if prof.Photo != nil {
+		url, err := h.file.GetDownloadUrlByKey(*prof.Photo)
 		if err != nil {
 			h.logger.
 				With(logger.Field{
@@ -59,9 +59,9 @@ func (h *get[T, F]) Handle(request gateway.Request) (any, errors.Error) {
 				}).
 				WithTrace("file.GetDownloadUrlByKey").
 				Errorf("error on get download url by key")
-			prof.Photo = ""
+			prof.Photo = nil
 		} else {
-			prof.Photo = url
+			prof.Photo = &url
 		}
 	}
 
