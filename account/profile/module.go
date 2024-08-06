@@ -18,7 +18,7 @@ type Module[Prof profile.Model, File file.Model] struct {
 	Repository p.Repository[Prof]
 	UseCase    p.UseCase[Prof]
 
-	GetHandler gateway.Handler
+	GetHandler delivery.GetHandler[Prof, File]
 
 	PhotoUpdateHandler delivery.PhotoHandler[File]
 
@@ -33,7 +33,7 @@ func New[Prof profile.Model, File file.Model](logger log.Logger,
 	m := &Module[Prof, File]{
 		Repository: repo,
 		UseCase:    uc,
-		GetHandler: delivery.NewGet(
+		GetHandler: delivery.NewGet[Prof, File](
 			logger.WithTrace("delivery.get"), uc, responder,
 		),
 		PhotoUpdateHandler: delivery.NewUpdatePhoto[File](
@@ -46,5 +46,6 @@ func New[Prof profile.Model, File file.Model](logger log.Logger,
 }
 
 func (m *Module[Prof, File]) Initialize(file fileClient.Client[File]) {
+	m.GetHandler.Initialize(file)
 	m.PhotoUpdateHandler.Initialize(file)
 }
