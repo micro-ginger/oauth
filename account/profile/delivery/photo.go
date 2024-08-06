@@ -86,5 +86,5 @@ func (h *photo[T]) Handle(request gateway.Request) (any, errors.Error) {
 			},
 		},
 	}
-	return pd.NewProfile(profile), nil
+	return pd.NewProfilePhoto(profile), nil
 }

@@ -23,7 +23,6 @@ func NewProfile[T profile.Model](prof *p.Profile[T]) *Profile[T] {
 }
 
 type ProfilePhoto[T profile.Model] struct {
-	Id    uint64 `json:"id"`
 	Photo string `json:"photo"`
 }
 
@@ -32,7 +31,6 @@ func NewProfilePhoto[T profile.Model](prof *p.Profile[T]) *ProfilePhoto[T] {
 		return new(ProfilePhoto[T])
 	}
 	return &ProfilePhoto[T]{
-		Id:    prof.Id,
 		Photo: prof.Photo,
 	}
 }
