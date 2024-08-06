@@ -8,6 +8,11 @@ import (
 	"github.com/micro-blonde/auth/profile"
 )
 
+type PhotoUpdater interface {
+	UpdatePhoto(ctx context.Context,
+		accountId uint64, photoId string) errors.Error
+}
+
 type UseCase[T profile.Model] interface {
 	List(ctx context.Context, query query.Query) ([]*Profile[T], errors.Error)
 	Get(ctx context.Context, query query.Query) (*Profile[T], errors.Error)
@@ -17,4 +22,6 @@ type UseCase[T profile.Model] interface {
 	Upsert(ctx context.Context, profile *Profile[T]) errors.Error
 	// Load gets or creates the profile and returns the profile as result
 	Load(ctx context.Context, id uint64, refId int64) (*Profile[T], errors.Error)
+	//
+	PhotoUpdater
 }

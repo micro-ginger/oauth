@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func (a *App[acc, prof, regReq, reg]) Start() {
+func (a *App[acc, prof, regReq, reg, f]) Start() {
 	go func() {
 		if err := a.Ginger.Run(); err != nil {
 			panic(err)

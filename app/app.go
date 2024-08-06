@@ -9,6 +9,8 @@ import (
 	"github.com/ginger-repository/sql"
 	"github.com/micro-blonde/auth/authorization"
 	"github.com/micro-blonde/auth/profile"
+	"github.com/micro-blonde/file"
+	fileClient "github.com/micro-blonde/file/client"
 	a "github.com/micro-ginger/oauth/account"
 	"github.com/micro-ginger/oauth/account/domain/account"
 	"github.com/micro-ginger/oauth/captcha"
@@ -28,7 +30,7 @@ type Application interface {
 }
 
 type App[acc account.Model, prof profile.Model,
-	regReq rdd.RequestModel, reg register.Model] struct {
+	regReq rdd.RequestModel, reg register.Model, f file.Model] struct {
 	Registry registry.Registry
 	Config   config
 	Logger   log.Handler
@@ -38,9 +40,10 @@ type App[acc account.Model, prof profile.Model,
 	Redis redisRepo.Repository
 	Cache repository.Cache
 	/* services */
+	File fileClient.Client[f]
 	/* modules */
 	Captcha    *captcha.Module
-	Account    *a.Module[acc, prof]
+	Account    *a.Module[acc, prof, f]
 	permission *permission.Module
 	Session    *session.Module
 	Login      *login.Module[acc]
@@ -52,9 +55,9 @@ type App[acc account.Model, prof profile.Model,
 }
 
 func New[acc account.Model, prof profile.Model,
-	regReq rdd.RequestModel, reg register.Model](
-	configType string) *App[acc, prof, regReq, reg] {
-	a := &App[acc, prof, regReq, reg]{
+	regReq rdd.RequestModel, reg register.Model, f file.Model](
+	configType string) *App[acc, prof, regReq, reg, f] {
+	a := &App[acc, prof, regReq, reg, f]{
 		Language: i18n.NewBundle(language.English),
 	}
 	a.loadConfig(configType)
@@ -65,7 +68,7 @@ func New[acc account.Model, prof profile.Model,
 	return a
 }
 
-func (a *App[acc, prof, regReq, reg]) Initialize() {
+func (a *App[acc, prof, regReq, reg, f]) Initialize() {
 	a.initializeLogger()
 	a.initializeLanguage()
 	a.initializeServer()

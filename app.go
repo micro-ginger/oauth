@@ -2,6 +2,7 @@ package oauth
 
 import (
 	"github.com/micro-blonde/auth/profile"
+	"github.com/micro-blonde/file"
 	"github.com/micro-ginger/oauth/account/domain/account"
 	"github.com/micro-ginger/oauth/app"
 	rdd "github.com/micro-ginger/oauth/register/domain/delivery/register"
@@ -9,6 +10,7 @@ import (
 )
 
 func NewApp[acc account.Model, prof profile.Model,
-	regReq rdd.RequestModel, reg register.Model](configType string) app.Application {
-	return app.New[acc, prof, regReq, reg](configType)
+	regReq rdd.RequestModel, reg register.Model,
+	f file.Model](configType string) app.Application {
+	return app.New[acc, prof, regReq, reg, f](configType)
 }

@@ -32,7 +32,7 @@ type grpcServer struct {
 	gRpcServer *grpc.Server
 }
 
-func (a *App[acc, prof, regReq, reg]) newGrpc(registry registry.Registry) GrpcServer {
+func (a *App[acc, prof, regReq, reg, f]) newGrpc(registry registry.Registry) GrpcServer {
 	s := &grpcServer{
 		logger:             a.Logger.WithTrace("grpc"),
 		GrpcAccountsGetter: a.Account.GrpcListHandler,

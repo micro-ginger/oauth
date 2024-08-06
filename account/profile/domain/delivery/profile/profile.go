@@ -6,8 +6,9 @@ import (
 )
 
 type Profile[T profile.Model] struct {
-	Id uint64 `json:"id"`
-	T  any    `json:"detail"`
+	Id    uint64 `json:"id"`
+	Photo string `json:"photo"`
+	T     any    `json:"detail"`
 }
 
 func NewProfile[T profile.Model](prof *p.Profile[T]) *Profile[T] {
@@ -15,15 +16,23 @@ func NewProfile[T profile.Model](prof *p.Profile[T]) *Profile[T] {
 		return new(Profile[T])
 	}
 	return &Profile[T]{
-		Id: prof.Id,
-		T:  prof.T.GetDeliveryResult(),
+		Id:    prof.Id,
+		Photo: prof.Photo,
+		T:     prof.T.GetDeliveryResult(),
 	}
 }
 
-// func (h Profile[T]) MarshalJSON() ([]byte, error) {
-// 	payloadJson, err := json.Marshal(h.T)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	return payloadJson, nil
-// }
+type ProfilePhoto[T profile.Model] struct {
+	Id    uint64 `json:"id"`
+	Photo string `json:"photo"`
+}
+
+func NewProfilePhoto[T profile.Model](prof *p.Profile[T]) *ProfilePhoto[T] {
+	if prof == nil {
+		return new(ProfilePhoto[T])
+	}
+	return &ProfilePhoto[T]{
+		Id:    prof.Id,
+		Photo: prof.Photo,
+	}
+}

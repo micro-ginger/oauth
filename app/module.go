@@ -9,7 +9,7 @@ import (
 	"github.com/micro-ginger/oauth/session"
 )
 
-func (a *App[acc, prof, regReq, reg]) initializeModules() {
+func (a *App[acc, prof, regReq, reg, f]) initializeModules() {
 	a.initiateCaptcha()
 	a.initiateAccount()
 	a.initializePermission()
@@ -23,31 +23,32 @@ func (a *App[acc, prof, regReq, reg]) initializeModules() {
 		a.permission.AccountScope.UseCase.SessionRemoveUnauthorized)
 	//
 	a.Register.Initialize(a.Account.UseCase)
+	a.Account.Initialize(a.File)
 }
 
-func (a *App[acc, prof, regReq, reg]) initiateCaptcha() {
+func (a *App[acc, prof, regReq, reg, f]) initiateCaptcha() {
 	a.Captcha = captcha.New(
 		a.Logger.WithTrace("captcha"),
 		a.Registry.ValueOf("captcha"),
 		a.Ginger.GetController())
 }
 
-func (a *App[acc, prof, regReq, reg]) initiateAccount() {
-	a.Account = account.New[acc, prof](
+func (a *App[acc, prof, regReq, reg, f]) initiateAccount() {
+	a.Account = account.New[acc, prof, f](
 		a.Logger.WithTrace("account"),
 		a.Registry.ValueOf("account"),
 		a.Sql, a.Ginger.GetController(),
 	)
 }
 
-func (a *App[acc, prof, regReq, reg]) initializePermission() {
+func (a *App[acc, prof, regReq, reg, f]) initializePermission() {
 	a.permission = permission.Initialize(
 		a.Logger.WithTrace("permission"),
 		a.Sql,
 	)
 }
 
-func (a *App[acc, prof, regReq, reg]) initiateSession() {
+func (a *App[acc, prof, regReq, reg, f]) initiateSession() {
 	a.Session = session.New(
 		a.Logger.WithTrace("session"),
 		a.Registry.ValueOf("session"),
@@ -55,7 +56,7 @@ func (a *App[acc, prof, regReq, reg]) initiateSession() {
 	)
 }
 
-func (a *App[acc, prof, regReq, reg]) initiateLogin() {
+func (a *App[acc, prof, regReq, reg, f]) initiateLogin() {
 	a.Login = login.New(
 		a.Logger.WithTrace("login"),
 		a.Registry.ValueOf("login"),
@@ -66,7 +67,7 @@ func (a *App[acc, prof, regReq, reg]) initiateLogin() {
 	)
 }
 
-func (a *App[acc, prof, regReq, reg]) initiateRegister() {
+func (a *App[acc, prof, regReq, reg, f]) initiateRegister() {
 	a.Register = register.New[regReq, reg, acc](
 		a.Logger.WithTrace("register"),
 		a.Sql, a.Ginger.GetController(),

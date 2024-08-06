@@ -2,7 +2,7 @@ package app
 
 import "github.com/micro-ginger/oauth/global"
 
-func (a *App[acc, prof, regReq, reg]) registerRoutes() {
+func (a *App[acc, prof, regReq, reg, f]) registerRoutes() {
 	rg := a.Ginger.NewRouterGroup("/")
 	//
 	// chaptcha
@@ -32,6 +32,10 @@ func (a *App[acc, prof, regReq, reg]) registerRoutes() {
 	profileGroup.Read("",
 		a.Authenticator.MustHaveScope(global.ScopeReadProfile),
 		a.Account.Profile.GetHandler,
+	)
+	profileGroup.Create("/photo",
+		a.Authenticator.MustHaveScope(global.ScopeUpdateProfile),
+		a.Account.Profile.PhotoUpdateHandler,
 	)
 	//
 	// register
