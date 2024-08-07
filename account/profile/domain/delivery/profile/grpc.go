@@ -15,6 +15,9 @@ func GetGrpcProfile[T profile.Model](
 		Id: a.Id,
 		T:  structpb.NewNullValue(),
 	}
+	if a.Photo != nil {
+		r.Photo = *a.Photo
+	}
 	var v *structpb.Struct
 	var t any = a.T
 	if vg, ok := t.(account.StructValueGetter); ok {

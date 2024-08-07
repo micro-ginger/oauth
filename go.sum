@@ -221,8 +221,8 @@ github.com/micro-blonde/auth v0.0.0-20240806160221-ff62016f96b5 h1:vYJHPQbTVD80j
 github.com/micro-blonde/auth v0.0.0-20240806160221-ff62016f96b5/go.mod h1:IFCqPinBG4A2NT9y+/bfeG1K7a4flq2nxSUh5gGHuJ4=
 github.com/micro-blonde/auth/authorization v0.0.0-20230630082657-5b527d26afce h1:41McCN6ebcAToHnRyWqT83pCRcuhiao7Ld+ZKNlCPgQ=
 github.com/micro-blonde/auth/authorization v0.0.0-20230630082657-5b527d26afce/go.mod h1:Mtg1IDwyB4DR4MAtPnUB2tTLpEkJmAC1nBGIRFlOQHs=
-github.com/micro-blonde/auth/proto v0.0.0-20240701181138-90b49c4c7d21 h1:8uGn1enaDlmh1OYV9wzmsJcTDr6QuFKMl/QlXRttR7c=
-github.com/micro-blonde/auth/proto v0.0.0-20240701181138-90b49c4c7d21/go.mod h1:tBXk1RkeEMBVi32FpwoEZkAT3Qs7ha1ooakRmLFGQ/U=
+github.com/micro-blonde/auth/proto v0.0.0-20240807093759-4d07945c6731 h1:WPm1t5tedTzZ5lwMZsePKLBV5LLgKee1mVblgFnRuwU=
+github.com/micro-blonde/auth/proto v0.0.0-20240807093759-4d07945c6731/go.mod h1:tBXk1RkeEMBVi32FpwoEZkAT3Qs7ha1ooakRmLFGQ/U=
 github.com/micro-blonde/file v0.0.0-20240805212943-31734ed43a25 h1:r5A22M8tuP/tQaSSFFf+d4Zbpfu+KpslfOoAIRl2TV8=
 github.com/micro-blonde/file v0.0.0-20240805212943-31734ed43a25/go.mod h1:DkuLDKiG4lrAlR35RyGTjYbHzcN91b3Ecc18MznGj0M=
 github.com/micro-blonde/file/client v0.0.0-20240805212943-31734ed43a25 h1:vR3Y27Y95X4QkueGVagf4y6ynCteJtX+XVX60U+Y4fM=
