@@ -23,8 +23,8 @@ type Module[Prof profile.Model, File file.Model] struct {
 
 	PhotoUpdateHandler delivery.PhotoHandler[File]
 
-	GrpcListHandler p.GrpcProfilesGetter
-	GrpcGetHandler  p.GrpcProfileGetter
+	GrpcListHandler grpc.ListHandler[Prof, File]
+	GrpcGetHandler  grpc.GetHandler[Prof, File]
 }
 
 func New[Prof profile.Model, File file.Model](logger log.Logger,
@@ -43,8 +43,8 @@ func New[Prof profile.Model, File file.Model](logger log.Logger,
 		PhotoUpdateHandler: delivery.NewUpdatePhoto[File](
 			logger.WithTrace("delivery.photoUpdate"), uc, responder,
 		),
-		GrpcListHandler: grpc.NewList(logger.WithTrace("grpcList"), uc),
-		GrpcGetHandler:  grpc.NewGet(logger.WithTrace("grpcGet"), uc),
+		GrpcListHandler: grpc.NewList[Prof, File](logger.WithTrace("grpcList"), uc),
+		GrpcGetHandler:  grpc.NewGet[Prof, File](logger.WithTrace("grpcGet"), uc),
 	}
 	return m
 }
@@ -52,4 +52,6 @@ func New[Prof profile.Model, File file.Model](logger log.Logger,
 func (m *Module[Prof, File]) Initialize(file fileClient.Client[File]) {
 	m.GetHandler.Initialize(file)
 	m.PhotoUpdateHandler.Initialize(file)
+	m.GrpcGetHandler.Initialize(file)
+	m.GrpcListHandler.Initialize(file)
 }
