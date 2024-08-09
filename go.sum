@@ -217,8 +217,8 @@ github.com/magiconair/properties v1.8.7 h1:IeQXZAiQcpL9mgcAe1Nu6cX9LLw6ExEHKjN0V
 github.com/magiconair/properties v1.8.7/go.mod h1:Dhd985XPs7jluiymwWYZ0G4Z61jb3vdS329zhj2hYo0=
 github.com/mattn/go-isatty v0.0.19 h1:JITubQf0MOLdlGRuRq+jtsDlekdYPia9ZFsB8h/APPA=
 github.com/mattn/go-isatty v0.0.19/go.mod h1:W+V8PltTTMOvKvAeJH7IuucS94S2C6jfK/D7dTCTo3Y=
-github.com/micro-blonde/auth v0.0.0-20240806160221-ff62016f96b5 h1:vYJHPQbTVD80jh3Q1LGDiy1p6qR2tpEFNAw28HgbXDw=
-github.com/micro-blonde/auth v0.0.0-20240806160221-ff62016f96b5/go.mod h1:IFCqPinBG4A2NT9y+/bfeG1K7a4flq2nxSUh5gGHuJ4=
+github.com/micro-blonde/auth v0.0.0-20240809192441-b2cf261b7620 h1:4PFQuHUQDRIQEBvaUUW71L/N35tdd3XBocVwO4IXayc=
+github.com/micro-blonde/auth v0.0.0-20240809192441-b2cf261b7620/go.mod h1:IFCqPinBG4A2NT9y+/bfeG1K7a4flq2nxSUh5gGHuJ4=
 github.com/micro-blonde/auth/authorization v0.0.0-20230630082657-5b527d26afce h1:41McCN6ebcAToHnRyWqT83pCRcuhiao7Ld+ZKNlCPgQ=
 github.com/micro-blonde/auth/authorization v0.0.0-20230630082657-5b527d26afce/go.mod h1:Mtg1IDwyB4DR4MAtPnUB2tTLpEkJmAC1nBGIRFlOQHs=
 github.com/micro-blonde/auth/proto v0.0.0-20240807093759-4d07945c6731 h1:WPm1t5tedTzZ5lwMZsePKLBV5LLgKee1mVblgFnRuwU=

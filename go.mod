@@ -17,7 +17,7 @@ require (
 	github.com/ginger-repository/redis v0.0.0-20230608170101-0b74d866bc2d
 	github.com/ginger-repository/sql v0.0.0-20240806160111-7365d88b4d19
 	github.com/go-sql-driver/mysql v1.7.1
-	github.com/micro-blonde/auth v0.0.0-20240806160221-ff62016f96b5
+	github.com/micro-blonde/auth v0.0.0-20240809192441-b2cf261b7620
 	github.com/micro-blonde/auth/authorization v0.0.0-20230630082657-5b527d26afce
 	github.com/micro-blonde/auth/proto v0.0.0-20240807093759-4d07945c6731
 	github.com/micro-blonde/file v0.0.0-20240805212943-31734ed43a25

@@ -11,9 +11,12 @@ import (
 func (uc *useCase[T]) Upsert(ctx context.Context,
 	profile *profile.Profile[T]) errors.Error {
 	q := query.NewUpdate(query.New(ctx))
-	updates := profile.T.GetUpdates()
-	for k, v := range updates {
-		q.WithSet(k, v)
+	var t T
+	if profile.T != t {
+		updates := profile.T.GetUpdates()
+		for k, v := range updates {
+			q.WithSet(k, v)
+		}
 	}
 	if profile.Photo != nil {
 		q.WithSet("photo", profile.Photo)
