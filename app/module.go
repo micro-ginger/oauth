@@ -4,6 +4,7 @@ import (
 	"github.com/micro-ginger/oauth/account"
 	"github.com/micro-ginger/oauth/captcha"
 	"github.com/micro-ginger/oauth/login"
+	"github.com/micro-ginger/oauth/monitoring"
 	"github.com/micro-ginger/oauth/permission"
 	"github.com/micro-ginger/oauth/register"
 	"github.com/micro-ginger/oauth/session"
@@ -16,6 +17,7 @@ func (a *App[acc, prof, regReq, reg, f]) initializeModules() {
 	a.initiateSession()
 	a.initiateLogin()
 	a.initiateRegister()
+	a.initializeMonitoring()
 	//
 	// session create handlers
 	a.Session.UseCase.RegisterSessionHandlers(
@@ -24,6 +26,8 @@ func (a *App[acc, prof, regReq, reg, f]) initializeModules() {
 	//
 	a.Register.Initialize(a.Account.UseCase)
 	a.Account.Initialize(a.File)
+	//
+	a.monitoring.Initialize(a.Redis, a.Sql)
 }
 
 func (a *App[acc, prof, regReq, reg, f]) initiateCaptcha() {
@@ -71,5 +75,12 @@ func (a *App[acc, prof, regReq, reg, f]) initiateRegister() {
 	a.Register = register.New[regReq, reg, acc](
 		a.Logger.WithTrace("register"),
 		a.Sql, a.Ginger.GetController(),
+	)
+}
+
+func (a *App[acc, prof, regReq, reg, f]) initializeMonitoring() {
+	a.monitoring = monitoring.New(
+		a.Logger.WithTrace("monitoring"),
+		a.Ginger.GetController(),
 	)
 }

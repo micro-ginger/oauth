@@ -15,6 +15,7 @@ import (
 	"github.com/micro-ginger/oauth/account/domain/account"
 	"github.com/micro-ginger/oauth/captcha"
 	"github.com/micro-ginger/oauth/login"
+	"github.com/micro-ginger/oauth/monitoring"
 	"github.com/micro-ginger/oauth/permission"
 	r "github.com/micro-ginger/oauth/register"
 	rdd "github.com/micro-ginger/oauth/register/domain/delivery/register"
@@ -48,6 +49,7 @@ type App[acc account.Model, prof profile.Model,
 	Session    *session.Module
 	Login      *login.Module[acc]
 	Register   *r.Module[regReq, reg, acc]
+	monitoring *monitoring.Module
 	/* server */
 	Authenticator authorization.Authenticator[acc]
 	Ginger        gateway.Server
