@@ -27,7 +27,7 @@ func (a *App[acc, prof, regReq, reg, f]) initializeModules() {
 	a.Register.Initialize(a.Account.UseCase)
 	a.Account.Initialize(a.File)
 	//
-	a.monitoring.Initialize(a.Redis, a.Sql)
+	a.Monitoring.Initialize(a.Redis, a.Sql)
 }
 
 func (a *App[acc, prof, regReq, reg, f]) initiateCaptcha() {
@@ -79,7 +79,7 @@ func (a *App[acc, prof, regReq, reg, f]) initiateRegister() {
 }
 
 func (a *App[acc, prof, regReq, reg, f]) initializeMonitoring() {
-	a.monitoring = monitoring.New(
+	a.Monitoring = monitoring.New(
 		a.Logger.WithTrace("monitoring"),
 		a.Ginger.GetController(),
 	)

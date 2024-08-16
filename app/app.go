@@ -49,7 +49,7 @@ type App[acc account.Model, prof profile.Model,
 	Session    *session.Module
 	Login      *login.Module[acc]
 	Register   *r.Module[regReq, reg, acc]
-	monitoring *monitoring.Module
+	Monitoring *monitoring.Module
 	/* server */
 	Authenticator authorization.Authenticator[acc]
 	Ginger        gateway.Server

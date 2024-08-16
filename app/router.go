@@ -53,4 +53,10 @@ func (a *App[acc, prof, regReq, reg, f]) registerRoutes() {
 		a.Register.RegisterHandler,
 	)
 	//
+	// internal
+	internalGroup := rg.Group("/internal")
+	monitoringGroup := internalGroup.Group("/monitoring")
+	monitoringGroup.Read("/health",
+		a.Monitoring.Health,
+	)
 }
