@@ -55,12 +55,11 @@ type App[acc account.Model, prof profile.Model,
 }
 
 func New[acc account.Model, prof profile.Model,
-	regReq rdd.RequestModel, reg register.Model, f file.Model](
-	configType string) *App[acc, prof, regReq, reg, f] {
+	regReq rdd.RequestModel, reg register.Model, f file.Model]() *App[acc, prof, regReq, reg, f] {
 	a := &App[acc, prof, regReq, reg, f]{
 		Language: i18n.NewBundle(language.English),
 	}
-	a.loadConfig(configType)
+	a.loadConfig()
 
 	if err := a.Registry.Unmarshal(&a.Config); err != nil {
 		panic(err)

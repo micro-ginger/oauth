@@ -6,7 +6,7 @@ require (
 	github.com/BurntSushi/toml v1.3.2
 	github.com/gin-gonic/gin v1.9.1
 	github.com/ginger-core/compound v0.0.0-20230608151919-2963b75416c3
-	github.com/ginger-core/compound/registry v0.0.0-20230608151919-2963b75416c3
+	github.com/ginger-core/compound/registry v0.0.0-20240815151007-6306bf13a816
 	github.com/ginger-core/errors v0.0.0-20230703084505-b10c3f9cedfb
 	github.com/ginger-core/errors/grpc v0.0.0-20230703084505-b10c3f9cedfb
 	github.com/ginger-core/gateway v0.0.0-20240714075215-1abe62a341df

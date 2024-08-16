@@ -11,6 +11,6 @@ import (
 
 func NewApp[acc account.Model, prof profile.Model,
 	regReq rdd.RequestModel, reg register.Model,
-	f file.Model](configType string) app.Application {
-	return app.New[acc, prof, regReq, reg, f](configType)
+	f file.Model]() app.Application {
+	return app.New[acc, prof, regReq, reg, f]()
 }
