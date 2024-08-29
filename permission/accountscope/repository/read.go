@@ -160,15 +160,16 @@ func (repo *repo) GetAccountScopesFromRoles(ctx context.Context,
 	accountId uint64, roles []string, getAll bool) ([]*scope.Detailed, errors.Error) {
 	var query string
 
-	params := []any{accountId}
+	params := []any{accountId, accountId}
 	query = `SELECT DISTINCT s.*, us.is_authorized AS is_authorized
 			FROM (
 					 SELECT s.*, r.name as role_name
 					 FROM scopes s
 							  LEFT JOIN role_scopes rs on s.id = rs.scope_id
 							  LEFT JOIN account_roles ur on rs.role_id = ur.role_id
+							  LEFT JOIN account_scopes us on s.id = us.scope_id
 							  LEFT JOIN roles r on rs.role_id = r.id
-					 WHERE (r.state & 1 = 1 OR ur.account_id = ?)
+					 WHERE (r.state & 1 = 1 OR ur.account_id = ? OR us.account_id = ?)
 					 `
 	if len(roles) > 0 {
 		query += `AND r.name IN ?`
@@ -214,8 +215,9 @@ func (repo *repo) GetAccountScopesFromScopes(ctx context.Context,
 					 FROM scopes s
 							  LEFT JOIN role_scopes rs on s.id = rs.scope_id
 							  LEFT JOIN account_roles ur on rs.role_id = ur.role_id
+							  LEFT JOIN account_scopes us on s.id = us.scope_id
 							  LEFT JOIN roles r on rs.role_id = r.id
-					 WHERE (r.state & 1 = 1 OR ur.account_id = ?)
+					 WHERE (r.state & 1 = 1 OR ur.account_id = ? OR us.account_id = ?)
 					   AND s.name IN ?
 				 ) AS s
 					 LEFT JOIN account_scopes us ON s.id = us.scope_id AND us.account_id = ?
@@ -227,7 +229,7 @@ func (repo *repo) GetAccountScopesFromScopes(ctx context.Context,
 			WHERE us.is_authorized IS NOT false
 			  AND ur.is_authorized IS NOT false;`
 	}
-	params := []any{accountId, names, accountId, accountId}
+	params := []any{accountId, accountId, names, accountId, accountId}
 
 	r := repo.GetDB(nil).(*gorm.DB).
 		WithContext(ctx).Model(new(scope.Scope)).Raw(query, params...)
