@@ -32,4 +32,9 @@ type Repository interface {
 	Delete(ctx context.Context, accountId uint64, scopeId uint64) errors.Error
 	DeleteBulk(ctx context.Context,
 		accountId uint64, scopeIds []uint64) errors.Error
+
+	Authorize(ctx context.Context,
+		accountId uint64, scopes ...string) errors.Error
+	Revoke(ctx context.Context,
+		accountId uint64, scopes ...string) errors.Error
 }

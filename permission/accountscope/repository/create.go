@@ -49,3 +49,28 @@ func (repo *repo) CreateBulk(ctx context.Context,
 	}
 	return nil
 }
+
+func (repo *repo) Authorize(ctx context.Context,
+	accountId uint64, scopes ...string) errors.Error {
+	valueStrings := make([]string, len(scopes))
+	valueArgs := make([]interface{}, len(scopes)*3)
+
+	for i, scope := range scopes {
+		valueStrings[i] = "(?, (SELECT id FROM scopes WHERE name=?), ?)"
+
+		valueArgs[i*2] = accountId
+		valueArgs[i*2+1] = scope
+		valueArgs[i*2+2] = true
+	}
+
+	smt := "INSERT IGNORE INTO account_scopes(account_id,scope_id,is_authorized) " +
+		"VALUES %s"
+	smt = fmt.Sprintf(smt, strings.Join(valueStrings, ","))
+
+	q := repo.GetDB(nil).(*gorm.DB).
+		WithContext(ctx).Model(new(accountscope.AccountScope))
+	if err := q.Exec(smt, valueArgs...).Error; err != nil {
+		return errors.New(err).WithTrace("accountscope.CreateBulk.Exec")
+	}
+	return nil
+}

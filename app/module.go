@@ -21,8 +21,8 @@ func (a *App[acc, prof, regReq, reg, f]) initializeModules() {
 	//
 	// session create handlers
 	a.Session.UseCase.RegisterSessionHandlers(
-		a.permission.AccountScope.UseCase.SessionAddRequestedRoleScopes,
-		a.permission.AccountScope.UseCase.SessionRemoveUnauthorized)
+		a.Permission.AccountScope.UseCase.SessionAddRequestedRoleScopes,
+		a.Permission.AccountScope.UseCase.SessionRemoveUnauthorized)
 	//
 	a.Register.Initialize(a.Account.UseCase)
 	a.Account.Initialize(a.File)
@@ -46,7 +46,7 @@ func (a *App[acc, prof, regReq, reg, f]) initiateAccount() {
 }
 
 func (a *App[acc, prof, regReq, reg, f]) initializePermission() {
-	a.permission = permission.Initialize(
+	a.Permission = permission.Initialize(
 		a.Logger.WithTrace("permission"),
 		a.Sql,
 	)

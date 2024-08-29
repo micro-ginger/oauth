@@ -45,7 +45,7 @@ type App[acc account.Model, prof profile.Model,
 	/* modules */
 	Captcha    *captcha.Module
 	Account    *a.Module[acc, prof, f]
-	permission *permission.Module
+	Permission *permission.Module
 	Session    *session.Module
 	Login      *login.Module[acc]
 	Register   *r.Module[regReq, reg, acc]

@@ -51,3 +51,16 @@ func (repo *repo) DeleteBulk(ctx context.Context,
 	}
 	return nil
 }
+
+func (repo *repo) Revoke(ctx context.Context,
+	accountId uint64, scopes ...string) errors.Error {
+	smt := "DELETE FROM account_scopes " +
+		"WHERE account_id=? AND " +
+		"scope_id IN (SELECT id FROM scopes WHERE name IN(?))"
+	q := repo.GetDB(nil).(*gorm.DB).
+		WithContext(ctx).Model(new(accountscope.AccountScope))
+	if err := q.Exec(smt, accountId, scopes).Error; err != nil {
+		return errors.New(err).WithTrace("accountscope.CreateBulk.Exec")
+	}
+	return nil
+}

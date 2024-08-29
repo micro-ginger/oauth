@@ -24,3 +24,8 @@ func (uc *useCase) DeleteBulk(ctx context.Context,
 	}
 	return nil
 }
+
+func (uc *useCase) Revoke(ctx context.Context,
+	accountId uint64, scopes ...string) errors.Error {
+	return uc.repo.Revoke(ctx, accountId, scopes...)
+}

@@ -18,7 +18,7 @@ type UseCase interface {
 		session *session.Session) errors.Error
 
 	Create(ctx context.Context, item *accountscope.AccountScope) errors.Error
-	CreateBulk(ctx context.Context, roleId uint64,
+	CreateBulk(ctx context.Context, accountId uint64,
 		scopes accountscope.CreateScopeBulk) errors.Error
 
 	GetAllAccountScopes(ctx context.Context,
@@ -30,6 +30,9 @@ type UseCase interface {
 	ListDefaultAccountScopes(ctx context.Context,
 		accountId uint64, getAll bool) ([]*scope.Detailed, errors.Error)
 
-	Delete(ctx context.Context, roleId uint64, scopeId uint64) errors.Error
-	DeleteBulk(ctx context.Context, roleId uint64, scopeIds []uint64) errors.Error
+	Delete(ctx context.Context, accountId uint64, scopeId uint64) errors.Error
+	DeleteBulk(ctx context.Context, accountId uint64, scopeIds []uint64) errors.Error
+
+	Authorize(ctx context.Context, accountId uint64, scopes ...string) errors.Error
+	Revoke(ctx context.Context, accountId uint64, scopes ...string) errors.Error
 }
