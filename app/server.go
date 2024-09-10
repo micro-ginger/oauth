@@ -7,27 +7,29 @@ import (
 )
 
 func (a *App[acc, prof, regReq, reg, f]) initializeServer() {
-	a.initializeGinger()
+	a.initializeHTTP()
 	a.initializeAuthenticator()
 }
 
-func (a *App[acc, prof, regReq, reg, f]) initializeGinger() {
-	logger := a.Logger.WithTrace("ginger")
-	a.Ginger = ginger.NewServer(logger, a.Registry.ValueOf("gateway.http"))
-
-	responder := a.Ginger.NewResponder()
+func (a *App[acc, prof, regReq, reg, f]) initializeHTTP() {
+	a.HTTP = ginger.NewHTTP(
+		a.Logger.WithTrace("ginger.http"),
+		a.Registry.ValueOf("gateway.http"),
+	)
+	responder := a.HTTP.NewResponder()
 	controller := gateway.NewController(responder).WithLanguageBundle(a.Language)
-	a.Ginger.SetController(controller)
+	a.HTTP.SetController(controller)
 }
 
 func (a *App[acc, prof, regReq, reg, f]) initializeGrpc() {
-	registry := a.Registry.ValueOf("gateway.grpc")
-	if registry != nil {
-		a.GRPC = a.newGrpc(registry)
-	}
+	a.GRPC = ginger.NewGRPC(
+		a.Logger.WithTrace("ginger.grpc"),
+		a.Registry.ValueOf("gateway.grpc"),
+	)
+	a.GRPC.Initialize(a.GRPC.NewResponder())
 }
 
 func (a *App[acc, prof, regReq, reg, f]) initializeAuthenticator() {
 	a.Authenticator = authorization.New[acc](
-		a.Ginger, a.Registry.ValueOf("gateway.authorization"))
+		a.HTTP, a.Registry.ValueOf("gateway.authorization"))
 }

@@ -21,6 +21,22 @@ func (repo *repo[T]) List(q query.Query) ([]*profile.Profile[T], errors.Error) {
 	return *r.(*[]*profile.Profile[T]), nil
 }
 
+func (repo *repo[T]) ListAggregated(q query.Query) ([]*profile.Profile[T], errors.Error) {
+	q = repo.initiateProfileFetch(q)
+	repo.joinAccount(q)
+	//
+	q = query.NewModelsQuery(q).
+		WithModelsHandlerFunc(func() any {
+			return new([]*profile.Profile[T])
+		})
+	r, err := repo.Repository.List(q)
+	if err != nil {
+		return nil, err.
+			WithTrace("Repository.Get")
+	}
+	return *r.(*[]*profile.Profile[T]), nil
+}
+
 func (repo *repo[T]) Get(q query.Query) (*profile.Profile[T], errors.Error) {
 	q = query.NewModelQuery(q).
 		WithModelHandlerFunc(func() any {

@@ -1,54 +1,85 @@
 package app
 
-import "github.com/micro-ginger/oauth/global"
+import (
+	"github.com/ginger-core/gateway"
+	"github.com/micro-blonde/auth/proto/auth"
+	"github.com/micro-ginger/oauth/global"
+)
 
 func (a *App[acc, prof, regReq, reg, f]) registerRoutes() {
-	rg := a.Ginger.NewRouterGroup("/")
+	a.registerHttpRoutes()
+	a.registerGrpcRoutes()
+}
+
+func (a *App[acc, prof, regReq, reg, f]) registerHttpRoutes() {
+	rg := a.HTTP.NewRouterGroup("/")
 	//
 	// chaptcha
 	if a.Captcha != nil {
-		rg.Create("/captcha/generate", a.Captcha.GenerateHandler)
+		rg.OnPath(
+			gateway.Create,
+			"/captcha/generate",
+			a.Captcha.GenerateHandler,
+		)
 	}
 	//
 	// login
 	loginGroup := rg.Group("/login")
-	loginGroup.Create("", a.Login.Handler)
+	loginGroup.OnPath(
+		gateway.Create,
+		"",
+		a.Login.Handler,
+	)
 	//
 	// accounts
 	accountsGroup := rg.Group("/accounts")
 	accountItemGroup := accountsGroup.Group("/:account_id")
-	accountItemGroup.Read("",
+	accountItemGroup.OnPath(
+		gateway.Read,
+		"",
 		a.Authenticator.MustAuthenticate(),
 		a.Account.GetHandler,
 	)
 	// account
 	accountGroup := rg.Group("/account")
-	accountGroup.Read("",
+	accountGroup.OnPath(
+		gateway.Read,
+		"",
 		a.Authenticator.MustHaveScope(global.ScopeReadAccount),
 		a.Account.GetHandler,
 	)
-	accountGroup.Update("",
+	accountGroup.OnPath(
+		gateway.Update,
+		"",
 		a.Authenticator.MustHaveScope(global.ScopeUpdateProfile),
 		a.Account.UpdateHandler,
 	)
 	// profile
 	profileGroup := accountGroup.Group("/profile")
-	profileGroup.Read("",
+	profileGroup.OnPath(
+		gateway.Read,
+		"",
 		a.Authenticator.MustHaveScope(global.ScopeReadProfile),
 		a.Account.Profile.GetHandler,
 	)
-	profileGroup.Update("",
+	profileGroup.OnPath(
+		gateway.Update,
+		"",
 		a.Authenticator.MustHaveScope(global.ScopeUpdateProfile),
 		a.Account.Profile.UpdateHandler,
 	)
-	profileGroup.Create("/photo",
+	profileGroup.OnPath(
+		gateway.Create,
+		"/photo",
 		a.Authenticator.MustHaveScope(global.ScopeUpdateProfile),
 		a.Account.Profile.PhotoUpdateHandler,
 	)
 	//
 	// register
 	registerGroup := rg.Group("/register")
-	registerGroup.Create("",
+	registerGroup.OnPath(
+		gateway.Create,
+		"",
 		a.Authenticator.MustHaveScope(global.ScopeRegister),
 		a.Register.RegisterHandler,
 	)
@@ -56,7 +87,33 @@ func (a *App[acc, prof, regReq, reg, f]) registerRoutes() {
 	// internal
 	internalGroup := rg.Group("/internal")
 	monitoringGroup := internalGroup.Group("/monitoring")
-	monitoringGroup.Read("/health",
+	monitoringGroup.OnPath(
+		gateway.Read,
+		"/health",
 		a.Monitoring.Health,
+	)
+}
+
+func (a *App[acc, prof, regReq, reg, f]) registerGrpcRoutes() {
+	authGroup := a.GRPC.Register(&auth.Auth_ServiceDesc)
+	authGroup.OnPath(
+		gateway.Unknown,
+		"ListAccounts",
+		a.Account.GrpcListHandler,
+	)
+	authGroup.OnPath(
+		gateway.Unknown,
+		"GetAccount",
+		a.Account.GrpcGetHandler,
+	)
+	authGroup.OnPath(
+		gateway.Unknown,
+		"ListProfiles",
+		a.Account.Profile.GrpcListHandler,
+	)
+	authGroup.OnPath(
+		gateway.Unknown,
+		"GetProfile",
+		a.Account.Profile.GrpcGetHandler,
 	)
 }

@@ -10,7 +10,7 @@ import (
 
 func (a *App[acc, prof, regReq, reg, f]) Start() {
 	go func() {
-		if err := a.Ginger.Run(); err != nil {
+		if err := a.HTTP.Run(); err != nil {
 			panic(err)
 		}
 	}()
@@ -30,10 +30,17 @@ func (a *App[acc, prof, regReq, reg, f]) Start() {
 		wg := new(sync.WaitGroup)
 		wg.Add(1)
 		go func() {
-			a.Logger.WithTrace("exit.ginger").Debugf("stopping...")
-			a.Ginger.Shutdown(time.Minute)
+			a.Logger.WithTrace("exit.HTTP").Debugf("stopping...")
+			a.HTTP.Shutdown(time.Minute)
 			wg.Done()
-			a.Logger.WithTrace("exit.ginger").Debugf("stopped")
+			a.Logger.WithTrace("exit.HTTP").Debugf("stopped")
+		}()
+		wg.Add(1)
+		go func() {
+			a.Logger.WithTrace("exit.GRPC").Debugf("stopping...")
+			a.GRPC.Shutdown(time.Minute)
+			wg.Done()
+			a.Logger.WithTrace("exit.GRPC").Debugf("stopped")
 		}()
 		// wait and exit
 		wg.Wait()

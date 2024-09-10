@@ -1,79 +1,52 @@
 package grpc
 
 import (
-	"context"
-
 	"github.com/ginger-core/errors"
-	"github.com/ginger-core/errors/grpc"
+	"github.com/ginger-core/gateway"
 	"github.com/ginger-core/log"
-	"github.com/ginger-core/log/logger"
 	"github.com/ginger-core/query"
 	acc "github.com/micro-blonde/auth/proto/auth/account"
 	"github.com/micro-ginger/oauth/account/domain/account"
-	accDlv "github.com/micro-ginger/oauth/account/domain/delivery/account"
 )
 
+type ListHandler[T account.Model] interface {
+	gateway.Handler
+	BaseReadHandler[T]
+}
+
 type list[T account.Model] struct {
-	logger log.Logger
-	uc     account.UseCase[T]
+	*baseRead[T]
 }
 
 func NewList[T account.Model](logger log.Logger,
-	uc account.UseCase[T]) account.GrpcAccountsGetter {
+	uc account.UseCase[T]) ListHandler[T] {
 	h := &list[T]{
-		logger: logger,
-		uc:     uc,
+		baseRead: newBaseRead[T](logger, uc),
 	}
 	return h
 }
 
-func (h *list[T]) listAccounts(ctx context.Context,
-	request *acc.ListRequest) (*acc.Accounts, errors.Error) {
+func (h *list[T]) Handle(request gateway.Request) (any, errors.Error) {
+	ctx := request.GetContext()
+	q := query.New(ctx)
 	var err errors.Error
-	var a []*account.Account[T]
-	r := new(acc.Accounts)
-	if len(request.Ids) > 0 {
-		q := query.NewFilter(query.New(ctx)).
-			WithMatch(&query.Match{
-				Key:      "id",
-				Operator: query.In,
-				Value:    request.Ids,
-			})
-		a, err = h.uc.List(ctx, q)
-		if err != nil {
-			return r, err.
-				WithTrace("uc.List")
-		}
-	} else {
-		return r, errors.Validation().
-			WithMessage("no reference given")
+	q, err = request.ProcessFilters(q, h.instruction)
+	if err != nil {
+		return nil, err.WithTrace("request.ProcessFilters")
 	}
-	r, err = accDlv.GetGrpcAccounts(a)
+	accs, err := h.uc.List(ctx, q)
 	if err != nil {
 		return nil, err.
-			WithTrace("delivery.GetGrpcAccounts")
+			WithTrace("uc.List")
 	}
-	return r, nil
-}
-
-func (h *list[T]) ListAccounts(ctx context.Context,
-	request *acc.ListRequest) (*acc.Accounts, error) {
-	r, err := h.listAccounts(ctx, request)
-	if err != nil {
-		h.logger.
-			WithContext(ctx).
-			With(logger.Field{
-				"error": err.Error(),
-				"ids":   request.Ids,
-			}).
-			Errorf("accounts request")
-		return r, grpc.Generate(err)
+	items := make([]*acc.Account, len(accs))
+	for i, acc := range accs {
+		items[i], err = h.getAccount(acc)
+		if err != nil {
+			return nil, err.WithTrace("getAccount")
+		}
 	}
-	h.logger.
-		WithContext(ctx).
-		With(logger.Field{
-			"ids": request.Ids,
-		}).
-		Infof("accounts request")
-	return r, nil
+	return &acc.Accounts{
+		Items: items,
+	}, nil
 }

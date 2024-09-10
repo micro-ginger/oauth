@@ -13,11 +13,20 @@ func (uc *useCase[T]) List(ctx context.Context,
 	return uc.repo.List(query)
 }
 
+func (uc *useCase[T]) ListAggregated(ctx context.Context,
+	q query.Query) ([]*profile.Profile[T], errors.Error) {
+	r, err := uc.repo.ListAggregated(q)
+	if err != nil {
+		return nil, err.WithTrace("repo.ListAggregated")
+	}
+	return r, nil
+}
+
 func (uc *useCase[T]) Get(ctx context.Context,
 	q query.Query) (*profile.Profile[T], errors.Error) {
 	r, err := uc.repo.Get(q)
 	if err != nil {
-		return nil, err
+		return nil, err.WithTrace("repo.Get")
 	}
 	return r, nil
 }
@@ -26,7 +35,7 @@ func (uc *useCase[T]) GetAggregated(ctx context.Context,
 	q query.Query) (*profile.Profile[T], errors.Error) {
 	r, err := uc.repo.GetAggregated(q)
 	if err != nil {
-		return nil, err
+		return nil, err.WithTrace("repo.GetAggregated")
 	}
 	return r, nil
 }
@@ -36,7 +45,7 @@ func (uc *useCase[T]) GetById(ctx context.Context,
 	q := query.NewFilter(query.New(ctx)).WithId(id)
 	r, err := uc.repo.Get(q)
 	if err != nil {
-		return nil, err
+		return nil, err.WithTrace("repo.Get")
 	}
 	return r, nil
 }
@@ -46,8 +55,7 @@ func (uc *useCase[T]) Load(ctx context.Context,
 	q := query.NewFilter(query.New(ctx)).WithId(id)
 	r, err := uc.repo.Get(q)
 	if err != nil {
-		return nil, err.
-			WithTrace("repo.Get")
+		return nil, err.WithTrace("repo.Get")
 	}
 	return r, nil
 }

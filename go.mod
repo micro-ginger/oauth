@@ -8,24 +8,22 @@ require (
 	github.com/ginger-core/compound v0.0.0-20230608151919-2963b75416c3
 	github.com/ginger-core/compound/registry v0.0.0-20240815151007-6306bf13a816
 	github.com/ginger-core/errors v0.0.0-20230703084505-b10c3f9cedfb
-	github.com/ginger-core/errors/grpc v0.0.0-20230703084505-b10c3f9cedfb
-	github.com/ginger-core/gateway v0.0.0-20240714075215-1abe62a341df
+	github.com/ginger-core/gateway v0.0.0-20240909095814-36fbbeaa9104
 	github.com/ginger-core/log v0.0.0-20240629145652-3b2876535940
 	github.com/ginger-core/query v0.0.0-20230608153800-9375f70642d8
 	github.com/ginger-core/repository v0.0.0-20230608165607-87044af67011
-	github.com/ginger-gateway/ginger v0.0.0-20240714075354-a5fc4c40e8fc
+	github.com/ginger-gateway/ginger v0.0.0-20240909095921-d32610dbcaf4
 	github.com/ginger-repository/redis v0.0.0-20230608170101-0b74d866bc2d
 	github.com/ginger-repository/sql v0.0.0-20240806160111-7365d88b4d19
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/micro-blonde/auth v0.0.0-20240809192441-b2cf261b7620
 	github.com/micro-blonde/auth/authorization v0.0.0-20230630082657-5b527d26afce
-	github.com/micro-blonde/auth/proto v0.0.0-20240807093759-4d07945c6731
+	github.com/micro-blonde/auth/proto v0.0.0-20240910204230-49addcdc7cd5
 	github.com/micro-blonde/file v0.0.0-20240805212943-31734ed43a25
 	github.com/micro-blonde/file/client v0.0.0-20240805212943-31734ed43a25
 	github.com/nicksnyder/go-i18n/v2 v2.2.1
 	golang.org/x/crypto v0.23.0
 	golang.org/x/text v0.15.0
-	google.golang.org/grpc v1.65.0
 	google.golang.org/protobuf v1.34.2
 	gorm.io/gorm v1.25.1
 )
@@ -38,6 +36,7 @@ require (
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.2 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
+	github.com/ginger-core/errors/grpc v0.0.0-20230703084505-b10c3f9cedfb // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/go-playground/validator/v10 v10.14.0 // indirect
@@ -75,6 +74,7 @@ require (
 	golang.org/x/net v0.25.0 // indirect
 	golang.org/x/sys v0.20.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240624140628-dc46fd24d27d // indirect
+	google.golang.org/grpc v1.65.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	gorm.io/driver/mysql v1.5.1 // indirect

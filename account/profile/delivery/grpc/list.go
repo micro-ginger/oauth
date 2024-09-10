@@ -1,108 +1,54 @@
 package grpc
 
 import (
-	"context"
-
 	"github.com/ginger-core/errors"
-	"github.com/ginger-core/errors/grpc"
+	"github.com/ginger-core/gateway"
 	"github.com/ginger-core/log"
-	"github.com/ginger-core/log/logger"
 	"github.com/ginger-core/query"
 	"github.com/micro-blonde/auth/profile"
 	prof "github.com/micro-blonde/auth/proto/auth/account/profile"
 	"github.com/micro-blonde/file"
-	fileClient "github.com/micro-blonde/file/client"
-	profDlv "github.com/micro-ginger/oauth/account/profile/domain/delivery/profile"
 	p "github.com/micro-ginger/oauth/account/profile/domain/profile"
 )
 
 type ListHandler[T profile.Model, F file.Model] interface {
-	p.GrpcProfilesGetter
-	Initialize(file fileClient.Client[F])
+	gateway.Handler
+	BaseReadHandler[T, F]
 }
 
 type list[T profile.Model, F file.Model] struct {
-	logger log.Logger
-	uc     p.UseCase[T]
-	file   fileClient.Client[F]
+	*baseRead[T, F]
 }
 
-func NewList[T profile.Model, F file.Model](logger log.Logger,
-	uc p.UseCase[T]) ListHandler[T, F] {
+func NewList[T profile.Model, F file.Model](
+	logger log.Logger, uc p.UseCase[T]) ListHandler[T, F] {
 	h := &list[T, F]{
-		logger: logger,
-		uc:     uc,
+		baseRead: newBaseRead[T, F](logger, uc),
 	}
 	return h
 }
 
-func (h *list[T, F]) Initialize(file fileClient.Client[F]) {
-	h.file = file
-}
-
-func (h *list[T, F]) ListProfiles(ctx context.Context,
-	request *prof.ListRequest) (*prof.Profiles, error) {
-	r, err := h.listProfiles(ctx, request)
-	if err != nil {
-		h.logger.
-			WithContext(ctx).
-			With(logger.Field{
-				"error": err.Error(),
-				"ids":   request.Ids,
-			}).
-			Errorf("accounts request")
-		return r, grpc.Generate(err)
-	}
-	h.logger.
-		WithContext(ctx).
-		With(logger.Field{
-			"ids": request.Ids,
-		}).
-		Infof("accounts request")
-	return r, nil
-}
-
-func (h *list[T, F]) listProfiles(ctx context.Context,
-	request *prof.ListRequest) (*prof.Profiles, errors.Error) {
+func (h *list[T, F]) Handle(request gateway.Request) (any, errors.Error) {
+	ctx := request.GetContext()
+	q := query.New(ctx)
 	var err errors.Error
-	var ps []*p.Profile[T]
-	r := new(prof.Profiles)
-	if len(request.Ids) > 0 {
-		q := query.NewFilter(query.New(ctx)).
-			WithMatch(&query.Match{
-				Key:      "id",
-				Operator: query.In,
-				Value:    request.Ids,
-			})
-		ps, err = h.uc.List(ctx, q)
-		if err != nil {
-			return r, err.
-				WithTrace("uc.List")
-		}
-	} else {
-		return r, errors.Validation().
-			WithMessage("no reference given")
+	q, err = request.ProcessFilters(q, h.instruction)
+	if err != nil {
+		return nil, err.WithTrace("request.ProcessFilters")
 	}
-	r, err = profDlv.GetGrpcProfiles(ps)
+	profs, err := h.uc.ListAggregated(ctx, q)
 	if err != nil {
 		return nil, err.
-			WithTrace("delivery.GetGrpcAccounts")
+			WithTrace("uc.GetAggregated")
 	}
-	for _, itm := range r.Items {
-		if itm.Photo != "" {
-			url, err := h.file.GetDownloadUrlByKey(itm.Photo)
-			if err != nil {
-				h.logger.
-					With(logger.Field{
-						"error": err.Error(),
-					}).
-					WithTrace("file.GetDownloadUrlByKey").
-					Errorf("error on get download url by key")
-				itm.Photo = ""
-			} else {
-				itm.Photo = url
-			}
+	items := make([]*prof.Profile, len(profs))
+	for i, itm := range profs {
+		items[i], err = h.getProfile(itm)
+		if err != nil {
+			return nil, err.WithTrace("getProfile")
 		}
 	}
-	return r, nil
+	return &prof.Profiles{
+		Items: items,
+	}, nil
 }

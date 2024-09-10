@@ -15,6 +15,8 @@ type PhotoUpdater interface {
 
 type UseCase[T profile.Model] interface {
 	List(ctx context.Context, query query.Query) ([]*Profile[T], errors.Error)
+	// ListAggregated returns profiles, using account joined query
+	ListAggregated(ctx context.Context, query query.Query) ([]*Profile[T], errors.Error)
 	Get(ctx context.Context, query query.Query) (*Profile[T], errors.Error)
 	GetById(ctx context.Context, id uint64) (*Profile[T], errors.Error)
 	// GetAggregated returns profile, using account joined query

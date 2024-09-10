@@ -34,14 +34,14 @@ func (a *App[acc, prof, regReq, reg, f]) initiateCaptcha() {
 	a.Captcha = captcha.New(
 		a.Logger.WithTrace("captcha"),
 		a.Registry.ValueOf("captcha"),
-		a.Ginger.GetController())
+		a.HTTP.GetController())
 }
 
 func (a *App[acc, prof, regReq, reg, f]) initiateAccount() {
 	a.Account = account.New[acc, prof, f](
 		a.Logger.WithTrace("account"),
 		a.Registry.ValueOf("account"),
-		a.Sql, a.Ginger.GetController(),
+		a.Sql, a.HTTP.GetController(),
 	)
 }
 
@@ -67,20 +67,20 @@ func (a *App[acc, prof, regReq, reg, f]) initiateLogin() {
 		a.Account.UseCase,
 		a.Session.UseCase,
 		a.Cache,
-		a.Ginger.GetController(),
+		a.HTTP.GetController(),
 	)
 }
 
 func (a *App[acc, prof, regReq, reg, f]) initiateRegister() {
 	a.Register = register.New[regReq, reg, acc](
 		a.Logger.WithTrace("register"),
-		a.Sql, a.Ginger.GetController(),
+		a.Sql, a.HTTP.GetController(),
 	)
 }
 
 func (a *App[acc, prof, regReq, reg, f]) initializeMonitoring() {
 	a.Monitoring = monitoring.New(
 		a.Logger.WithTrace("monitoring"),
-		a.Ginger.GetController(),
+		a.HTTP.GetController(),
 	)
 }

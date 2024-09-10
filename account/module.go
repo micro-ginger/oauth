@@ -23,8 +23,8 @@ type Module[Acc a.Model, Prof profile.Model, File file.Model] struct {
 	GetHandler    gateway.Handler
 	UpdateHandler gateway.Handler
 
-	GrpcGetHandler  a.GrpcAccountGetter
-	GrpcListHandler a.GrpcAccountsGetter
+	GrpcGetHandler  grpc.GetHandler[Acc]
+	GrpcListHandler grpc.ListHandler[Acc]
 
 	Profile *p.Module[Prof, File]
 }

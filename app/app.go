@@ -5,6 +5,7 @@ import (
 	"github.com/ginger-core/gateway"
 	"github.com/ginger-core/log"
 	"github.com/ginger-core/repository"
+	"github.com/ginger-gateway/ginger/grpc"
 	redisRepo "github.com/ginger-repository/redis/repository"
 	"github.com/ginger-repository/sql"
 	"github.com/micro-blonde/auth/authorization"
@@ -52,8 +53,8 @@ type App[acc account.Model, prof profile.Model,
 	Monitoring *monitoring.Module
 	/* server */
 	Authenticator authorization.Authenticator[acc]
-	Ginger        gateway.Server
-	GRPC          GrpcServer
+	HTTP          gateway.Server
+	GRPC          grpc.Server
 }
 
 func New[acc account.Model, prof profile.Model,
