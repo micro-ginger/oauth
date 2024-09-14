@@ -64,6 +64,12 @@ func (h *lh[acc]) RegisterHandler(t step.Type, sh handler.Handler[acc]) {
 }
 
 func (h *lh[acc]) Handle(request gateway.Request) (r any, err errors.Error) {
+	if h.manager != nil {
+		// before handle request
+		if err = h.manager.BeforeHandle(request); err != nil {
+			return nil, err.WithTrace("manager.BeforeHandle")
+		}
+	}
 	var sess *s.Session[acc]
 	challenge, ok := request.GetQuery("challenge")
 	if ok {

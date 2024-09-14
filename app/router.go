@@ -28,6 +28,7 @@ func (a *App[acc, prof, regReq, reg, f]) registerHttpRoutes() {
 	loginGroup.OnPath(
 		gateway.Create,
 		"",
+		a.Authenticator.ShouldVerifyCaptcha(),
 		a.Login.Handler,
 	)
 	//

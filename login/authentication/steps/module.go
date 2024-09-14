@@ -27,7 +27,7 @@ func (m *Module[acc]) Initialize(f flow.Flows) {
 		for _, stg := range flow.Stages {
 			for si, step := range stg.Steps {
 				if stp := GetByType(step.Type); stp != nil {
-					stg.Steps[si] = stp
+					stg.Steps[si].Populate(stp)
 				}
 			}
 		}
