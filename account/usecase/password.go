@@ -74,7 +74,7 @@ func (uc *useCase[T]) VerifyPassword(ctx context.Context,
 	return nil
 }
 
-func (uc *useCase[T]) ResetPassword(ctx context.Context,
+func (uc *useCase[T]) UpdatePassword(ctx context.Context,
 	q query.Query, hashedPassword []byte) errors.Error {
 	err := uc.repo.Update(q, &account.Account[T]{
 		HashedPassword: hashedPassword,

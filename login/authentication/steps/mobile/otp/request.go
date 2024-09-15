@@ -2,6 +2,7 @@ package otp
 
 import (
 	"context"
+	"strings"
 
 	"github.com/ginger-core/errors"
 	"github.com/ginger-core/gateway"
@@ -13,7 +14,7 @@ type body struct {
 	Mobile *string `json:"mobile"`
 }
 
-func (h *_handler[acc]) request(ctx context.Context, request gateway.Request,
+func (h *_handler[acc]) request(_ context.Context, request gateway.Request,
 	sess *session.Session[acc]) (response.Response, errors.Error) {
 	body := new(body)
 	if err := request.ProcessBody(body); err != nil {
@@ -21,7 +22,9 @@ func (h *_handler[acc]) request(ctx context.Context, request gateway.Request,
 			WithTrace("request.ProcessBody")
 	}
 	if body.Mobile != nil && len(*body.Mobile) > 0 {
-		sess.Info.SetTemp("mobile", *body.Mobile)
+		mobile := *body.Mobile
+		mobile = strings.ReplaceAll(mobile, " ", "")
+		sess.Info.SetTemp("mobile", mobile)
 	}
 
 	r, err := h.Handler.Process(request, sess)

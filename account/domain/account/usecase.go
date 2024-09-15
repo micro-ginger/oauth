@@ -27,12 +27,19 @@ type UseCase[T account.Model] interface {
 		account *Account[T], password string) errors.Error
 
 	ValidatePassword(ctx context.Context, password string) errors.Error
-	ResetPassword(ctx context.Context,
+	UpdatePassword(ctx context.Context,
 		q query.Query, hashedPassword []byte) errors.Error
 }
 
 type ResetPasswordHandler interface {
 	ValidatePassword(ctx context.Context, password string) errors.Error
-	ResetPassword(ctx context.Context,
+	UpdatePassword(ctx context.Context,
+		q query.Query, hashedPassword []byte) errors.Error
+}
+
+type PasswordUpdateHandler[T account.Model] interface {
+	Get(ctx context.Context, q query.Query) (*Account[T], errors.Error)
+	ValidatePassword(ctx context.Context, password string) errors.Error
+	UpdatePassword(ctx context.Context,
 		q query.Query, hashedPassword []byte) errors.Error
 }

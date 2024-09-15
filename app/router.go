@@ -57,6 +57,12 @@ func (a *App[acc, prof, regReq, reg, f]) registerHttpRoutes() {
 	)
 	accountGroup.OnPath(
 		gateway.Create,
+		"/password/update",
+		a.Authenticator.MustHaveScope(global.ScopeUpdatePassword),
+		a.Account.PasswordUpdateHandler,
+	)
+	accountGroup.OnPath(
+		gateway.Create,
 		"/password/reset",
 		a.Authenticator.MustHaveScope(global.ScopeResetPassword),
 		a.Account.PasswordResetHandler,
