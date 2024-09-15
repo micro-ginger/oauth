@@ -19,7 +19,7 @@ func (h *lh[acc]) start(request gateway.Request) (*session.Session[acc], any, er
 	if err != nil {
 		return nil, nil, err.WithTrace("getFlow")
 	}
-	if flow.Stages[req.Stage].Steps[0].IsCaptchaRequired {
+	if flow.Stages[0].Steps[0].IsCaptchaRequired {
 		auth := request.GetAuthorization().(authorization.Authorization[acc])
 		if !auth.IsCaptchaVerified() {
 			return nil, nil, errors.Validation().

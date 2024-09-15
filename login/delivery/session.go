@@ -12,7 +12,7 @@ import (
 
 const DefaultSection = "DEFAULT"
 
-func (h *lh[acc]) getFlow(request gateway.Request,
+func (h *lh[acc]) getFlow(_ gateway.Request,
 	req *login.Request) (*flow.Flow, errors.Error) {
 	if req.Section == "" {
 		req.Section = DefaultSection

@@ -5,6 +5,7 @@ import (
 	"unicode"
 
 	"github.com/ginger-core/errors"
+	"github.com/ginger-core/query"
 	"github.com/micro-ginger/oauth/account/domain/account"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -69,6 +70,17 @@ func (uc *useCase[T]) VerifyPassword(ctx context.Context,
 			WithTrace("bcrypt.CompareHashAndPassword.Err").
 			WithDesc("invalid password").
 			WithMessage("You have entered an invalid password.")
+	}
+	return nil
+}
+
+func (uc *useCase[T]) ResetPassword(ctx context.Context,
+	q query.Query, hashedPassword []byte) errors.Error {
+	err := uc.repo.Update(q, &account.Account[T]{
+		HashedPassword: hashedPassword,
+	})
+	if err != nil {
+		return err.WithTrace("repo.Update")
 	}
 	return nil
 }

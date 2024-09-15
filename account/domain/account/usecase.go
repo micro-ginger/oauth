@@ -25,4 +25,14 @@ type UseCase[T account.Model] interface {
 
 	VerifyPassword(ctx context.Context,
 		account *Account[T], password string) errors.Error
+
+	ValidatePassword(ctx context.Context, password string) errors.Error
+	ResetPassword(ctx context.Context,
+		q query.Query, hashedPassword []byte) errors.Error
+}
+
+type ResetPasswordHandler interface {
+	ValidatePassword(ctx context.Context, password string) errors.Error
+	ResetPassword(ctx context.Context,
+		q query.Query, hashedPassword []byte) errors.Error
 }

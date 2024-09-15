@@ -20,8 +20,9 @@ type Module[Acc a.Model, Prof profile.Model, File file.Model] struct {
 	Repository a.Repository[Acc]
 	UseCase    a.UseCase[Acc]
 
-	GetHandler    gateway.Handler
-	UpdateHandler gateway.Handler
+	GetHandler           gateway.Handler
+	UpdateHandler        gateway.Handler
+	PasswordResetHandler gateway.Handler
 
 	GrpcGetHandler  grpc.GetHandler[Acc]
 	GrpcListHandler grpc.ListHandler[Acc]
@@ -42,6 +43,10 @@ func New[Acc a.Model, Prof profile.Model, File file.Model](logger log.Logger,
 		),
 		UpdateHandler: delivery.NewUpdate(
 			logger.WithTrace("delivery.update"), uc, responder,
+		),
+		PasswordResetHandler: delivery.NewPasswordReset(
+			logger.WithTrace("delivery.passwordReset"),
+			uc, responder,
 		),
 		GrpcGetHandler:  grpc.NewGet(logger.WithTrace("grpcGet"), uc),
 		GrpcListHandler: grpc.NewList(logger.WithTrace("grpcList"), uc),

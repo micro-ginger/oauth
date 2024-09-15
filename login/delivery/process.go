@@ -3,6 +3,7 @@ package delivery
 import (
 	"github.com/ginger-core/errors"
 	"github.com/ginger-core/gateway"
+	"github.com/micro-blonde/auth/authorization"
 	"github.com/micro-ginger/oauth/login/session/domain/session"
 )
 
@@ -15,7 +16,15 @@ func (h *lh[acc]) process(request gateway.Request,
 			WithTrace("sh=nil").
 			WithDesc("step handler not found")
 	}
-
+	if actionIdx == 0 && s.IsCaptchaRequired {
+		auth := request.GetAuthorization().(authorization.Authorization[acc])
+		if !auth.IsCaptchaVerified() {
+			return nil, errors.Validation().
+				WithTrace("!auth.IsCaptchaVerified").
+				WithId("InvalidCaptcha").
+				WithMessage("an error occured while verifiying Captcha")
+		}
+	}
 	r, err := sh.Process(request, sess)
 	if err != nil {
 		return nil, err.
