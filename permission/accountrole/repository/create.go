@@ -51,15 +51,13 @@ func (repo *repo) CreateBulk(ctx context.Context,
 }
 
 func (repo *repo) Assign(ctx context.Context,
-	accId uint64, role string, isAuthorized *bool) errors.Error {
+	accId uint64, roles []string) errors.Error {
 	smt := `INSERT IGNORE INTO account_roles(account_id, role_id, is_authorized)
-		SELECT ?, r.id, true
-		FROM roles r
-		where r.name = ?`
+		SELECT ?, r.id, true FROM roles r WHERE r.name IN ?`
 
 	db := repo.GetDB(nil).(*gorm.DB).
 		WithContext(ctx).Model(new(accountrole.AccountRole))
-	if err := db.Exec(smt, accId, role).Error; err != nil {
+	if err := db.Exec(smt, accId, roles).Error; err != nil {
 		return errors.New(err).WithTrace("db.Exec")
 	}
 	return nil

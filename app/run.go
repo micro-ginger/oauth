@@ -21,6 +21,10 @@ func (a *App[acc, prof, regReq, reg, f]) Start() {
 		}
 	}()
 
+	go func() {
+		a.Account.Start()
+	}()
+
 	done := make(chan struct{})
 	go func() {
 		c := make(chan os.Signal, 1)
@@ -41,6 +45,13 @@ func (a *App[acc, prof, regReq, reg, f]) Start() {
 			a.GRPC.Shutdown(time.Minute)
 			wg.Done()
 			a.Logger.WithTrace("exit.GRPC").Debugf("stopped")
+		}()
+		wg.Add(1)
+		go func() {
+			a.Logger.WithTrace("exit.account").Debugf("stopping...")
+			a.Account.Stop()
+			wg.Done()
+			a.Logger.WithTrace("exit.account").Debugf("stopped")
 		}()
 		// wait and exit
 		wg.Wait()

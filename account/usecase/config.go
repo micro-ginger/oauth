@@ -1,14 +1,14 @@
 package usecase
 
+import "github.com/micro-blonde/auth/account"
+
 type config struct {
 	Password struct {
 		MinLen        int
 		MinComplexity int
 	}
-	Status struct {
-		Verify struct {
-			AddRoles []string
-		}
+	InternalStatus map[account.InternalStatus]struct {
+		AddRoles []string
 	}
 }
 

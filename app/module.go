@@ -25,7 +25,7 @@ func (a *App[acc, prof, regReq, reg, f]) initializeModules() {
 		a.Permission.AccountScope.UseCase.SessionRemoveUnauthorized)
 	//
 	a.Register.Initialize(a.Account.UseCase)
-	a.Account.Initialize(a.File)
+	a.Account.Initialize(a.File, a.Permission.AccountRole.UseCase)
 	//
 	a.Monitoring.Initialize(a.Redis, a.Sql)
 }

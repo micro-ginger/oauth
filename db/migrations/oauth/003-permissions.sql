@@ -1,7 +1,7 @@
 insert into scopes(name, state, description)
 values ('api.auth.account.read', 0b01, 'read current logged-in account'),
        ('api.auth.account.profile.read', 0b01, 'read current logged-in profile'),
-       ('api.auth.account.profile.update', 0b01, 'update current profile'),
+       ('api.auth.account.profile.update', 0b00, 'update current profile'),
        ('api.auth.password.update', 0b00, 'update password access'),
        ('api.auth.password.reset', 0b00, 'reset password access'),
        ('api.auth.accounts.manage', 0b10, 'access to manage existing accounts in system'),

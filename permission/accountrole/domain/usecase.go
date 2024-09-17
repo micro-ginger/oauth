@@ -9,13 +9,8 @@ import (
 )
 
 type UseCase interface {
-	RegisterCreateEventHandle(handle accountrole.CreatedRoleEventHandle)
-
 	Create(ctx context.Context, item *accountrole.AccountRole) errors.Error
-	Assign(ctx context.Context, accId uint64,
-		role string, isAuthorized *bool) errors.Error
-	CreateBulk(ctx context.Context,
-		accountId uint64, roles accountrole.CreateBulk) errors.Error
+	Assign(ctx context.Context, accId uint64, roles []string) errors.Error
 
 	Getaccountroles(ctx context.Context,
 		accountId uint64, getAll bool) ([]*role.Detailed, errors.Error)

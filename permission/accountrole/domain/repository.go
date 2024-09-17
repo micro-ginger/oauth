@@ -12,7 +12,7 @@ import (
 type Repository interface {
 	Create(q query.Query, item *accountrole.AccountRole) errors.Error
 	Assign(ctx context.Context,
-		accId uint64, role string, isAuthorized *bool) errors.Error
+		accId uint64, roles []string) errors.Error
 	CreateBulk(ctx context.Context,
 		accountId uint64, roles accountrole.CreateBulk) errors.Error
 

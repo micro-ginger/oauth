@@ -69,7 +69,7 @@ func (uc *useCase[T]) Update(ctx context.Context,
 		changed = true
 	}
 	if changed {
-		if err := uc.repo.Update(q, nil); err != nil {
+		if err := uc.repo.Update(fq, nil); err != nil {
 			return err.WithTrace("repo.Update")
 		}
 	}

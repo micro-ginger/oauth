@@ -10,7 +10,9 @@ import (
 	fileClient "github.com/micro-blonde/file/client"
 	"github.com/micro-ginger/oauth/account/delivery"
 	"github.com/micro-ginger/oauth/account/delivery/grpc"
+	d "github.com/micro-ginger/oauth/account/domain"
 	a "github.com/micro-ginger/oauth/account/domain/account"
+	"github.com/micro-ginger/oauth/account/domain/permission"
 	p "github.com/micro-ginger/oauth/account/profile"
 	r "github.com/micro-ginger/oauth/account/repository"
 	"github.com/micro-ginger/oauth/account/usecase"
@@ -18,7 +20,7 @@ import (
 
 type Module[Acc a.Model, Prof profile.Model, File file.Model] struct {
 	Repository a.Repository[Acc]
-	UseCase    a.UseCase[Acc]
+	UseCase    d.UseCase[Acc]
 
 	GetHandler            gateway.Handler
 	UpdateHandler         gateway.Handler
@@ -63,6 +65,20 @@ func New[Acc a.Model, Prof profile.Model, File file.Model](logger log.Logger,
 	return m
 }
 
-func (m *Module[Acc, Prof, File]) Initialize(file fileClient.Client[File]) {
+func (m *Module[Acc, Prof, File]) Initialize(
+	file fileClient.Client[File], accountRole permission.AccountRole) {
+	m.UseCase.Initialize(accountRole)
 	m.Profile.Initialize(file)
+}
+
+func (m *Module[Acc, Prof, File]) SetManager(manager a.Manager[Acc]) {
+	m.UseCase.SetManager(manager)
+}
+
+func (m *Module[Acc, Prof, File]) Start() {
+	m.UseCase.Start()
+}
+
+func (m *Module[Acc, Prof, File]) Stop() {
+	m.UseCase.Stop()
 }
