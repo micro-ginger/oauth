@@ -14,6 +14,7 @@ func (uc useCase[T]) startCron() {
 	defer uc.startMtx.RUnlock()
 
 	ticker := time.NewTicker(time.Second * 10)
+	defer ticker.Stop()
 
 	select {
 	case <-uc.closeChan:
