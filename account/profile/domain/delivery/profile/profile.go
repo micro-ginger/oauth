@@ -6,7 +6,7 @@ import (
 )
 
 type Profile[T profile.Model] struct {
-	Id    uint64  `json:"id"`
+	Id    uint64  `json:"id,omitempty"`
 	Photo *string `json:"photo"`
 	T     any     `json:"detail"`
 }
