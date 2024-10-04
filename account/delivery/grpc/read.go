@@ -7,22 +7,19 @@ import (
 	blondeAcc "github.com/micro-blonde/auth/account"
 	acc "github.com/micro-blonde/auth/proto/auth/account"
 	ins "github.com/micro-ginger/oauth/account/delivery/instruction"
-	"github.com/micro-ginger/oauth/account/domain/account"
 	a "github.com/micro-ginger/oauth/account/domain/account"
+	ad "github.com/micro-ginger/oauth/account/domain/delivery/account"
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
-type BaseReadHandler[T account.Model] interface {
-}
-
-type baseRead[T account.Model] struct {
+type baseRead[T a.Model] struct {
 	instruction instruction.Instruction
 	logger      log.Logger
 	uc          a.UseCase[T]
 }
 
-func newBaseRead[T account.Model](
-	logger log.Logger, uc a.UseCase[T]) *baseRead[T] {
+func newBaseRead[T a.Model](
+	logger log.Logger, uc a.UseCase[T]) ad.BaseReadHandler[T] {
 	h := &baseRead[T]{
 		instruction: ins.NewInstruction(),
 		logger:      logger,
@@ -31,7 +28,11 @@ func newBaseRead[T account.Model](
 	return h
 }
 
-func (h *baseRead[T]) getAccount(a *account.Account[T]) (*acc.Account, errors.Error) {
+func (h *baseRead[T]) GetInstruction() instruction.Instruction {
+	return h.instruction
+}
+
+func (h *baseRead[T]) GetAccount(a *a.Account[T]) (*acc.Account, errors.Error) {
 	var v *structpb.Struct
 	var t any = a.T
 	if vg, ok := t.(blondeAcc.StructValueGetter); ok {

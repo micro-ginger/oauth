@@ -24,6 +24,7 @@ type Module[Prof profile.Model, File file.Model] struct {
 
 	PhotoUpdateHandler delivery.PhotoHandler[File]
 
+	GrpcRead        grpc.BaseReadHandler[Prof, File]
 	GrpcListHandler grpc.ListHandler[Prof, File]
 	GrpcGetHandler  grpc.GetHandler[Prof, File]
 }
@@ -33,6 +34,9 @@ func New[Prof profile.Model, File file.Model](logger log.Logger,
 	repo := r.New[Prof](baseRepo)
 	uc := usecase.New(logger, repo)
 	read := delivery.NewRead[Prof, File](logger.WithTrace("read"))
+	grpcRead := grpc.NewBaseRead[Prof, File](
+		logger.WithTrace("grpcRead"), uc,
+	)
 	m := &Module[Prof, File]{
 		Repository: repo,
 		UseCase:    uc,
@@ -47,15 +51,17 @@ func New[Prof profile.Model, File file.Model](logger log.Logger,
 		PhotoUpdateHandler: delivery.NewUpdatePhoto[File](
 			logger.WithTrace("delivery.photoUpdate"), uc, responder,
 		),
-		GrpcListHandler: grpc.NewList[Prof, File](logger.WithTrace("grpcList"), uc),
-		GrpcGetHandler:  grpc.NewGet[Prof, File](logger.WithTrace("grpcGet"), uc),
+		GrpcRead: grpcRead,
+		GrpcListHandler: grpc.NewList[Prof, File](
+			logger.WithTrace("grpcList"), uc, grpcRead),
+		GrpcGetHandler: grpc.NewGet[Prof, File](
+			logger.WithTrace("grpcGet"), uc, grpcRead),
 	}
 	return m
 }
 
 func (m *Module[Prof, File]) Initialize(file fileClient.Client[File]) {
 	m.Read.Initialize(file)
+	m.GrpcRead.Initialize(file)
 	m.PhotoUpdateHandler.Initialize(file)
-	m.GrpcGetHandler.Initialize(file)
-	m.GrpcListHandler.Initialize(file)
 }

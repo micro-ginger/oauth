@@ -15,6 +15,7 @@ import (
 )
 
 type BaseReadHandler[T profile.Model, F file.Model] interface {
+	profDlv.BaseReadHandler[T]
 	Initialize(file fileClient.Client[F])
 }
 
@@ -25,8 +26,8 @@ type baseRead[T profile.Model, F file.Model] struct {
 	file        fileClient.Client[F]
 }
 
-func newBaseRead[T profile.Model, F file.Model](
-	logger log.Logger, uc p.UseCase[T]) *baseRead[T, F] {
+func NewBaseRead[T profile.Model, F file.Model](
+	logger log.Logger, uc p.UseCase[T]) BaseReadHandler[T, F] {
 	h := &baseRead[T, F]{
 		instruction: ins.NewInstructionIntegrated(),
 		logger:      logger,
@@ -39,8 +40,15 @@ func (h *baseRead[T, F]) Initialize(file fileClient.Client[F]) {
 	h.file = file
 }
 
-func (h *baseRead[T, F]) getProfile(p *p.Profile[T]) (*prof.Profile, errors.Error) {
-	r, err := profDlv.GetGrpcProfile[T](p)
+func (h *baseRead[T, F]) GetInstruction() instruction.Instruction {
+	return h.instruction
+}
+
+func (h *baseRead[T, F]) GetProfile(p *p.Profile[T]) (*prof.Profile, errors.Error) {
+	if p == nil {
+		return nil, nil
+	}
+	r, err := profDlv.GetGrpcProfile(p)
 	if err != nil {
 		return nil, err.
 			WithTrace("delivery.GetGrpcAccount")

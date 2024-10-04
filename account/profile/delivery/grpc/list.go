@@ -13,17 +13,18 @@ import (
 
 type ListHandler[T profile.Model, F file.Model] interface {
 	gateway.Handler
-	BaseReadHandler[T, F]
 }
 
 type list[T profile.Model, F file.Model] struct {
-	*baseRead[T, F]
+	read BaseReadHandler[T, F]
+	uc   p.UseCase[T]
 }
 
-func NewList[T profile.Model, F file.Model](
-	logger log.Logger, uc p.UseCase[T]) ListHandler[T, F] {
+func NewList[T profile.Model, F file.Model](logger log.Logger,
+	uc p.UseCase[T], read BaseReadHandler[T, F]) ListHandler[T, F] {
 	h := &list[T, F]{
-		baseRead: newBaseRead[T, F](logger, uc),
+		read: read,
+		uc:   uc,
 	}
 	return h
 }
@@ -32,7 +33,7 @@ func (h *list[T, F]) Handle(request gateway.Request) (any, errors.Error) {
 	ctx := request.GetContext()
 	q := query.New(ctx)
 	var err errors.Error
-	q, err = request.ProcessFilters(q, h.instruction)
+	q, err = request.ProcessFilters(q, h.read.GetInstruction())
 	if err != nil {
 		return nil, err.WithTrace("request.ProcessFilters")
 	}
@@ -43,7 +44,7 @@ func (h *list[T, F]) Handle(request gateway.Request) (any, errors.Error) {
 	}
 	items := make([]*prof.Profile, len(profs))
 	for i, itm := range profs {
-		items[i], err = h.getProfile(itm)
+		items[i], err = h.read.GetProfile(itm)
 		if err != nil {
 			return nil, err.WithTrace("getProfile")
 		}

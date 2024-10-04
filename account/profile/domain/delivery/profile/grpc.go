@@ -2,6 +2,7 @@ package delivery
 
 import (
 	"github.com/ginger-core/errors"
+	"github.com/ginger-core/gateway/instruction"
 	"github.com/micro-blonde/auth/account"
 	"github.com/micro-blonde/auth/profile"
 	prof "github.com/micro-blonde/auth/proto/auth/account/profile"
@@ -11,6 +12,9 @@ import (
 
 func GetGrpcProfile[T profile.Model](
 	a *p.Profile[T]) (*prof.Profile, errors.Error) {
+	if a == nil {
+		return nil, nil
+	}
 	r := &prof.Profile{
 		Id: a.Id,
 		T:  structpb.NewNullValue(),
@@ -45,4 +49,10 @@ func GetGrpcProfiles[T profile.Model](
 		}
 	}
 	return r, nil
+}
+
+type BaseReadHandler[T profile.Model] interface {
+	GetInstruction() instruction.Instruction
+
+	GetProfile(a *p.Profile[T]) (*prof.Profile, errors.Error)
 }

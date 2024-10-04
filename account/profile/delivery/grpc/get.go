@@ -12,17 +12,18 @@ import (
 
 type GetHandler[T profile.Model, F file.Model] interface {
 	gateway.Handler
-	BaseReadHandler[T, F]
 }
 
 type get[T profile.Model, F file.Model] struct {
-	*baseRead[T, F]
+	read BaseReadHandler[T, F]
+	uc   p.UseCase[T]
 }
 
-func NewGet[T profile.Model, F file.Model](
-	logger log.Logger, uc p.UseCase[T]) GetHandler[T, F] {
+func NewGet[T profile.Model, F file.Model](logger log.Logger,
+	uc p.UseCase[T], read BaseReadHandler[T, F]) GetHandler[T, F] {
 	h := &get[T, F]{
-		baseRead: newBaseRead[T, F](logger, uc),
+		read: read,
+		uc:   uc,
 	}
 	return h
 }
@@ -31,7 +32,7 @@ func (h *get[T, F]) Handle(request gateway.Request) (any, errors.Error) {
 	ctx := request.GetContext()
 	q := query.New(ctx)
 	var err errors.Error
-	q, err = request.ProcessFilters(q, h.instruction)
+	q, err = request.ProcessFilters(q, h.read.GetInstruction())
 	if err != nil {
 		return nil, err.WithTrace("request.ProcessFilters")
 	}
@@ -40,5 +41,5 @@ func (h *get[T, F]) Handle(request gateway.Request) (any, errors.Error) {
 		return nil, err.
 			WithTrace("uc.GetAggregated")
 	}
-	return h.getProfile(prof)
+	return h.read.GetProfile(prof)
 }
