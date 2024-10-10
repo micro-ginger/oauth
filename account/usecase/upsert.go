@@ -11,7 +11,7 @@ import (
 func (uc *useCase[T]) Upsert(ctx context.Context,
 	q query.Query, update *account.Account[T]) errors.Error {
 	if err := uc.repo.Upsert(q, update); err != nil {
-		return err.WithTrace("repo.Update")
+		return err.WithTrace("repo.Upsert")
 	}
 	return nil
 }

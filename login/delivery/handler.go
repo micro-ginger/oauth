@@ -6,6 +6,7 @@ import (
 	"github.com/ginger-core/log"
 	"github.com/micro-ginger/oauth/account/domain/account"
 	"github.com/micro-ginger/oauth/login/authorization"
+	ad "github.com/micro-ginger/oauth/login/domain/account"
 	ld "github.com/micro-ginger/oauth/login/domain/delivery/login"
 	"github.com/micro-ginger/oauth/login/flow"
 	"github.com/micro-ginger/oauth/login/flow/stage/step"
@@ -16,8 +17,8 @@ import (
 
 type Handler[acc account.Model] interface {
 	gateway.Handler
-	Initialize(loginSession s.Handler[acc],
-		flows flow.Flows, session session.UseCase)
+	Initialize(account ad.UseCase[acc],
+		loginSession s.Handler[acc], flows flow.Flows, session session.UseCase)
 	SetManager(manager authorization.Manager[acc])
 	RegisterHandler(t step.Type, sh handler.Handler[acc])
 }
@@ -25,6 +26,8 @@ type Handler[acc account.Model] interface {
 type lh[acc account.Model] struct {
 	gateway.Responder
 	logger log.Logger
+
+	account ad.UseCase[acc]
 
 	loginSession s.Handler[acc]
 
@@ -45,8 +48,9 @@ func NewLogin[acc account.Model](
 	return h
 }
 
-func (h *lh[acc]) Initialize(loginSession s.Handler[acc],
-	flows flow.Flows, session session.UseCase) {
+func (h *lh[acc]) Initialize(account ad.UseCase[acc],
+	loginSession s.Handler[acc], flows flow.Flows, session session.UseCase) {
+	h.account = account
 	h.loginSession = loginSession
 	h.flows = flows
 	h.session = session
@@ -83,12 +87,18 @@ func (h *lh[acc]) Handle(request gateway.Request) (r any, err errors.Error) {
 			return nil, err.WithTrace("start")
 		}
 	}
+	if err = h.validate(request, sess); err != nil {
+		return nil, err.WithTrace("validate")
+	}
 	if sess.IsDone() {
 		if h.manager != nil {
 			// before login
 			if err = h.manager.BeforeLogin(request, sess); err != nil {
 				return nil, err.WithTrace("manager.BeforeLogin")
 			}
+		}
+		if err = h.validate(request, sess); err != nil {
+			return nil, err.WithTrace("validate")
 		}
 		// login
 		sessions := make([]*session.CreateRequest, len(sess.Flow.Login.Sessions))

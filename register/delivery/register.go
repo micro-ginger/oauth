@@ -68,28 +68,23 @@ func (h *handler[R, T, acc]) Handle(request gateway.Request) (any, errors.Error)
 		return nil, err.
 			WithTrace("request.ProcessBody")
 	}
-	var hashedPassword []byte
+
+	req := &register.Request[T, acc]{
+		Update: &a.Update[acc]{},
+		Register: &register.Register[T]{
+			AccountId: accId,
+		},
+	}
 	if body.Password != nil {
-		hashedPassword, err = a.HashPassword(*body.Password)
+		hashedPassword, err := a.HashPassword(*body.Password)
 		if err != nil {
 			return nil, err.
 				WithTrace("a.HashPassword")
 		}
-	}
-
-	req := &register.Request[T, acc]{
-		Account: &a.Account[acc]{
-			Account: account.Account[acc]{
-				Base: account.Base{
-					Id: accId,
-				},
-			},
-			HashedPassword: hashedPassword,
-		},
-		Register: &register.Register[T]{
-			AccountId:      accId,
-			HashedPassword: hashedPassword,
-		},
+		req.Register.HashedPassword = hashedPassword
+		req.Update.UpdatePassword = &a.UpdatePassword{
+			New: *body.Password,
+		}
 	}
 
 	if err = h.reqHandler.PopulateRequest(body, req); err != nil {

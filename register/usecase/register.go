@@ -6,12 +6,15 @@ import (
 	"github.com/ginger-core/errors"
 	"github.com/ginger-core/query"
 	sqlQuery "github.com/ginger-repository/sql/query"
+	"github.com/micro-blonde/auth/account"
+	ad "github.com/micro-ginger/oauth/account/domain/account"
 	"github.com/micro-ginger/oauth/register/domain/register"
 )
 
 func (uc *useCase[T, acc]) Register(ctx context.Context,
 	request *register.Request[T, acc]) (err errors.Error) {
-	q := sqlQuery.New(query.New(ctx), nil)
+	q := query.New(ctx)
+	q = sqlQuery.New(q, nil)
 
 	err = uc.repo.Begin(q)
 	if err != nil {
@@ -29,12 +32,21 @@ func (uc *useCase[T, acc]) Register(ctx context.Context,
 		}
 	}()
 
-	err = uc.account.Upsert(ctx, q, request.Account)
-	if err != nil {
-		return err.WithTrace("account.Upsert")
+	q = query.NewFilter(q).
+		WithMatch(&query.Match{
+			Key:      "id",
+			Operator: query.Equal,
+			Value:    request.Register.AccountId,
+		})
+	if request.Update.UpdateStatus == nil {
+		request.Update.UpdateStatus = new(ad.UpdateStatus)
 	}
+	request.Update.UpdateStatus.Add(account.StatusRegistered)
 
-	request.Register.AccountId = request.Account.Id
+	err = uc.account.Update(ctx, q, request.Update)
+	if err != nil {
+		return err.WithTrace("account.Update")
+	}
 
 	err = uc.repo.Upsert(q, request.Register)
 	if err != nil {

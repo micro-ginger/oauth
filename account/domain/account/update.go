@@ -38,6 +38,7 @@ type Update[T account.Model] struct {
 
 	UpdateStatus   *UpdateStatus
 	UpdatePassword *UpdatePassword
+	T              T
 }
 
 func (u *Update[T]) AddStatus(status account.Status) {

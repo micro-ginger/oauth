@@ -8,6 +8,7 @@ import (
 	"github.com/micro-ginger/oauth/account/domain/account"
 	"github.com/micro-ginger/oauth/login/authentication"
 	"github.com/micro-ginger/oauth/login/delivery"
+	ad "github.com/micro-ginger/oauth/login/domain/account"
 	"github.com/micro-ginger/oauth/login/flow"
 	s "github.com/micro-ginger/oauth/login/session/domain/session"
 	sessionHandler "github.com/micro-ginger/oauth/login/session/handler"
@@ -49,10 +50,11 @@ func New[acc account.Model](logger log.Logger, registry registry.Registry,
 	return m
 }
 
-func (m *Module[acc]) Initialize(flows flow.Flows, session session.UseCase) {
+func (m *Module[acc]) Initialize(account ad.UseCase[acc],
+	flows flow.Flows, session session.UseCase) {
 	m.Authentication.GetBase().InitializeSteps(flows)
 	m.Authentication.Initialize()
-	m.Handler.Initialize(m.Session, flows, session)
+	m.Handler.Initialize(account, m.Session, flows, session)
 
 	stepHandlers := m.Authentication.GetStepHandlers()
 	for _, h := range stepHandlers {

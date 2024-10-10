@@ -26,18 +26,7 @@ func (uc *useCase[T]) Update(ctx context.Context,
 			changed = true
 		}
 		if update.UpdateStatus.AddStatus.Is(account.StatusRegistered) {
-			// registered
 			internalStatuses |= account.InternalStatusRegistered
-			changed = true
-		}
-		if update.UpdateStatus.AddStatus.Is(account.StatusVerified) {
-			// verified
-			internalStatuses |= account.InternalStatusVerified
-			changed = true
-		}
-		if update.UpdateStatus.AddStatus.Is(account.StatusRejected) {
-			// rejected
-			internalStatuses |= account.InternalStatusRejected
 			changed = true
 		}
 	}
@@ -68,14 +57,12 @@ func (uc *useCase[T]) Update(ctx context.Context,
 		fq.WithSet("hashed_password", hashedPassword)
 		changed = true
 	}
+	changed = update.T.ProcessUpdates(fq) || changed
 	if changed {
 		if err := uc.repo.Update(fq, nil); err != nil {
 			return err.WithTrace("repo.Update")
 		}
 	}
-	// if update.UpdatePassword != nil {
-	// 	// changed password
-	// }
 
 	if update.Account != nil {
 		if err := uc.UpdateAccount(ctx, q, update.Account); err != nil {

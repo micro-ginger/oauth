@@ -9,6 +9,6 @@ import (
 )
 
 type UseCase[T account.Model] interface {
-	Upsert(ctx context.Context, q query.Query,
-		account *account.Account[T]) errors.Error
+	Update(ctx context.Context, q query.Query,
+		update *account.Update[T]) errors.Error
 }

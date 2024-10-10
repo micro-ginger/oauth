@@ -1,7 +1,11 @@
 package flow
 
-import "github.com/micro-ginger/oauth/session/domain/session"
+import (
+	"github.com/micro-ginger/oauth/login/validation"
+	"github.com/micro-ginger/oauth/session/domain/session"
+)
 
 type Login struct {
-	Sessions []*session.CreateConfig
+	Validations []validation.Validation
+	Sessions    []*session.CreateConfig
 }
