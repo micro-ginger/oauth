@@ -7,7 +7,7 @@ import (
 	"github.com/ginger-core/errors"
 )
 
-func (h *handler[acc]) Generate(ctx context.Context,
+func (h *handler[acc, SessionAccountDetail]) Generate(ctx context.Context,
 	key any, o *Otp, otpType string) (*Otp, time.Duration, errors.Error) {
 	v, err := h.globalValidator.BeginRequest(ctx, key)
 	if err != nil {

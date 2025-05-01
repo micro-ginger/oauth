@@ -11,8 +11,9 @@ type body struct {
 	Token string `json:"token" binding:"required"`
 }
 
-func (h *h[acc]) Process(request gateway.Request,
-	sess *session.Session[acc]) (response.Response, errors.Error) {
+func (h *h[acc, SessionAccountDetail]) Process(
+	request gateway.Request, sess *session.Session[acc, SessionAccountDetail],
+) (response.Response, errors.Error) {
 	body := new(body)
 	if err := request.ProcessBody(body); err != nil {
 		return nil, err

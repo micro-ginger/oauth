@@ -2,6 +2,8 @@ package session
 
 import (
 	"time"
+
+	"github.com/ginger-core/gateway"
 )
 
 type CreateConfig struct {
@@ -21,7 +23,9 @@ type CreateConfig struct {
 	IncludeRoles []string
 }
 
-func NewCreateConfigFromSession(s *Session) *CreateConfig {
+func NewCreateConfigFromSession[AccountDetail gateway.ResultGetter](
+	s *Session[AccountDetail],
+) *CreateConfig {
 	r := &CreateConfig{
 		Section:            s.Section,
 		AccessTokenExp:     s.AccessTokenExp,

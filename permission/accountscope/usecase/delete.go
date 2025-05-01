@@ -6,7 +6,7 @@ import (
 	"github.com/ginger-core/errors"
 )
 
-func (uc *useCase) Delete(ctx context.Context,
+func (uc *useCase[SessionAccountDetail]) Delete(ctx context.Context,
 	roleId uint64, scopeId uint64) errors.Error {
 	if err := uc.repo.Delete(ctx, roleId, scopeId); err != nil {
 		if err.IsType(errors.TypeNotFound) {
@@ -17,7 +17,7 @@ func (uc *useCase) Delete(ctx context.Context,
 	return nil
 }
 
-func (uc *useCase) DeleteBulk(ctx context.Context,
+func (uc *useCase[SessionAccountDetail]) DeleteBulk(ctx context.Context,
 	roleId uint64, scopeIds []uint64) errors.Error {
 	if err := uc.repo.DeleteBulk(ctx, roleId, scopeIds); err != nil {
 		return err
@@ -25,7 +25,7 @@ func (uc *useCase) DeleteBulk(ctx context.Context,
 	return nil
 }
 
-func (uc *useCase) Revoke(ctx context.Context,
+func (uc *useCase[SessionAccountDetail]) Revoke(ctx context.Context,
 	accountId uint64, scopes ...string) errors.Error {
 	return uc.repo.Revoke(ctx, accountId, scopes...)
 }

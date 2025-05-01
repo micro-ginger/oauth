@@ -2,6 +2,7 @@ package authentication
 
 import (
 	"github.com/ginger-core/compound/registry"
+	"github.com/ginger-core/gateway"
 	"github.com/ginger-core/log"
 	"github.com/ginger-core/log/logger"
 	"github.com/ginger-core/repository"
@@ -18,7 +19,7 @@ import (
 	"github.com/micro-ginger/oauth/session/domain/session"
 )
 
-type Base[acc account.Model] struct {
+type Base[acc account.Model, SessionAccountDetail gateway.ResultGetter] struct {
 	logger   log.Logger
 	registry registry.Registry
 
@@ -26,17 +27,20 @@ type Base[acc account.Model] struct {
 
 	account account.UseCase[acc]
 
-	loginSession loginSession.Handler[acc]
+	loginSession loginSession.Handler[acc, SessionAccountDetail]
 
-	steps *steps.Module[acc]
+	steps *steps.Module[acc, SessionAccountDetail]
 
-	session session.UseCase
+	session session.UseCase[SessionAccountDetail]
 }
 
-func NewBase[acc account.Model](logger log.Logger, registry registry.Registry,
-	loginSession loginSession.Handler[acc], cache repository.Cache,
-	account account.UseCase[acc], session session.UseCase) *Base[acc] {
-	m := &Base[acc]{
+func NewBase[acc account.Model, SessionAccountDetail gateway.ResultGetter](
+	logger log.Logger, registry registry.Registry,
+	loginSession loginSession.Handler[acc, SessionAccountDetail],
+	cache repository.Cache, account account.UseCase[acc],
+	session session.UseCase[SessionAccountDetail],
+) *Base[acc, SessionAccountDetail] {
+	m := &Base[acc, SessionAccountDetail]{
 		logger:       logger,
 		registry:     registry,
 		loginSession: loginSession,
@@ -48,19 +52,19 @@ func NewBase[acc account.Model](logger log.Logger, registry registry.Registry,
 	return m
 }
 
-func (m *Base[acc]) GetBase() *Base[acc] {
+func (m *Base[acc, SessionAccountDetail]) GetBase() *Base[acc, SessionAccountDetail] {
 	return m
 }
 
-func (m *Base[acc]) InitializeSteps(flows flow.Flows) {
-	m.steps = steps.New[acc](m.logger.WithTrace("handlers"))
+func (m *Base[acc, SessionAccountDetail]) InitializeSteps(flows flow.Flows) {
+	m.steps = steps.New[acc, SessionAccountDetail](m.logger.WithTrace("handlers"))
 	m.steps.Initialize(flows)
 }
 
-func (m *Base[acc]) Initialize() {
+func (m *Base[acc, SessionAccountDetail]) Initialize() {
 	m.initializeHandlers()
 }
-func (m *Base[acc]) initializeHandlers() {
+func (m *Base[acc, SessionAccountDetail]) initializeHandlers() {
 	config := new(config)
 	if err := m.registry.Unmarshal(config); err != nil {
 		panic(err)
@@ -72,7 +76,7 @@ func (m *Base[acc]) initializeHandlers() {
 	}
 }
 
-func (m *Base[acc]) initializeHandler(
+func (m *Base[acc, SessionAccountDetail]) initializeHandler(
 	registry registry.Registry, handlerType step.Type) {
 	baseHandler := sbase.New(
 		m.logger.WithTrace("base"),
@@ -84,7 +88,7 @@ func (m *Base[acc]) initializeHandler(
 		WithType(handlerType).
 		WithAccount(m.account)
 
-	var h handler.Handler[acc]
+	var h handler.Handler[acc, SessionAccountDetail]
 	switch handlerType {
 	case keyPw.Type:
 		h = keyPw.New(
@@ -115,10 +119,10 @@ func (m *Base[acc]) initializeHandler(
 	m.steps.RegisterHandler(handlerType, h)
 }
 
-func (m *Base[acc]) GetLoginSession() loginSession.Handler[acc] {
+func (m *Base[acc, SessionAccountDetail]) GetLoginSession() loginSession.Handler[acc, SessionAccountDetail] {
 	return m.loginSession
 }
 
-func (m *Base[acc]) GetStepHandlers() map[step.Type]handler.Handler[acc] {
+func (m *Base[acc, SessionAccountDetail]) GetStepHandlers() map[step.Type]handler.Handler[acc, SessionAccountDetail] {
 	return m.steps.Handlers
 }

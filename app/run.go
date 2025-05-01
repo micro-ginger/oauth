@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func (a *App[acc, prof, regReq, reg, f]) Start() {
+func (a *App[acc, prof, regReq, reg, f, SessionAccountDetail]) Start() {
 	go func() {
 		if err := a.HTTP.Run(); err != nil {
 			panic(err)

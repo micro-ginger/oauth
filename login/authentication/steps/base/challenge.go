@@ -7,7 +7,7 @@ import (
 	"github.com/ginger-core/gateway"
 )
 
-func (h *Handler[acc]) GetChallenge(ctx context.Context,
+func (h *Handler[acc, SessionAccountDetail]) GetChallenge(ctx context.Context,
 	request gateway.Request) (string, errors.Error) {
 	ch, ok := request.GetQuery("challenge")
 	if !ok {

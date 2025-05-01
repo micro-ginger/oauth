@@ -8,10 +8,10 @@ import (
 	"github.com/micro-ginger/oauth/session/domain/session"
 )
 
-func (repo *repo) Create(ctx context.Context,
-	key string, session *session.Session, exp time.Duration) errors.Error {
+func (repo *repo[AccountDetail]) Create(ctx context.Context, key string,
+	session *session.Session[AccountDetail], exp time.Duration) errors.Error {
 	if err := repo.cache.MarshalStore(ctx, key, session, exp); err != nil {
-		return err
+		return err.WithTrace("cache.MarshalStore")
 	}
 	return nil
 }

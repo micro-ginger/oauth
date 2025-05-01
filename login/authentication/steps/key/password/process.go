@@ -21,8 +21,9 @@ type body struct {
 	Password string `json:"password" form:"password" binding:"required"`
 }
 
-func (h *h[acc]) Process(request gateway.Request,
-	sess *session.Session[acc]) (response.Response, errors.Error) {
+func (h *h[acc, SessionAccountDetail]) Process(
+	request gateway.Request, sess *session.Session[acc, SessionAccountDetail],
+) (response.Response, errors.Error) {
 	ctx := request.GetContext()
 	body := new(body)
 	if err := request.ProcessBody(body); err != nil {
@@ -52,7 +53,8 @@ func (h *h[acc]) Process(request gateway.Request,
 	return nil, nil
 }
 
-func (h *h[acc]) checkDisableAccount(ctx context.Context, accId uint64) errors.Error {
+func (h *h[acc, SessionAccountDetail],
+) checkDisableAccount(ctx context.Context, accId uint64) errors.Error {
 	// cache attempt
 	key := fmt.Sprint(accId)
 	v, err := h.wrongPassValidator.BeginRequest(ctx, key)

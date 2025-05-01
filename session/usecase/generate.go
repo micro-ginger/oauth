@@ -16,7 +16,7 @@ const (
 var src = rand.NewSource(time.Now().UnixNano())
 
 // ref: https://stackoverflow.com/questions/22892120/how-to-generate-a-random-string-of-a-fixed-length-in-go
-func (uc *useCase) randStringBytesMaskImprSrcUnsafe(n int) string {
+func (uc *useCase[AccountDetail]) randStringBytesMaskImprSrcUnsafe(n int) string {
 	b := make([]byte, n)
 	// A src.Int63() generates 63 random bits, enough for letterIdxMax characters!
 	for i, cache, remain := n-1, src.Int63(), letterIdxMax; i >= 0; {
@@ -34,10 +34,10 @@ func (uc *useCase) randStringBytesMaskImprSrcUnsafe(n int) string {
 	return *(*string)(unsafe.Pointer(&b))
 }
 
-func (uc *useCase) randomId() string {
+func (uc *useCase[AccountDetail]) randomId() string {
 	return uc.randStringBytesMaskImprSrcUnsafe(16)
 }
 
-func (uc *useCase) generateToken(n int) string {
+func (uc *useCase[AccountDetail]) generateToken(n int) string {
 	return uc.randStringBytesMaskImprSrcUnsafe(n)
 }

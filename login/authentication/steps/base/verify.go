@@ -11,7 +11,7 @@ import (
 	"github.com/micro-ginger/oauth/login/authentication/steps/handler"
 )
 
-func (h *Handler[acc]) CheckVerifyKey(
+func (h *Handler[acc, SessionAccountDetail]) CheckVerifyKey(
 	ctx context.Context, key string) errors.Error {
 	_verfied := ctx.Value(handler.VerifiedKey)
 	if _verfied != nil {
@@ -29,7 +29,7 @@ func (h *Handler[acc]) CheckVerifyKey(
 	return nil
 }
 
-func (h *Handler[acc]) CheckVerifyAccount(
+func (h *Handler[acc, SessionAccountDetail]) CheckVerifyAccount(
 	ctx context.Context, a *a.Account[acc]) errors.Error {
 	if err := h.CheckVerifyKey(ctx, fmt.Sprint(a.Id)); err != nil {
 		return err.WithTrace("CheckVerifyKey")

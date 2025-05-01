@@ -7,8 +7,8 @@ import (
 	"github.com/micro-ginger/oauth/login/validation"
 )
 
-func (h *lh[acc]) validate(request gateway.Request,
-	sess *s.Session[acc]) errors.Error {
+func (h *lh[acc, SessionAccountDetail]) validate(request gateway.Request,
+	sess *s.Session[acc, SessionAccountDetail]) errors.Error {
 	if sess.Info.Account == nil {
 		if sess.Info.AccountId == 0 {
 			return nil

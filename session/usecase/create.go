@@ -8,15 +8,16 @@ import (
 	"github.com/micro-ginger/oauth/session/domain/session"
 )
 
-func (uc *useCase) Create(ctx context.Context,
-	request *session.CreateRequest) (*session.Session, errors.Error) {
+func (uc *useCase[AccountDetail]) Create(
+	ctx context.Context, request *session.CreateRequest[AccountDetail],
+) (*session.Session[AccountDetail], errors.Error) {
 	conf := uc.config.Create
 	if request.CreateConfig != nil {
 		conf = *request.CreateConfig
 	}
 	s := request.Old
 	if s == nil {
-		s = &session.Session{
+		s = &session.Session[AccountDetail]{
 			CreatedAt:      time.Now().UTC(),
 			AccessTokenExp: conf.AccessTokenExp,
 			Account:        request.Account,

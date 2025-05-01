@@ -14,8 +14,10 @@ type body struct {
 	Mobile *string `json:"mobile"`
 }
 
-func (h *_handler[acc]) request(_ context.Context, request gateway.Request,
-	sess *session.Session[acc]) (response.Response, errors.Error) {
+func (h *_handler[acc, SessionAccountDetail]) request(
+	_ context.Context, request gateway.Request,
+	sess *session.Session[acc, SessionAccountDetail],
+) (response.Response, errors.Error) {
 	body := new(body)
 	if err := request.ProcessBody(body); err != nil {
 		return nil, err.

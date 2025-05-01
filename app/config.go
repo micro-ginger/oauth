@@ -16,7 +16,7 @@ type config struct {
 	}
 }
 
-func (a *App[acc, prof, regReq, reg, f]) loadConfig() {
+func (a *App[acc, prof, regReq, reg, f, SessionAccountDetail]) loadConfig() {
 	registry, err := registry.New(context.Background())
 	if err != nil {
 		panic(err)

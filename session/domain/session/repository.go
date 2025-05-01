@@ -5,13 +5,14 @@ import (
 	"time"
 
 	"github.com/ginger-core/errors"
+	"github.com/ginger-core/gateway"
 )
 
-type Repository interface {
+type Repository[AccountDetail gateway.ResultGetter] interface {
 	Create(ctx context.Context, id string,
-		session *Session, exp time.Duration) errors.Error
+		session *Session[AccountDetail], exp time.Duration) errors.Error
 
-	Get(ctx context.Context, key string) (*Session, errors.Error)
+	Get(ctx context.Context, key string) (*Session[AccountDetail], errors.Error)
 	ListKeys(ctx context.Context, pattern string) ([]string, errors.Error)
 
 	Delete(ctx context.Context, key string) errors.Error

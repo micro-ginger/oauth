@@ -7,8 +7,8 @@ import (
 	"github.com/micro-ginger/oauth/login/session/domain/session"
 )
 
-func (h *handler[acc]) Save(ctx context.Context,
-	sess *session.Session[acc]) errors.Error {
+func (h *handler[acc, SessionAccountDetail]) Save(ctx context.Context,
+	sess *session.Session[acc, SessionAccountDetail]) errors.Error {
 	challenge, err := h.challengeGenerator(
 		h.config.Challenge.Characters,
 		h.config.Challenge.Length,

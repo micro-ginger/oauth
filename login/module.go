@@ -15,17 +15,19 @@ import (
 	"github.com/micro-ginger/oauth/session/domain/session"
 )
 
-type Module[acc account.Model] struct {
+type Module[acc account.Model, SessionAccountDetail gateway.ResultGetter] struct {
 	Logger         log.Logger
-	Session        s.Handler[acc]
-	Authentication authentication.Module[acc]
-	Handler        delivery.Handler[acc]
+	Session        s.Handler[acc, SessionAccountDetail]
+	Authentication authentication.Module[acc, SessionAccountDetail]
+	Handler        delivery.Handler[acc, SessionAccountDetail]
 }
 
-func New[acc account.Model](logger log.Logger, registry registry.Registry,
-	account account.UseCase[acc], session session.UseCase,
-	cache repository.Cache, responder gateway.Responder) *Module[acc] {
-	sess := sessionHandler.New[acc](
+func New[acc account.Model, SessionAccountDetail gateway.ResultGetter](
+	logger log.Logger, registry registry.Registry,
+	account account.UseCase[acc], session session.UseCase[SessionAccountDetail],
+	cache repository.Cache, responder gateway.Responder,
+) *Module[acc, SessionAccountDetail] {
+	sess := sessionHandler.New[acc, SessionAccountDetail](
 		logger.WithTrace("session"),
 		registry.ValueOf("session"),
 		cache,
@@ -38,11 +40,11 @@ func New[acc account.Model](logger log.Logger, registry registry.Registry,
 		account,
 		session,
 	)
-	m := &Module[acc]{
+	m := &Module[acc, SessionAccountDetail]{
 		Logger:         logger,
 		Session:        sess,
 		Authentication: auth,
-		Handler: delivery.NewLogin[acc](
+		Handler: delivery.NewLogin[acc, SessionAccountDetail](
 			logger.WithTrace("delivery.login"),
 			responder,
 		),
@@ -50,8 +52,8 @@ func New[acc account.Model](logger log.Logger, registry registry.Registry,
 	return m
 }
 
-func (m *Module[acc]) Initialize(account ad.UseCase[acc],
-	flows flow.Flows, session session.UseCase) {
+func (m *Module[acc, SessionAccountDetail]) Initialize(account ad.UseCase[acc],
+	flows flow.Flows, session session.UseCase[SessionAccountDetail]) {
 	m.Authentication.GetBase().InitializeSteps(flows)
 	m.Authentication.Initialize()
 	m.Handler.Initialize(account, m.Session, flows, session)

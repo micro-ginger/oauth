@@ -16,21 +16,23 @@ import (
 	"github.com/micro-ginger/oauth/validator/domain/validator"
 )
 
-type Handler[acc account.Model] struct {
+type Handler[acc account.Model, SessionAccountDetail gateway.ResultGetter] struct {
 	logger log.Logger
 
 	Type step.Type
 
 	Account account.UseCase[acc]
-	Session session.Handler[acc]
+	Session session.Handler[acc, SessionAccountDetail]
 
 	AccountGetter info.AccountGetter[acc]
 
 	SuspendValidator validator.UseCase
 }
 
-func New[acc account.Model](logger log.Logger, registry registry.Registry,
-	session session.Handler[acc], cache repository.Cache) *Handler[acc] {
+func New[acc account.Model, SessionAccountDetail gateway.ResultGetter](
+	logger log.Logger, registry registry.Registry,
+	session session.Handler[acc, SessionAccountDetail],
+	cache repository.Cache) *Handler[acc, SessionAccountDetail] {
 	// suspendValidator is otp validation which is being
 	// validated in each login session
 	suspendValidator := v.New(
@@ -39,7 +41,7 @@ func New[acc account.Model](logger log.Logger, registry registry.Registry,
 		cache,
 	)
 
-	h := &Handler[acc]{
+	h := &Handler[acc, SessionAccountDetail]{
 		logger:           logger,
 		Session:          session,
 		SuspendValidator: suspendValidator.UseCase,
@@ -47,48 +49,48 @@ func New[acc account.Model](logger log.Logger, registry registry.Registry,
 	return h
 }
 
-func (h *Handler[acc]) WithType(t step.Type) handler.Handler[acc] {
+func (h *Handler[acc, SessionAccountDetail]) WithType(t step.Type) handler.Handler[acc, SessionAccountDetail] {
 	h.Type = t
 	return h
 }
 
-func (h *Handler[acc]) GetType() step.Type {
+func (h *Handler[acc, SessionAccountDetail]) GetType() step.Type {
 	return h.Type
 }
 
-func (h *Handler[acc]) WithAccount(
-	account account.UseCase[acc]) handler.Handler[acc] {
+func (h *Handler[acc, SessionAccountDetail]) WithAccount(
+	account account.UseCase[acc]) handler.Handler[acc, SessionAccountDetail] {
 	h.Account = account
 	return h
 }
 
-func (h *Handler[acc]) WithAccountGetter(
-	getter info.AccountGetter[acc]) handler.Handler[acc] {
+func (h *Handler[acc, SessionAccountDetail]) WithAccountGetter(
+	getter info.AccountGetter[acc]) handler.Handler[acc, SessionAccountDetail] {
 	h.AccountGetter = getter
 	return h
 }
 
-func (h *Handler[acc]) Clone() handler.Handler[acc] {
+func (h *Handler[acc, SessionAccountDetail]) Clone() handler.Handler[acc, SessionAccountDetail] {
 	return h
 }
 
-func (h *Handler[acc]) WithConfig(registry registry.Registry) handler.Handler[acc] {
+func (h *Handler[acc, SessionAccountDetail]) WithConfig(registry registry.Registry) handler.Handler[acc, SessionAccountDetail] {
 	return h
 }
 
-func (h *Handler[acc]) Process(request gateway.Request,
-	sess *session.Session[acc]) (response.Response, errors.Error) {
+func (h *Handler[acc, SessionAccountDetail]) Process(request gateway.Request,
+	sess *session.Session[acc, SessionAccountDetail]) (response.Response, errors.Error) {
 	return nil, errors.NotFound()
 }
 
-func (h *Handler[acc]) CanStepIn(sess *session.Session[acc]) bool {
+func (h *Handler[acc, SessionAccountDetail]) CanStepIn(sess *session.Session[acc, SessionAccountDetail]) bool {
 	return false
 }
 
-func (h *Handler[acc]) CanStepOut(sess *session.Session[acc]) bool {
+func (h *Handler[acc, SessionAccountDetail]) CanStepOut(sess *session.Session[acc, SessionAccountDetail]) bool {
 	return false
 }
 
-func (h *Handler[acc]) IsDone(sess *session.Session[acc]) bool {
+func (h *Handler[acc, SessionAccountDetail]) IsDone(sess *session.Session[acc, SessionAccountDetail]) bool {
 	return false
 }

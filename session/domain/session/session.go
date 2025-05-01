@@ -1,8 +1,12 @@
 package session
 
-import "time"
+import (
+	"time"
 
-type Session struct {
+	"github.com/ginger-core/gateway"
+)
+
+type Session[AccountDetail gateway.ResultGetter] struct {
 	Id        string
 	CreatedAt time.Time
 
@@ -14,7 +18,7 @@ type Session struct {
 	RefreshToken    string
 	RefreshTokenExp time.Duration
 
-	Account Account
+	Account Account[AccountDetail]
 
 	Roles  []string
 	Scopes []string

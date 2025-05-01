@@ -1,6 +1,7 @@
 package oauth
 
 import (
+	"github.com/ginger-core/gateway"
 	"github.com/micro-blonde/auth/profile"
 	"github.com/micro-blonde/file"
 	"github.com/micro-ginger/oauth/account/domain/account"
@@ -11,6 +12,6 @@ import (
 
 func NewApp[acc account.Model, prof profile.Model,
 	regReq rdd.RequestModel, reg register.Model,
-	f file.Model]() app.Application {
-	return app.New[acc, prof, regReq, reg, f]()
+	f file.Model, SessionAccountDetail gateway.ResultGetter]() app.Application {
+	return app.New[acc, prof, regReq, reg, f, SessionAccountDetail]()
 }

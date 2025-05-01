@@ -1,6 +1,7 @@
 package permission
 
 import (
+	"github.com/ginger-core/gateway"
 	"github.com/ginger-core/log"
 	dl "github.com/ginger-core/repository"
 	"github.com/micro-ginger/oauth/permission/accountrole"
@@ -10,16 +11,18 @@ import (
 	"github.com/micro-ginger/oauth/permission/scope"
 )
 
-type Module struct {
+type Module[SessionAccountDetail gateway.ResultGetter] struct {
 	Scope        *scope.Module
 	Role         *role.Module
 	RoleScope    *rs.Module
-	AccountScope *accountscope.Module
+	AccountScope *accountscope.Module[SessionAccountDetail]
 	AccountRole  *accountrole.Module
 }
 
-func Initialize(logger log.Logger, baseDb dl.Repository) *Module {
-	mod := &Module{
+func Initialize[SessionAccountDetail gateway.ResultGetter](
+	logger log.Logger, baseDb dl.Repository,
+) *Module[SessionAccountDetail] {
+	mod := &Module[SessionAccountDetail]{
 		Scope: scope.Initialize(
 			logger.WithTrace("scope"),
 			baseDb,
@@ -32,7 +35,7 @@ func Initialize(logger log.Logger, baseDb dl.Repository) *Module {
 			logger.WithTrace("roleScope"),
 			baseDb,
 		),
-		AccountScope: accountscope.Initialize(
+		AccountScope: accountscope.Initialize[SessionAccountDetail](
 			logger.WithTrace("accountScope"),
 			baseDb,
 		),

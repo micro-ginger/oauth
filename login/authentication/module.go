@@ -2,6 +2,7 @@ package authentication
 
 import (
 	"github.com/ginger-core/compound/registry"
+	"github.com/ginger-core/gateway"
 	"github.com/ginger-core/log"
 	"github.com/ginger-core/repository"
 	"github.com/micro-ginger/oauth/account/domain/account"
@@ -11,24 +12,27 @@ import (
 	"github.com/micro-ginger/oauth/session/domain/session"
 )
 
-type Model[acc account.Model] interface {
+type Model[acc account.Model, SessionAccountDetail gateway.ResultGetter] interface {
 	Initialize()
-	GetStepHandlers() map[step.Type]handler.Handler[acc]
+	GetStepHandlers() map[step.Type]handler.Handler[acc, SessionAccountDetail]
 }
 
-type Module[acc account.Model] interface {
-	Model[acc]
-	GetBase() *Base[acc]
+type Module[acc account.Model, SessionAccountDetail gateway.ResultGetter] interface {
+	Model[acc, SessionAccountDetail]
+	GetBase() *Base[acc, SessionAccountDetail]
 }
 
-type module[acc account.Model] struct {
-	*Base[acc]
+type module[acc account.Model, SessionAccountDetail gateway.ResultGetter] struct {
+	*Base[acc, SessionAccountDetail]
 }
 
-func New[acc account.Model](logger log.Logger, registry registry.Registry,
-	loginSession loginSession.Handler[acc], cache repository.Cache,
-	account account.UseCase[acc], session session.UseCase) Module[acc] {
-	m := &module[acc]{
+func New[acc account.Model, SessionAccountDetail gateway.ResultGetter](
+	logger log.Logger, registry registry.Registry,
+	loginSession loginSession.Handler[acc, SessionAccountDetail],
+	cache repository.Cache, account account.UseCase[acc],
+	session session.UseCase[SessionAccountDetail],
+) Module[acc, SessionAccountDetail] {
+	m := &module[acc, SessionAccountDetail]{
 		Base: NewBase(logger, registry,
 			loginSession, cache, account, session),
 	}

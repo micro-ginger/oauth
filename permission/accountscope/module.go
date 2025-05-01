@@ -1,6 +1,7 @@
 package accountscope
 
 import (
+	"github.com/ginger-core/gateway"
 	"github.com/ginger-core/log"
 	dl "github.com/ginger-core/repository"
 	"github.com/micro-ginger/oauth/permission/accountscope/domain"
@@ -8,16 +9,16 @@ import (
 	"github.com/micro-ginger/oauth/permission/accountscope/usecase"
 )
 
-type Module struct {
+type Module[SessionAccountDetail gateway.ResultGetter] struct {
 	Repository domain.Repository
-	UseCase    domain.UseCase
+	UseCase    domain.UseCase[SessionAccountDetail]
 }
 
-func Initialize(logger log.Logger, baseDb dl.Repository) *Module {
+func Initialize[SessionAccountDetail gateway.ResultGetter](logger log.Logger, baseDb dl.Repository) *Module[SessionAccountDetail] {
 	repo := repository.New(baseDb)
-	uc := usecase.New(logger, repo)
+	uc := usecase.New[SessionAccountDetail](logger, repo)
 
-	m := &Module{
+	m := &Module[SessionAccountDetail]{
 		Repository: repo,
 		UseCase:    uc,
 	}

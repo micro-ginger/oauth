@@ -8,7 +8,7 @@ require (
 	github.com/ginger-core/compound v0.0.0-20230608151919-2963b75416c3
 	github.com/ginger-core/compound/registry v0.0.0-20240815151007-6306bf13a816
 	github.com/ginger-core/errors v0.0.0-20230703084505-b10c3f9cedfb
-	github.com/ginger-core/gateway v0.0.0-20240909095814-36fbbeaa9104
+	github.com/ginger-core/gateway v0.0.0-20250501122452-524cf3e6d89b
 	github.com/ginger-core/log v0.0.0-20240629145652-3b2876535940
 	github.com/ginger-core/query v0.0.0-20230608153800-9375f70642d8
 	github.com/ginger-core/repository v0.0.0-20230608165607-87044af67011
@@ -84,3 +84,4 @@ require (
 // replace github.com/micro-blonde/auth => ../../micro-blonde/auth
 // replace github.com/ginger-repository/sql => ../../../github.com/ginger-repository/sql
 // replace github.com/micro-blonde/auth/proto => ../../micro-blonde/auth/proto
+// replace github.com/ginger-core/gateway => ../../ginger-core/gateway

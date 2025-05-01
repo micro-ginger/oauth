@@ -9,7 +9,7 @@ import (
 	"github.com/micro-ginger/oauth/permission/accountscope/domain/accountscope"
 )
 
-func (uc *useCase) Create(ctx context.Context,
+func (uc *useCase[SessionAccountDetail]) Create(ctx context.Context,
 	item *accountscope.AccountScope) errors.Error {
 	q := query.New(ctx)
 	if err := uc.repo.Create(q, item); err != nil {
@@ -26,7 +26,7 @@ func (uc *useCase) Create(ctx context.Context,
 	return nil
 }
 
-func (uc *useCase) CreateBulk(ctx context.Context,
+func (uc *useCase[SessionAccountDetail]) CreateBulk(ctx context.Context,
 	accountId uint64, scopes accountscope.CreateScopeBulk) errors.Error {
 	if err := uc.repo.CreateBulk(ctx, accountId, scopes); err != nil {
 		return err
@@ -44,7 +44,7 @@ func (uc *useCase) CreateBulk(ctx context.Context,
 	return nil
 }
 
-func (uc *useCase) Authorize(ctx context.Context,
+func (uc *useCase[SessionAccountDetail]) Authorize(ctx context.Context,
 	accountId uint64, scopes ...string) errors.Error {
 	return uc.repo.Authorize(ctx, accountId, scopes...)
 }

@@ -6,12 +6,12 @@ import (
 	"github.com/micro-blonde/auth/authorization"
 )
 
-func (a *App[acc, prof, regReq, reg, f]) initializeServer() {
+func (a *App[acc, prof, regReq, reg, f, SessionAccountDetail]) initializeServer() {
 	a.initializeHTTP()
 	a.initializeAuthenticator()
 }
 
-func (a *App[acc, prof, regReq, reg, f]) initializeHTTP() {
+func (a *App[acc, prof, regReq, reg, f, SessionAccountDetail]) initializeHTTP() {
 	a.HTTP = ginger.NewHTTP(
 		a.Logger.WithTrace("ginger.http"),
 		a.Registry.ValueOf("gateway.http"),
@@ -21,7 +21,7 @@ func (a *App[acc, prof, regReq, reg, f]) initializeHTTP() {
 	a.HTTP.SetController(controller)
 }
 
-func (a *App[acc, prof, regReq, reg, f]) initializeGrpc() {
+func (a *App[acc, prof, regReq, reg, f, SessionAccountDetail]) initializeGrpc() {
 	a.GRPC = ginger.NewGRPC(
 		a.Logger.WithTrace("ginger.grpc"),
 		a.Registry.ValueOf("gateway.grpc"),
@@ -29,7 +29,7 @@ func (a *App[acc, prof, regReq, reg, f]) initializeGrpc() {
 	a.GRPC.Initialize(a.GRPC.NewResponder())
 }
 
-func (a *App[acc, prof, regReq, reg, f]) initializeAuthenticator() {
+func (a *App[acc, prof, regReq, reg, f, SessionAccountDetail]) initializeAuthenticator() {
 	a.Authenticator = authorization.New[acc](
 		a.HTTP, a.Registry.ValueOf("gateway.authorization"))
 }

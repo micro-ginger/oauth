@@ -3,10 +3,11 @@ package login
 import (
 	"time"
 
+	"github.com/ginger-core/gateway"
 	"github.com/micro-ginger/oauth/session/domain/session"
 )
 
-type Session struct {
+type Session[SessionAccountDetail gateway.ResultGetter] struct {
 	Id        string    `json:"id"`
 	CreatedAt time.Time `json:"createdAt"`
 
@@ -17,10 +18,14 @@ type Session struct {
 	RefreshTokenExpSec uint   `json:"refreshTokenExpSec,omitempty"`
 
 	Scopes []string `json:"scopes"`
+
+	Account any `json:"account,omitempty"`
 }
 
-func NewSession(session *session.Session) *Session {
-	return &Session{
+func NewSession[SessionAccountDetail gateway.ResultGetter](
+	session *session.Session[SessionAccountDetail],
+) *Session[SessionAccountDetail] {
+	return &Session[SessionAccountDetail]{
 		Id:                 session.Id,
 		CreatedAt:          session.CreatedAt,
 		AccessToken:        session.AccessToken,
@@ -28,5 +33,6 @@ func NewSession(session *session.Session) *Session {
 		RefreshToken:       session.RefreshToken,
 		RefreshTokenExpSec: uint(session.RefreshTokenExp.Seconds()),
 		Scopes:             session.Scopes,
+		Account:            session.Account.Detail.GetResult(),
 	}
 }

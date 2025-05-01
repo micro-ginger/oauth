@@ -6,8 +6,9 @@ import (
 	"github.com/micro-ginger/oauth/login/session/domain/session"
 )
 
-func (h *lh[acc]) challenge(request gateway.Request,
-	challenge string) (*session.Session[acc], any, errors.Error) {
+func (h *lh[acc, SessionAccountDetail]) challenge(
+	request gateway.Request, challenge string,
+) (*session.Session[acc, SessionAccountDetail], any, errors.Error) {
 	sess, err := h.loginSession.Get(request.GetContext(), challenge)
 	if err != nil {
 		return nil, nil, errors.Unauthorized(err).

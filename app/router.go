@@ -6,12 +6,12 @@ import (
 	"github.com/micro-ginger/oauth/global"
 )
 
-func (a *App[acc, prof, regReq, reg, f]) registerRoutes() {
+func (a *App[acc, prof, regReq, reg, f, SessionAccountDetail]) registerRoutes() {
 	a.registerHttpRoutes()
 	a.registerGrpcRoutes()
 }
 
-func (a *App[acc, prof, regReq, reg, f]) registerHttpRoutes() {
+func (a *App[acc, prof, regReq, reg, f, SessionAccountDetail]) registerHttpRoutes() {
 	rg := a.HTTP.NewRouterGroup("/")
 	//
 	// chaptcha
@@ -107,7 +107,7 @@ func (a *App[acc, prof, regReq, reg, f]) registerHttpRoutes() {
 	)
 }
 
-func (a *App[acc, prof, regReq, reg, f]) registerGrpcRoutes() {
+func (a *App[acc, prof, regReq, reg, f, SessionAccountDetail]) registerGrpcRoutes() {
 	authGroup := a.GRPC.Register(&auth.Auth_ServiceDesc)
 	authGroup.OnPath(
 		gateway.Unknown,

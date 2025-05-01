@@ -32,7 +32,8 @@ type Application interface {
 }
 
 type App[acc account.Model, prof profile.Model,
-	regReq rdd.RequestModel, reg register.Model, f file.Model] struct {
+	regReq rdd.RequestModel, reg register.Model, f file.Model,
+	SessionAccountDetail gateway.ResultGetter] struct {
 	Registry registry.Registry
 	Config   config
 	Logger   log.Handler
@@ -46,9 +47,9 @@ type App[acc account.Model, prof profile.Model,
 	/* modules */
 	Captcha    *captcha.Module
 	Account    *a.Module[acc, prof, f]
-	Permission *permission.Module
-	Session    *session.Module
-	Login      *login.Module[acc]
+	Permission *permission.Module[SessionAccountDetail]
+	Session    *session.Module[SessionAccountDetail]
+	Login      *login.Module[acc, SessionAccountDetail]
 	Register   *r.Module[regReq, reg, acc]
 	Monitoring *monitoring.Module
 	/* server */
@@ -58,8 +59,9 @@ type App[acc account.Model, prof profile.Model,
 }
 
 func New[acc account.Model, prof profile.Model,
-	regReq rdd.RequestModel, reg register.Model, f file.Model]() *App[acc, prof, regReq, reg, f] {
-	a := &App[acc, prof, regReq, reg, f]{
+	regReq rdd.RequestModel, reg register.Model, f file.Model,
+	SessionAccountDetail gateway.ResultGetter]() *App[acc, prof, regReq, reg, f, SessionAccountDetail] {
+	a := &App[acc, prof, regReq, reg, f, SessionAccountDetail]{
 		Language: i18n.NewBundle(language.English),
 	}
 	a.loadConfig()
@@ -70,7 +72,7 @@ func New[acc account.Model, prof profile.Model,
 	return a
 }
 
-func (a *App[acc, prof, regReq, reg, f]) Initialize() {
+func (a *App[acc, prof, regReq, reg, f, SessionAccountDetail]) Initialize() {
 	a.initializeLogger()
 	a.initializeLanguage()
 	a.initializeServer()

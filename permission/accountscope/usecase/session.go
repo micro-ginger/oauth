@@ -8,8 +8,8 @@ import (
 	"github.com/micro-ginger/oauth/session/domain/session"
 )
 
-func (uc *useCase) SessionRemoveUnauthorized(ctx context.Context,
-	session *session.Session) errors.Error {
+func (uc *useCase[SessionAccountDetail]) SessionRemoveUnauthorized(
+	ctx context.Context, session *session.Session[SessionAccountDetail]) errors.Error {
 	scopes, err := uc.GetAccountScopesFromScopes(ctx,
 		session.Account.Id, session.Scopes, false)
 	if err != nil {
@@ -46,8 +46,8 @@ func (uc *useCase) SessionRemoveUnauthorized(ctx context.Context,
 	return nil
 }
 
-func (uc *useCase) SessionAddRequestedRoleScopes(ctx context.Context,
-	session *session.Session) errors.Error {
+func (uc *useCase[SessionAccountDetail]) SessionAddRequestedRoleScopes(ctx context.Context,
+	session *session.Session[SessionAccountDetail]) errors.Error {
 	var scopes []*scope.Detailed
 	var err errors.Error
 

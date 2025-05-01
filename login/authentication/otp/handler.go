@@ -6,6 +6,7 @@ import (
 
 	"github.com/ginger-core/compound/registry"
 	"github.com/ginger-core/errors"
+	"github.com/ginger-core/gateway"
 	"github.com/ginger-core/log"
 	"github.com/micro-ginger/oauth/account/domain/account"
 	"github.com/micro-ginger/oauth/login/session/domain/session"
@@ -26,11 +27,11 @@ type Handler interface {
 		otpType string, code string) errors.Error
 }
 
-type handler[acc account.Model] struct {
+type handler[acc account.Model, SessionAccountDetail gateway.ResultGetter] struct {
 	logger log.Logger
 	config config
 
-	session session.Handler[acc]
+	session session.Handler[acc, SessionAccountDetail]
 
 	codeGenerator func() string
 	// sessionValidator is otp validation which is being
@@ -41,10 +42,12 @@ type handler[acc account.Model] struct {
 	globalValidator validator.UseCase
 }
 
-func New[acc account.Model](logger log.Logger, registry registry.Registry,
-	session session.Handler[acc], sessionValidator validator.UseCase,
+func New[acc account.Model, SessionAccountDetail gateway.ResultGetter](
+	logger log.Logger, registry registry.Registry,
+	session session.Handler[acc, SessionAccountDetail],
+	sessionValidator validator.UseCase,
 	globalValidator validator.UseCase) Handler {
-	h := &handler[acc]{
+	h := &handler[acc, SessionAccountDetail]{
 		logger:           logger,
 		session:          session,
 		sessionValidator: sessionValidator,
@@ -60,6 +63,8 @@ func New[acc account.Model](logger log.Logger, registry registry.Registry,
 	return h
 }
 
-func (h *handler[acc]) RegisterCodeGenerator(generator func() string) {
+func (h *handler[acc, SessionAccountDetail]) RegisterCodeGenerator(
+	generator func() string,
+) {
 	h.codeGenerator = generator
 }

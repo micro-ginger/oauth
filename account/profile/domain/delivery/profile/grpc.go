@@ -2,8 +2,8 @@ package delivery
 
 import (
 	"github.com/ginger-core/errors"
+	"github.com/ginger-core/gateway"
 	"github.com/ginger-core/gateway/instruction"
-	"github.com/micro-blonde/auth/account"
 	"github.com/micro-blonde/auth/profile"
 	prof "github.com/micro-blonde/auth/proto/auth/account/profile"
 	p "github.com/micro-ginger/oauth/account/profile/domain/profile"
@@ -24,9 +24,9 @@ func GetGrpcProfile[T profile.Model](
 	}
 	var v *structpb.Struct
 	var t any = a.T
-	if vg, ok := t.(account.StructValueGetter); ok {
+	if vg, ok := t.(gateway.MapResultGetter); ok {
 		var err error
-		v, err = structpb.NewStruct(vg.GetValues())
+		v, err = structpb.NewStruct(vg.GetMap())
 		if err != nil {
 			return nil, errors.New(err).
 				WithTrace("structpb.NewStruct")

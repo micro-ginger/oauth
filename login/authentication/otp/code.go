@@ -5,7 +5,7 @@ import (
 	"math/rand"
 )
 
-func (h *handler[acc]) GenerateCode() string {
+func (h *handler[acc, SessionAccountDetail]) GenerateCode() string {
 	var code int
 	if !h.config.Debug {
 		code = rand.Intn(h.config.Code.Max-h.config.Code.Min) + h.config.Code.Min

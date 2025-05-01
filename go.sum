@@ -88,8 +88,8 @@ github.com/ginger-core/errors v0.0.0-20230703084505-b10c3f9cedfb h1:akBGMOMV7nOA
 github.com/ginger-core/errors v0.0.0-20230703084505-b10c3f9cedfb/go.mod h1:cWRsvoY6zQYQoDdg/8NqUC5r47R4tUs+uLEugCbCjqo=
 github.com/ginger-core/errors/grpc v0.0.0-20230703084505-b10c3f9cedfb h1:0CQsO/MKgQmne0MuS5UOAOODkRFpYP5xogKoTdPUdy4=
 github.com/ginger-core/errors/grpc v0.0.0-20230703084505-b10c3f9cedfb/go.mod h1:JkEdcv4N8oXQuNRM8/CyxOAItdUg/07lB0ZmKxxUKRk=
-github.com/ginger-core/gateway v0.0.0-20240909095814-36fbbeaa9104 h1:/kO4DiB1MbyFZ429j0bLXfBkgt59K0pEj7N8on9TqjA=
-github.com/ginger-core/gateway v0.0.0-20240909095814-36fbbeaa9104/go.mod h1:n+Eg9q5i2dLKOhKcy8C+QfoSPGUBpvLrPuHGxdsljzc=
+github.com/ginger-core/gateway v0.0.0-20250501122452-524cf3e6d89b h1:byQFoRUJqZ3asacbLgdimSSs9S6QD5Zc8vbU4uZxhAo=
+github.com/ginger-core/gateway v0.0.0-20250501122452-524cf3e6d89b/go.mod h1:n+Eg9q5i2dLKOhKcy8C+QfoSPGUBpvLrPuHGxdsljzc=
 github.com/ginger-core/log v0.0.0-20240629145652-3b2876535940 h1:mueI1W4U6Q8gMZ41dR/zT9WRIaFKUrT9Bm+z+QCQ91s=
 github.com/ginger-core/log v0.0.0-20240629145652-3b2876535940/go.mod h1:NMyweTtD7nHIYE4tqRq5mjGc2Z16LrKnceturfD+pDc=
 github.com/ginger-core/query v0.0.0-20230608153800-9375f70642d8 h1:YD5UjtaOj3Upo7EvSapbdylNkV9PcmUTglIOLYEjSI8=

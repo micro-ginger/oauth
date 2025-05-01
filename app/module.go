@@ -10,7 +10,7 @@ import (
 	"github.com/micro-ginger/oauth/session"
 )
 
-func (a *App[acc, prof, regReq, reg, f]) initializeModules() {
+func (a *App[acc, prof, regReq, reg, f, SessionAccountDetail]) initializeModules() {
 	a.initiateCaptcha()
 	a.initiateAccount()
 	a.initializePermission()
@@ -30,14 +30,14 @@ func (a *App[acc, prof, regReq, reg, f]) initializeModules() {
 	a.Monitoring.Initialize(a.Redis, a.Sql)
 }
 
-func (a *App[acc, prof, regReq, reg, f]) initiateCaptcha() {
+func (a *App[acc, prof, regReq, reg, f, SessionAccountDetail]) initiateCaptcha() {
 	a.Captcha = captcha.New(
 		a.Logger.WithTrace("captcha"),
 		a.Registry.ValueOf("captcha"),
 		a.HTTP.GetController())
 }
 
-func (a *App[acc, prof, regReq, reg, f]) initiateAccount() {
+func (a *App[acc, prof, regReq, reg, f, SessionAccountDetail]) initiateAccount() {
 	a.Account = account.New[acc, prof, f](
 		a.Logger.WithTrace("account"),
 		a.Registry.ValueOf("account"),
@@ -45,22 +45,22 @@ func (a *App[acc, prof, regReq, reg, f]) initiateAccount() {
 	)
 }
 
-func (a *App[acc, prof, regReq, reg, f]) initializePermission() {
-	a.Permission = permission.Initialize(
+func (a *App[acc, prof, regReq, reg, f, SessionAccountDetail]) initializePermission() {
+	a.Permission = permission.Initialize[SessionAccountDetail](
 		a.Logger.WithTrace("permission"),
 		a.Sql,
 	)
 }
 
-func (a *App[acc, prof, regReq, reg, f]) initiateSession() {
-	a.Session = session.New(
+func (a *App[acc, prof, regReq, reg, f, SessionAccountDetail]) initiateSession() {
+	a.Session = session.New[SessionAccountDetail](
 		a.Logger.WithTrace("session"),
 		a.Registry.ValueOf("session"),
 		a.Cache,
 	)
 }
 
-func (a *App[acc, prof, regReq, reg, f]) initiateLogin() {
+func (a *App[acc, prof, regReq, reg, f, SessionAccountDetail]) initiateLogin() {
 	a.Login = login.New(
 		a.Logger.WithTrace("login"),
 		a.Registry.ValueOf("login"),
@@ -71,14 +71,14 @@ func (a *App[acc, prof, regReq, reg, f]) initiateLogin() {
 	)
 }
 
-func (a *App[acc, prof, regReq, reg, f]) initiateRegister() {
+func (a *App[acc, prof, regReq, reg, f, SessionAccountDetail]) initiateRegister() {
 	a.Register = register.New[regReq, reg, acc](
 		a.Logger.WithTrace("register"),
 		a.Sql, a.HTTP.GetController(),
 	)
 }
 
-func (a *App[acc, prof, regReq, reg, f]) initializeMonitoring() {
+func (a *App[acc, prof, regReq, reg, f, SessionAccountDetail]) initializeMonitoring() {
 	a.Monitoring = monitoring.New(
 		a.Logger.WithTrace("monitoring"),
 		a.HTTP.GetController(),

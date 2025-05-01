@@ -10,13 +10,19 @@ import (
 	"github.com/micro-ginger/oauth/session/domain/session"
 )
 
-type Manager[acc account.Model] interface {
+type Manager[acc account.Model, SessionAccountDetail gateway.ResultGetter] interface {
 	BeforeHandle(request gateway.Request) errors.Error
 	BeforeStart(request gateway.Request,
 		queries *ld.Request, flow *flow.Flow) errors.Error
-	BeforeLogin(request gateway.Request, sess *s.Session[acc]) errors.Error
+	BeforeLogin(request gateway.Request,
+		sess *s.Session[acc, SessionAccountDetail]) errors.Error
 	BeforeSessionCreate(request gateway.Request,
-		sess *s.Session[acc], sessions []*session.CreateRequest) errors.Error
-	AfterSessionCreate(request gateway.Request,
-		sess *s.Session[acc], resp *ld.Response) errors.Error
+		sess *s.Session[acc, SessionAccountDetail],
+		sessions []*session.CreateRequest[SessionAccountDetail],
+	) errors.Error
+	AfterSessionCreate(
+		request gateway.Request,
+		sess *s.Session[acc, SessionAccountDetail],
+		resp *ld.Response[SessionAccountDetail],
+	) errors.Error
 }

@@ -4,6 +4,8 @@ import (
 	"context"
 
 	"github.com/ginger-core/errors"
+	"github.com/ginger-core/gateway"
 )
 
-type SessionHandlerFunc func(ctx context.Context, session *Session) errors.Error
+type SessionHandlerFunc[AccountDetail gateway.ResultGetter] func(ctx context.Context,
+	session *Session[AccountDetail]) errors.Error

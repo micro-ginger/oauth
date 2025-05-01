@@ -7,7 +7,7 @@ import (
 	"github.com/micro-ginger/oauth/permission/scope/domain/scope"
 )
 
-func (uc *useCase) GetAllAccountScopes(ctx context.Context,
+func (uc *useCase[SessionAccountDetail]) GetAllAccountScopes(ctx context.Context,
 	accountId uint64, getAll bool) ([]*scope.Detailed, errors.Error) {
 	scopes, err := uc.repo.GetAllAccountScopes(ctx, accountId, getAll)
 	if err != nil {
@@ -16,7 +16,7 @@ func (uc *useCase) GetAllAccountScopes(ctx context.Context,
 	return scopes, nil
 }
 
-func (uc *useCase) GetAccountScopes(ctx context.Context,
+func (uc *useCase[SessionAccountDetail]) GetAccountScopes(ctx context.Context,
 	accountId uint64, getAll bool) ([]*scope.Detailed, errors.Error) {
 	scopes, err := uc.repo.GetAccountScopes(ctx, accountId, getAll)
 	if err != nil {
@@ -25,7 +25,7 @@ func (uc *useCase) GetAccountScopes(ctx context.Context,
 	return scopes, nil
 }
 
-func (uc *useCase) GetAccountScopesFromRoles(ctx context.Context,
+func (uc *useCase[SessionAccountDetail]) GetAccountScopesFromRoles(ctx context.Context,
 	accountId uint64, roles []string, getAll bool) ([]*scope.Detailed, errors.Error) {
 	scopes, err := uc.repo.GetAccountScopesFromRoles(ctx, accountId, roles, getAll)
 	if err != nil {
@@ -34,7 +34,7 @@ func (uc *useCase) GetAccountScopesFromRoles(ctx context.Context,
 	return scopes, nil
 }
 
-func (uc *useCase) GetAccountScopesFromScopes(ctx context.Context,
+func (uc *useCase[SessionAccountDetail]) GetAccountScopesFromScopes(ctx context.Context,
 	accountId uint64, names []string, getAll bool) ([]*scope.Detailed, errors.Error) {
 	scopes, err := uc.repo.GetAccountScopesFromScopes(ctx, accountId, names, getAll)
 	if err != nil {
@@ -43,7 +43,7 @@ func (uc *useCase) GetAccountScopesFromScopes(ctx context.Context,
 	return scopes, nil
 }
 
-func (uc *useCase) ListDefaultAccountScopes(ctx context.Context,
+func (uc *useCase[SessionAccountDetail]) ListDefaultAccountScopes(ctx context.Context,
 	accountId uint64, getAll bool) ([]*scope.Detailed, errors.Error) {
 	scopes, err := uc.repo.ListDefaultAccountScopes(ctx, accountId, getAll)
 	if err != nil {

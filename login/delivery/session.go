@@ -12,7 +12,7 @@ import (
 
 const DefaultSection = "DEFAULT"
 
-func (h *lh[acc]) getFlow(_ gateway.Request,
+func (h *lh[acc, SessionAccountDetail]) getFlow(_ gateway.Request,
 	req *login.Request) (*flow.Flow, errors.Error) {
 	if req.Section == "" {
 		req.Section = DefaultSection
@@ -25,8 +25,9 @@ func (h *lh[acc]) getFlow(_ gateway.Request,
 	return flow, nil
 }
 
-func (h *lh[acc]) generateSession(request gateway.Request,
-	flow *flow.Flow, req *login.Request) (*session.Session[acc], errors.Error) {
+func (h *lh[acc, SessionAccountDetail]) generateSession(
+	request gateway.Request, flow *flow.Flow, req *login.Request,
+) (*session.Session[acc, SessionAccountDetail], errors.Error) {
 	stepQ, _ := request.GetQuery("step")
 	genReq := &session.GenerateRequest{
 		Flow:  flow,
@@ -36,8 +37,9 @@ func (h *lh[acc]) generateSession(request gateway.Request,
 	return h.storeSession(request, genReq)
 }
 
-func (h *lh[acc]) storeSession(request gateway.Request,
-	genReq *session.GenerateRequest) (*session.Session[acc], errors.Error) {
+func (h *lh[acc, SessionAccountDetail]) storeSession(
+	request gateway.Request, genReq *session.GenerateRequest,
+) (*session.Session[acc, SessionAccountDetail], errors.Error) {
 	session, err := h.loginSession.Generate(request.GetContext(), genReq)
 	if err != nil {
 		return nil, err.

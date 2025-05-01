@@ -1,10 +1,12 @@
 package session
 
-type CreateRequest struct {
-	Account Account
+import "github.com/ginger-core/gateway"
+
+type CreateRequest[AccountDetail gateway.ResultGetter] struct {
+	Account Account[AccountDetail]
 
 	CreateConfig *CreateConfig
-	Old          *Session
+	Old          *Session[AccountDetail]
 	// RequestedScopes is scopes that user requested for. and
 	// must be checked before giving the permission
 	RequestedScopes []string
