@@ -2,11 +2,10 @@ package session
 
 import (
 	"github.com/micro-blonde/auth/account"
-	a "github.com/micro-blonde/auth/account"
 )
 
 type CreateRequest[AccountDetail account.ExtentedModel] struct {
-	Account *a.Account[AccountDetail]
+	Account account.Account[AccountDetail]
 
 	CreateConfig *CreateConfig
 	Old          *Session[AccountDetail]

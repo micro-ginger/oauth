@@ -18,7 +18,7 @@ type Session[AccountDetail a.ExtentedModel] struct {
 	RefreshToken    string
 	RefreshTokenExp time.Duration
 
-	Account *a.Account[AccountDetail]
+	Account a.Account[AccountDetail]
 
 	Roles  []string
 	Scopes []string

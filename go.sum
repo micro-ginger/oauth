@@ -217,10 +217,10 @@ github.com/magiconair/properties v1.8.7 h1:IeQXZAiQcpL9mgcAe1Nu6cX9LLw6ExEHKjN0V
 github.com/magiconair/properties v1.8.7/go.mod h1:Dhd985XPs7jluiymwWYZ0G4Z61jb3vdS329zhj2hYo0=
 github.com/mattn/go-isatty v0.0.19 h1:JITubQf0MOLdlGRuRq+jtsDlekdYPia9ZFsB8h/APPA=
 github.com/mattn/go-isatty v0.0.19/go.mod h1:W+V8PltTTMOvKvAeJH7IuucS94S2C6jfK/D7dTCTo3Y=
-github.com/micro-blonde/auth v0.0.0-20260710150422-48c33ace517d h1:CIm3KfVEPrvXKlPf7oqAXwUwyiho2fFDcKRw1hgH9i0=
-github.com/micro-blonde/auth v0.0.0-20260710150422-48c33ace517d/go.mod h1:tyPCY7NdVcgeMzC6XseVRJrApSb6AXFyZhgXjFWAatk=
-github.com/micro-blonde/auth/authorization v0.0.0-20230630082657-5b527d26afce h1:41McCN6ebcAToHnRyWqT83pCRcuhiao7Ld+ZKNlCPgQ=
-github.com/micro-blonde/auth/authorization v0.0.0-20230630082657-5b527d26afce/go.mod h1:Mtg1IDwyB4DR4MAtPnUB2tTLpEkJmAC1nBGIRFlOQHs=
+github.com/micro-blonde/auth v0.0.0-20260710161037-311b7ff35146 h1:n4653Nk/mlIQKklps46LZi5xZw/wN5CmgrW5ijPnKJI=
+github.com/micro-blonde/auth v0.0.0-20260710161037-311b7ff35146/go.mod h1:Hfs48R7EXOih/swvQVsJyZtzrdVENhSgOnfn8+fSfVs=
+github.com/micro-blonde/auth/authorization v0.0.0-20260710161037-311b7ff35146 h1:yqGMCKl41sWQzeswsv7PG6NtGk3CVaQOQLIFJ0NO8ik=
+github.com/micro-blonde/auth/authorization v0.0.0-20260710161037-311b7ff35146/go.mod h1:wSTv9Cil91De9ruktGTdsgFrxaI2KIACsIlf0THLhBQ=
 github.com/micro-blonde/auth/proto v0.0.0-20241004080911-a8f21e8940d6 h1:VJ1YiFrFMAooUDKHFJeG39zT/un615M1u2VefhIJW7w=
 github.com/micro-blonde/auth/proto v0.0.0-20241004080911-a8f21e8940d6/go.mod h1:tBXk1RkeEMBVi32FpwoEZkAT3Qs7ha1ooakRmLFGQ/U=
 github.com/micro-blonde/file v0.0.0-20240805212943-31734ed43a25 h1:r5A22M8tuP/tQaSSFFf+d4Zbpfu+KpslfOoAIRl2TV8=
