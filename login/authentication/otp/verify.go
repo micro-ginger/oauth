@@ -7,7 +7,7 @@ import (
 	"github.com/micro-ginger/oauth/validator/domain/validator"
 )
 
-func (h *handler[acc, SessionAccountDetail]) Verify(ctx context.Context,
+func (h *handler[acc]) Verify(ctx context.Context,
 	o *Otp, otpType string, code string) errors.Error {
 	v, err := h.globalValidator.BeginVerify(ctx, o.Key)
 	if err != nil {

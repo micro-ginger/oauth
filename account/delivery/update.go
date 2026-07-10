@@ -10,13 +10,13 @@ import (
 	ad "github.com/micro-ginger/oauth/account/domain/delivery/account"
 )
 
-type update[T account.Model] struct {
+type update[T account.ExtentedModel] struct {
 	gateway.Responder
 	logger log.Logger
 	uc     a.UseCase[T]
 }
 
-func NewUpdate[T account.Model](logger log.Logger,
+func NewUpdate[T account.ExtentedModel](logger log.Logger,
 	uc a.UseCase[T], responder gateway.Responder) gateway.Handler {
 	h := &update[T]{
 		Responder: responder,

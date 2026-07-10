@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
-func GetGrpcAccount[T a.Model](
+func GetGrpcAccount[T blondeAcc.ExtentedModel](
 	a *a.Account[T]) (*acc.Account, errors.Error) {
 	var v *structpb.Struct
 	var t any = a.T
@@ -22,14 +22,14 @@ func GetGrpcAccount[T a.Model](
 		}
 	}
 	r := &acc.Account{
-		Id:     a.Id,
-		Status: a.Status.Uint64(),
+		Id:     a.GetId(),
+		Status: a.GetStatus().Uint64(),
 		T:      structpb.NewStructValue(v),
 	}
 	return r, nil
 }
 
-func GetGrpcAccounts[T a.Model](
+func GetGrpcAccounts[T blondeAcc.ExtentedModel](
 	a []*a.Account[T]) (*acc.Accounts, errors.Error) {
 	r := &acc.Accounts{
 		Items: make([]*acc.Account, len(a)),
@@ -44,7 +44,7 @@ func GetGrpcAccounts[T a.Model](
 	return r, nil
 }
 
-type BaseReadHandler[T a.Model] interface {
+type BaseReadHandler[T blondeAcc.ExtentedModel] interface {
 	GetInstruction() instruction.Instruction
 
 	GetAccount(a *a.Account[T]) (*acc.Account, errors.Error)

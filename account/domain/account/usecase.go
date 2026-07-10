@@ -8,7 +8,7 @@ import (
 	"github.com/micro-blonde/auth/account"
 )
 
-type UseCase[T account.Model] interface {
+type UseCase[T account.ExtentedModel] interface {
 	Create(ctx context.Context, account *Account[T]) errors.Error
 
 	Count(ctx context.Context, q query.Query) (uint64, errors.Error)
@@ -37,7 +37,7 @@ type ResetPasswordHandler interface {
 		q query.Query, hashedPassword []byte) errors.Error
 }
 
-type PasswordUpdateHandler[T account.Model] interface {
+type PasswordUpdateHandler[T account.ExtentedModel] interface {
 	Get(ctx context.Context, q query.Query) (*Account[T], errors.Error)
 	ValidatePassword(ctx context.Context, password string) errors.Error
 	UpdatePassword(ctx context.Context,

@@ -10,7 +10,7 @@ import (
 	"github.com/micro-ginger/oauth/login/session/domain/info"
 )
 
-func (h *Handler[acc, SessionAccountDetail]) GetAccount(ctx context.Context,
+func (h *Handler[acc]) GetAccount(ctx context.Context,
 	inf *info.Info[acc], req gateway.Request,
 	request request.Request) (*account.Account[acc], errors.Error) {
 	if a := ctx.Value("account"); a != nil {
@@ -31,7 +31,7 @@ func (h *Handler[acc, SessionAccountDetail]) GetAccount(ctx context.Context,
 	if req.IsAuthenticated() {
 		auth := req.GetAuthorization()
 		a = auth.GetApplicant().(*account.Account[acc])
-		a, err = h.Account.GetById(ctx, a.Id)
+		a, err = h.Account.GetById(ctx, a.GetId())
 		if err != nil {
 			return nil, err
 		}

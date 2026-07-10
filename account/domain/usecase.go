@@ -6,7 +6,7 @@ import (
 	"github.com/micro-ginger/oauth/account/domain/permission"
 )
 
-type UseCase[T account.Model] interface {
+type UseCase[T account.ExtentedModel] interface {
 	a.UseCase[T]
 	Initialize(accountRole permission.AccountRole)
 	SetManager(manager a.Manager[T])

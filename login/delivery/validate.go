@@ -7,8 +7,8 @@ import (
 	"github.com/micro-ginger/oauth/login/validation"
 )
 
-func (h *lh[acc, SessionAccountDetail]) validate(request gateway.Request,
-	sess *s.Session[acc, SessionAccountDetail]) errors.Error {
+func (h *lh[acc]) validate(request gateway.Request,
+	sess *s.Session[acc]) errors.Error {
 	if sess.Info.Account == nil {
 		if sess.Info.AccountId == 0 {
 			return nil
@@ -31,9 +31,9 @@ func (h *lh[acc, SessionAccountDetail]) validate(request gateway.Request,
 		isValid = true
 		switch v.Type {
 		case validation.TypeStatusPresent:
-			isValid = sess.Info.Account.Status.Is(v.Status)
+			isValid = sess.Info.Account.GetStatus().Is(v.Status)
 		case validation.TypeStatusAbsent:
-			isValid = !sess.Info.Account.Status.Has(v.Status)
+			isValid = !sess.Info.Account.GetStatus().Has(v.Status)
 		}
 		if !isValid {
 			return errors.Forbidden().

@@ -2,29 +2,29 @@ package usecase
 
 import (
 	"github.com/ginger-core/log"
-	"github.com/micro-ginger/oauth/account/domain/account"
+	a "github.com/micro-blonde/auth/account"
 	"github.com/micro-ginger/oauth/register/domain"
-	a "github.com/micro-ginger/oauth/register/domain/account"
+	ra "github.com/micro-ginger/oauth/register/domain/account"
 	"github.com/micro-ginger/oauth/register/domain/register"
 )
 
-type base[T register.Model, acc account.Model] struct {
+type base[T register.Model, acc a.ExtentedModel] struct {
 	logger log.Logger
 	repo   register.Repository[T]
 
-	account a.UseCase[acc]
+	account ra.UseCase[acc]
 }
 
-type useCase[T register.Model, acc account.Model] struct {
+type useCase[T register.Model, acc a.ExtentedModel] struct {
 	*base[T, acc]
 }
 
-type uc[T register.Model, acc account.Model] struct {
+type uc[T register.Model, acc a.ExtentedModel] struct {
 	base *base[T, acc]
 	register.UseCase[T, acc]
 }
 
-func New[T register.Model, acc account.Model](logger log.Logger,
+func New[T register.Model, acc a.ExtentedModel](logger log.Logger,
 	repo register.Repository[T]) domain.UseCase[T, acc] {
 	base := &base[T, acc]{
 		logger: logger,
@@ -39,7 +39,7 @@ func New[T register.Model, acc account.Model](logger log.Logger,
 	return uc
 }
 
-func (uc *uc[T, acc]) Initialize(account a.UseCase[acc]) {
+func (uc *uc[T, acc]) Initialize(account ra.UseCase[acc]) {
 	uc.base.account = account
 }
 

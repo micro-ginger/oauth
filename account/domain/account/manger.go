@@ -7,6 +7,6 @@ import (
 	"github.com/micro-blonde/auth/account"
 )
 
-type Manager[T account.Model] interface {
+type Manager[T account.ExtentedModel] interface {
 	HandleInternalStatus(ctx context.Context, account *Account[T]) errors.Error
 }

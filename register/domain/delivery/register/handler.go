@@ -2,7 +2,7 @@ package register
 
 import (
 	"github.com/ginger-core/errors"
-	"github.com/micro-ginger/oauth/account/domain/account"
+	a "github.com/micro-blonde/auth/account"
 	"github.com/micro-ginger/oauth/register/domain/register"
 )
 
@@ -10,7 +10,7 @@ type RequestModel interface {
 }
 
 type RequestModelHandler[R RequestModel,
-	T register.Model, acc account.Model] interface {
+	T register.Model, acc a.ExtentedModel] interface {
 	New() *Request[R]
 	PopulateRequest(body *Request[R], req *register.Request[T, acc]) errors.Error
 }

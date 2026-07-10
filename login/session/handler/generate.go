@@ -10,15 +10,15 @@ import (
 	"github.com/micro-ginger/oauth/login/session/domain/session"
 )
 
-func (h *handler[acc, SessionAccountDetail]) Generate(
+func (h *handler[acc]) Generate(
 	ctx context.Context, request *session.GenerateRequest,
-) (*session.Session[acc, SessionAccountDetail], errors.Error) {
+) (*session.Session[acc], errors.Error) {
 	key, err := h.challengeGenerator(h.config.Challenge.Characters, 10)
 	if err != nil {
 		return nil, err
 	}
 
-	sess := &session.Session[acc, SessionAccountDetail]{
+	sess := &session.Session[acc]{
 		Key: key,
 		Flow: flow.Flow{
 			Flow: request.Flow,

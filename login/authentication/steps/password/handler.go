@@ -2,26 +2,25 @@ package password
 
 import (
 	"github.com/ginger-core/compound/registry"
-	"github.com/ginger-core/gateway"
 	"github.com/ginger-core/log"
-	"github.com/micro-ginger/oauth/account/domain/account"
+	a "github.com/micro-blonde/auth/account"
 	"github.com/micro-ginger/oauth/login/authentication/steps/base"
 	"github.com/micro-ginger/oauth/login/flow/stage/step/handler"
 	"github.com/micro-ginger/oauth/login/session/domain/session"
 )
 
-type h[acc account.Model, SessionAccountDetail gateway.ResultGetter] struct {
-	*base.Handler[acc, SessionAccountDetail]
+type h[acc a.ExtentedModel] struct {
+	*base.Handler[acc]
 
 	logger log.Logger
 	config config
 }
 
-func New[acc account.Model, SessionAccountDetail gateway.ResultGetter](
+func New[acc a.ExtentedModel](
 	logger log.Logger, registry registry.Registry,
-	base *base.Handler[acc, SessionAccountDetail],
-) handler.Handler[acc, SessionAccountDetail] {
-	h := &h[acc, SessionAccountDetail]{
+	base *base.Handler[acc],
+) handler.Handler[acc] {
+	h := &h[acc]{
 		Handler: base,
 		logger:  logger,
 	}
@@ -34,17 +33,17 @@ func New[acc account.Model, SessionAccountDetail gateway.ResultGetter](
 	return h
 }
 
-func (h *h[acc, SessionAccountDetail]) CanStepIn(
-	sess *session.Session[acc, SessionAccountDetail]) bool {
+func (h *h[acc]) CanStepIn(
+	sess *session.Session[acc]) bool {
 	return false
 }
 
-func (h *h[acc, SessionAccountDetail]) CanStepOut(
-	sess *session.Session[acc, SessionAccountDetail]) bool {
+func (h *h[acc]) CanStepOut(
+	sess *session.Session[acc]) bool {
 	return true
 }
 
-func (h *h[acc, SessionAccountDetail]) IsDone(
-	sess *session.Session[acc, SessionAccountDetail]) bool {
+func (h *h[acc]) IsDone(
+	sess *session.Session[acc]) bool {
 	return true
 }

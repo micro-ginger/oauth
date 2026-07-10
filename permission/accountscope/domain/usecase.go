@@ -4,13 +4,13 @@ import (
 	"context"
 
 	"github.com/ginger-core/errors"
-	"github.com/ginger-core/gateway"
+	a "github.com/micro-blonde/auth/account"
 	"github.com/micro-ginger/oauth/permission/accountscope/domain/accountscope"
 	"github.com/micro-ginger/oauth/permission/scope/domain/scope"
 	"github.com/micro-ginger/oauth/session/domain/session"
 )
 
-type UseCase[SessionAccountDetail gateway.ResultGetter] interface {
+type UseCase[SessionAccountDetail a.ExtentedModel] interface {
 	RegisterCreateEventHandle(handle accountscope.CreatedScopeEventHandle)
 
 	SessionAddRequestedRoleScopes(ctx context.Context,

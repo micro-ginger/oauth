@@ -4,6 +4,7 @@ import (
 	"github.com/ginger-core/errors"
 	"github.com/ginger-core/gateway/instruction"
 	"github.com/ginger-core/log"
+	ba "github.com/micro-blonde/auth/account"
 	blondeAcc "github.com/micro-blonde/auth/account"
 	acc "github.com/micro-blonde/auth/proto/auth/account"
 	ins "github.com/micro-ginger/oauth/account/delivery/instruction"
@@ -12,13 +13,13 @@ import (
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
-type baseRead[T a.Model] struct {
+type baseRead[T ba.ExtentedModel] struct {
 	instruction instruction.Instruction
 	logger      log.Logger
 	uc          a.UseCase[T]
 }
 
-func newBaseRead[T a.Model](
+func newBaseRead[T ba.ExtentedModel](
 	logger log.Logger, uc a.UseCase[T]) ad.BaseReadHandler[T] {
 	h := &baseRead[T]{
 		instruction: ins.NewInstruction(),
@@ -44,8 +45,8 @@ func (h *baseRead[T]) GetAccount(a *a.Account[T]) (*acc.Account, errors.Error) {
 		}
 	}
 	r := &acc.Account{
-		Id:     a.Id,
-		Status: a.Status.Uint64(),
+		Id:     a.GetId(),
+		Status: a.GetStatus().Uint64(),
 		T:      structpb.NewStructValue(v),
 	}
 	return r, nil

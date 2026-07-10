@@ -3,7 +3,7 @@ package session
 import (
 	"time"
 
-	"github.com/ginger-core/gateway"
+	a "github.com/micro-blonde/auth/account"
 )
 
 type CreateConfig struct {
@@ -23,7 +23,7 @@ type CreateConfig struct {
 	IncludeRoles []string
 }
 
-func NewCreateConfigFromSession[AccountDetail gateway.ResultGetter](
+func NewCreateConfigFromSession[AccountDetail a.ExtentedModel](
 	s *Session[AccountDetail],
 ) *CreateConfig {
 	r := &CreateConfig{

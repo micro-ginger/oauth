@@ -6,7 +6,7 @@ import (
 	"github.com/ginger-core/errors"
 )
 
-func (h *handler[acc, SessionAccountDetail]) GenerateChallenge(chars string,
+func (h *handler[acc]) GenerateChallenge(chars string,
 	length int) (string, errors.Error) {
 	charLen := len(chars)
 	maxCharInd := 255 - (256 % charLen)

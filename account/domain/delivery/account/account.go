@@ -7,7 +7,7 @@ import (
 	a "github.com/micro-ginger/oauth/account/domain/account"
 )
 
-type Account[T account.Model] struct {
+type Account[T account.ExtentedModel] struct {
 	Id uint64 `json:"id"`
 
 	CreatedAt time.Time  `json:"createdAt"`
@@ -15,15 +15,15 @@ type Account[T account.Model] struct {
 
 	Status account.Status `json:"status"`
 
-	T any `json:"detail"`
+	Extended any `json:",inline"`
 }
 
-func NewAccount[T account.Model](acc *a.Account[T]) *Account[T] {
+func NewAccount[T account.ExtentedModel](acc *a.Account[T]) *Account[T] {
 	return &Account[T]{
-		Id:        acc.Id,
+		Id:        acc.GetId(),
 		CreatedAt: acc.CreatedAt,
 		UpdatedAt: acc.UpdatedAt,
-		Status:    acc.Status,
-		T:         acc.T.GetDeliveryResult(),
+		Status:    acc.GetStatus(),
+		Extended:  acc.T.GetDeliveryResult(),
 	}
 }

@@ -6,11 +6,11 @@ import (
 	a "github.com/micro-ginger/oauth/account/domain/account"
 )
 
-type repo[T account.Model] struct {
+type repo[T account.ExtentedModel] struct {
 	repository.Repository
 }
 
-func New[T account.Model](base repository.Repository) a.Repository[T] {
+func New[T account.ExtentedModel](base repository.Repository) a.Repository[T] {
 	repo := &repo[T]{
 		Repository: base,
 	}

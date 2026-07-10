@@ -5,6 +5,7 @@ import (
 	"github.com/ginger-core/gateway"
 	"github.com/ginger-core/log"
 	"github.com/ginger-core/repository"
+	a "github.com/micro-blonde/auth/account"
 	"github.com/micro-ginger/oauth/account/domain/account"
 	"github.com/micro-ginger/oauth/login/authentication"
 	"github.com/micro-ginger/oauth/login/delivery"
@@ -15,19 +16,19 @@ import (
 	"github.com/micro-ginger/oauth/session/domain/session"
 )
 
-type Module[acc account.Model, SessionAccountDetail gateway.ResultGetter] struct {
+type Module[acc a.ExtentedModel] struct {
 	Logger         log.Logger
-	Session        s.Handler[acc, SessionAccountDetail]
-	Authentication authentication.Module[acc, SessionAccountDetail]
-	Handler        delivery.Handler[acc, SessionAccountDetail]
+	Session        s.Handler[acc]
+	Authentication authentication.Module[acc]
+	Handler        delivery.Handler[acc]
 }
 
-func New[acc account.Model, SessionAccountDetail gateway.ResultGetter](
+func New[acc a.ExtentedModel](
 	logger log.Logger, registry registry.Registry,
-	account account.UseCase[acc], session session.UseCase[SessionAccountDetail],
+	account account.UseCase[acc], session session.UseCase[acc],
 	cache repository.Cache, responder gateway.Responder,
-) *Module[acc, SessionAccountDetail] {
-	sess := sessionHandler.New[acc, SessionAccountDetail](
+) *Module[acc] {
+	sess := sessionHandler.New[acc](
 		logger.WithTrace("session"),
 		registry.ValueOf("session"),
 		cache,
@@ -40,11 +41,11 @@ func New[acc account.Model, SessionAccountDetail gateway.ResultGetter](
 		account,
 		session,
 	)
-	m := &Module[acc, SessionAccountDetail]{
+	m := &Module[acc]{
 		Logger:         logger,
 		Session:        sess,
 		Authentication: auth,
-		Handler: delivery.NewLogin[acc, SessionAccountDetail](
+		Handler: delivery.NewLogin[acc](
 			logger.WithTrace("delivery.login"),
 			responder,
 		),
@@ -52,8 +53,8 @@ func New[acc account.Model, SessionAccountDetail gateway.ResultGetter](
 	return m
 }
 
-func (m *Module[acc, SessionAccountDetail]) Initialize(account ad.UseCase[acc],
-	flows flow.Flows, session session.UseCase[SessionAccountDetail]) {
+func (m *Module[acc]) Initialize(account ad.UseCase[acc],
+	flows flow.Flows, session session.UseCase[acc]) {
 	m.Authentication.GetBase().InitializeSteps(flows)
 	m.Authentication.Initialize()
 	m.Handler.Initialize(account, m.Session, flows, session)

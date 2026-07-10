@@ -1,7 +1,7 @@
 package login
 
-import "github.com/ginger-core/gateway"
+import a "github.com/micro-blonde/auth/account"
 
-type Response[SessionAccountDetail gateway.ResultGetter] struct {
-	Sessions map[string]*Session[SessionAccountDetail] `json:"sessions"`
+type Response[acc a.ExtentedModel] struct {
+	Sessions map[string]*Session[acc] `json:"sessions"`
 }

@@ -4,10 +4,10 @@ import (
 	"context"
 
 	"github.com/ginger-core/errors"
-	"github.com/ginger-core/gateway"
+	a "github.com/micro-blonde/auth/account"
 )
 
-type UseCase[AccountDetail gateway.ResultGetter] interface {
+type UseCase[AccountDetail a.ExtentedModel] interface {
 	RegisterSessionHandlers(handlerFuncs ...SessionHandlerFunc[AccountDetail])
 
 	Create(

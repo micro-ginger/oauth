@@ -2,7 +2,6 @@ package authentication
 
 import (
 	"github.com/ginger-core/compound/registry"
-	"github.com/ginger-core/gateway"
 	"github.com/ginger-core/log"
 	"github.com/ginger-core/log/logger"
 	"github.com/ginger-core/repository"
@@ -17,29 +16,29 @@ import (
 	"github.com/micro-ginger/oauth/validator"
 )
 
-type MobileModule[acc mobileAcc.Model, SessionAccountDetail gateway.ResultGetter] struct {
-	*Base[acc, SessionAccountDetail]
+type MobileModule[acc mobileAcc.Model] struct {
+	*Base[acc]
 
 	mobileMasker account.MaskerFunc
 }
 
-func NewMobile[acc mobileAcc.Model, SessionAccountDetail gateway.ResultGetter](
-	base *Base[acc, SessionAccountDetail],
+func NewMobile[acc mobileAcc.Model](
+	base *Base[acc],
 	mobileMasker account.MaskerFunc,
-) *MobileModule[acc, SessionAccountDetail] {
-	m := &MobileModule[acc, SessionAccountDetail]{
+) *MobileModule[acc] {
+	m := &MobileModule[acc]{
 		Base:         base,
 		mobileMasker: mobileMasker,
 	}
 	return m
 }
 
-func (m *MobileModule[acc, SessionAccountDetail]) Initialize() {
+func (m *MobileModule[acc]) Initialize() {
 	m.Base.Initialize()
 	m.initializeHandlers()
 }
 
-func (m *MobileModule[acc, SessionAccountDetail]) initializeHandlers() {
+func (m *MobileModule[acc]) initializeHandlers() {
 	config := new(config)
 	if err := m.registry.Unmarshal(config); err != nil {
 		panic(err)
@@ -51,7 +50,7 @@ func (m *MobileModule[acc, SessionAccountDetail]) initializeHandlers() {
 	}
 }
 
-func (m *MobileModule[acc, SessionAccountDetail]) getValidators(logger log.Logger,
+func (m *MobileModule[acc]) getValidators(logger log.Logger,
 	registry registry.Registry, cache repository.Cache) (*validator.Module, *validator.Module) {
 	sessionValidator := validator.New(
 		m.logger.WithTrace("validators.session"),
@@ -66,7 +65,7 @@ func (m *MobileModule[acc, SessionAccountDetail]) getValidators(logger log.Logge
 	return sessionValidator, globalValidator
 }
 
-func (m *MobileModule[acc, SessionAccountDetail]) initializeHandler(
+func (m *MobileModule[acc]) initializeHandler(
 	registry registry.Registry, handlerType step.Type) {
 	baseHandler := sbase.New(
 		m.logger.WithTrace("base"),
@@ -75,7 +74,7 @@ func (m *MobileModule[acc, SessionAccountDetail]) initializeHandler(
 		m.cache,
 	)
 	baseHandler.WithType(handlerType)
-	var h handler.Handler[acc, SessionAccountDetail]
+	var h handler.Handler[acc]
 	switch handlerType {
 	case mobileOtp.Type:
 		sessionValidator, globalValidator := m.getValidators(

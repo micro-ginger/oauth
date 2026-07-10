@@ -8,7 +8,7 @@ require (
 	github.com/ginger-core/compound v0.0.0-20230608151919-2963b75416c3
 	github.com/ginger-core/compound/registry v0.0.0-20240815151007-6306bf13a816
 	github.com/ginger-core/errors v0.0.0-20230703084505-b10c3f9cedfb
-	github.com/ginger-core/gateway v0.0.0-20250501122452-524cf3e6d89b
+	github.com/ginger-core/gateway v0.0.0-20260710151801-6ef57b1ae09b
 	github.com/ginger-core/log v0.0.0-20240629145652-3b2876535940
 	github.com/ginger-core/query v0.0.0-20230608153800-9375f70642d8
 	github.com/ginger-core/repository v0.0.0-20230608165607-87044af67011
@@ -16,7 +16,7 @@ require (
 	github.com/ginger-repository/redis v0.0.0-20230608170101-0b74d866bc2d
 	github.com/ginger-repository/sql v0.0.0-20240806160111-7365d88b4d19
 	github.com/go-sql-driver/mysql v1.7.1
-	github.com/micro-blonde/auth v0.0.0-20241010060016-c2a631f6c947
+	github.com/micro-blonde/auth v0.0.0-20260710150422-48c33ace517d
 	github.com/micro-blonde/auth/authorization v0.0.0-20230630082657-5b527d26afce
 	github.com/micro-blonde/auth/proto v0.0.0-20241004080911-a8f21e8940d6
 	github.com/micro-blonde/file v0.0.0-20240805212943-31734ed43a25

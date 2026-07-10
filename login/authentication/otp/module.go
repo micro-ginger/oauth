@@ -2,10 +2,9 @@ package otp
 
 import (
 	"github.com/ginger-core/compound/registry"
-	"github.com/ginger-core/gateway"
 	"github.com/ginger-core/log"
 	"github.com/ginger-core/repository"
-	"github.com/micro-ginger/oauth/account/domain/account"
+	a "github.com/micro-blonde/auth/account"
 	"github.com/micro-ginger/oauth/login/session/domain/session"
 	"github.com/micro-ginger/oauth/validator"
 )
@@ -17,9 +16,9 @@ type Module struct {
 	GlobalValidation  *validator.Module
 }
 
-func Initialize[acc account.Model, SessionAccountDetail gateway.ResultGetter](
+func Initialize[acc a.ExtentedModel](
 	logger log.Logger, registry registry.Registry, cache repository.Cache,
-	session session.Handler[acc, SessionAccountDetail]) *Module {
+	session session.Handler[acc]) *Module {
 	sessionValidator := validator.New(
 		logger.WithTrace("validators.session"),
 		registry.ValueOf("validators.session"),

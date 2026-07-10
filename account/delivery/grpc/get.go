@@ -5,21 +5,22 @@ import (
 	"github.com/ginger-core/gateway"
 	"github.com/ginger-core/log"
 	"github.com/ginger-core/query"
+	a "github.com/micro-blonde/auth/account"
 	"github.com/micro-ginger/oauth/account/domain/account"
 	ad "github.com/micro-ginger/oauth/account/domain/delivery/account"
 )
 
-type GetHandler[T account.Model] interface {
+type GetHandler[T a.ExtentedModel] interface {
 	gateway.Handler
 	ad.BaseReadHandler[T]
 }
 
-type get[T account.Model] struct {
+type get[T a.ExtentedModel] struct {
 	ad.BaseReadHandler[T]
 	uc account.UseCase[T]
 }
 
-func NewGet[T account.Model](logger log.Logger,
+func NewGet[T a.ExtentedModel](logger log.Logger,
 	uc account.UseCase[T]) GetHandler[T] {
 	h := &get[T]{
 		BaseReadHandler: newBaseRead[T](logger, uc),

@@ -1,9 +1,9 @@
 package account
 
-import "github.com/micro-ginger/oauth/account/domain/account"
+import a "github.com/micro-blonde/auth/account"
 
 type Model interface {
-	account.Model
+	a.ExtentedModel
 	GetMobile() *string
 	MaskMobile() string
 }

@@ -3,10 +3,10 @@ package session
 import (
 	"time"
 
-	"github.com/ginger-core/gateway"
+	a "github.com/micro-blonde/auth/account"
 )
 
-type Session[AccountDetail gateway.ResultGetter] struct {
+type Session[AccountDetail a.ExtentedModel] struct {
 	Id        string
 	CreatedAt time.Time
 
@@ -18,7 +18,7 @@ type Session[AccountDetail gateway.ResultGetter] struct {
 	RefreshToken    string
 	RefreshTokenExp time.Duration
 
-	Account Account[AccountDetail]
+	Account *a.Account[AccountDetail]
 
 	Roles  []string
 	Scopes []string

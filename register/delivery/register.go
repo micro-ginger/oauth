@@ -14,12 +14,12 @@ import (
 	"github.com/micro-ginger/oauth/register/domain/register"
 )
 
-type Handler[R rdd.RequestModel, T register.Model, acc account.Model] interface {
+type Handler[R rdd.RequestModel, T register.Model, acc account.ExtentedModel] interface {
 	gateway.Handler
 	SetRequestModelHandler(reqHandler rdd.RequestModelHandler[R, T, acc])
 }
 
-type handler[R rdd.RequestModel, T register.Model, acc account.Model] struct {
+type handler[R rdd.RequestModel, T register.Model, acc account.ExtentedModel] struct {
 	gateway.Responder
 	logger log.Logger
 	uc     register.UseCase[T, acc]
@@ -27,7 +27,7 @@ type handler[R rdd.RequestModel, T register.Model, acc account.Model] struct {
 	reqHandler rdd.RequestModelHandler[R, T, acc]
 }
 
-func NewRegister[R rdd.RequestModel, T register.Model, acc account.Model](logger log.Logger,
+func NewRegister[R rdd.RequestModel, T register.Model, acc account.ExtentedModel](logger log.Logger,
 	uc register.UseCase[T, acc], responder gateway.Responder) Handler[R, T, acc] {
 	h := &handler[R, T, acc]{
 		Responder: responder,
@@ -46,7 +46,7 @@ func (h *handler[R, T, acc]) Handle(request gateway.Request) (any, errors.Error)
 	ctx := request.GetContext()
 
 	auth := request.GetAuthorization().(authorization.Authorization[acc])
-	accId := auth.GetAccount().Id
+	accId := auth.GetAccount().GetId()
 
 	accIdStr := request.GetParam("account_id")
 	if accIdStr != "" {

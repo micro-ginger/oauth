@@ -2,7 +2,6 @@ package verify
 
 import (
 	"github.com/ginger-core/compound/registry"
-	"github.com/ginger-core/gateway"
 	"github.com/ginger-core/log"
 	"github.com/micro-ginger/oauth/login/authentication/otp"
 	"github.com/micro-ginger/oauth/login/authentication/steps/base"
@@ -11,8 +10,8 @@ import (
 	"github.com/micro-ginger/oauth/login/session/domain/session"
 )
 
-type _handler[acc account.Model, SessionAccountDetail gateway.ResultGetter] struct {
-	*base.Handler[acc, SessionAccountDetail]
+type _handler[acc account.Model] struct {
+	*base.Handler[acc]
 
 	logger log.Logger
 	config config
@@ -22,11 +21,11 @@ type _handler[acc account.Model, SessionAccountDetail gateway.ResultGetter] stru
 	masker account.MaskerFunc
 }
 
-func New[acc account.Model, SessionAccountDetail gateway.ResultGetter](logger log.Logger,
+func New[acc account.Model](logger log.Logger,
 	registry registry.Registry, masker account.MaskerFunc,
-	base *base.Handler[acc, SessionAccountDetail], otp otp.Handler,
-) handler.Handler[acc, SessionAccountDetail] {
-	h := &_handler[acc, SessionAccountDetail]{
+	base *base.Handler[acc], otp otp.Handler,
+) handler.Handler[acc] {
+	h := &_handler[acc]{
 		Handler: base,
 		logger:  logger,
 		otp:     otp,
@@ -39,33 +38,33 @@ func New[acc account.Model, SessionAccountDetail gateway.ResultGetter](logger lo
 	return h
 }
 
-func (h *_handler[acc, SessionAccountDetail]) Clone() handler.Handler[acc, SessionAccountDetail] {
-	return &_handler[acc, SessionAccountDetail]{
+func (h *_handler[acc]) Clone() handler.Handler[acc] {
+	return &_handler[acc]{
 		Handler: h.Handler,
 		logger:  h.logger,
 		otp:     h.otp,
 	}
 }
 
-func (h *_handler[acc, SessionAccountDetail]) WithConfig(
-	registry registry.Registry) handler.Handler[acc, SessionAccountDetail] {
+func (h *_handler[acc]) WithConfig(
+	registry registry.Registry) handler.Handler[acc] {
 	if err := registry.Unmarshal(&h.config); err != nil {
 		panic(err)
 	}
 	return h
 }
 
-func (h *_handler[acc, SessionAccountDetail]) CanStepIn(
-	sess *session.Session[acc, SessionAccountDetail]) bool {
+func (h *_handler[acc]) CanStepIn(
+	sess *session.Session[acc]) bool {
 	return sess.Flow.Pos.StepIndex == 0
 }
 
-func (h *_handler[acc, SessionAccountDetail]) CanStepOut(
-	sess *session.Session[acc, SessionAccountDetail]) bool {
+func (h *_handler[acc]) CanStepOut(
+	sess *session.Session[acc]) bool {
 	return sess.Flow.Pos.StepIndex == 1
 }
 
-func (h *_handler[acc, SessionAccountDetail]) IsDone(
-	sess *session.Session[acc, SessionAccountDetail]) bool {
+func (h *_handler[acc]) IsDone(
+	sess *session.Session[acc]) bool {
 	return sess.Flow.Pos.StepIndex > 1
 }

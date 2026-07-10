@@ -3,13 +3,12 @@ package session
 import (
 	"encoding/json"
 
-	"github.com/ginger-core/gateway"
-	"github.com/micro-ginger/oauth/account/domain/account"
+	a "github.com/micro-blonde/auth/account"
 	"github.com/micro-ginger/oauth/login/session/domain/flow"
 	"github.com/micro-ginger/oauth/login/session/domain/info"
 )
 
-type Session[acc account.Model, SessionAccountDetail gateway.ResultGetter] struct {
+type Session[acc a.ExtentedModel] struct {
 	Key       any
 	Challenge string
 	Flow      flow.Flow
@@ -21,7 +20,7 @@ type Session[acc account.Model, SessionAccountDetail gateway.ResultGetter] struc
 	state State
 }
 
-func (s *Session[acc, SessionAccountDetail]) MarshalBinary() (data []byte, err error) {
+func (s *Session[acc]) MarshalBinary() (data []byte, err error) {
 	var bytes []byte
 	bytes, err = json.Marshal(s)
 	if err != nil {
@@ -30,19 +29,19 @@ func (s *Session[acc, SessionAccountDetail]) MarshalBinary() (data []byte, err e
 	return bytes, nil
 }
 
-func (s *Session[acc, SessionAccountDetail]) AddState(state State) {
+func (s *Session[acc]) AddState(state State) {
 	s.state.Add(state)
 }
 
-func (s *Session[acc, SessionAccountDetail]) IsFromDB() bool {
+func (s *Session[acc]) IsFromDB() bool {
 	return s.state.Has(StateFromDB)
 }
 
-func (s *Session[acc, SessionAccountDetail]) GetKey() string {
+func (s *Session[acc]) GetKey() string {
 	return "login.sessions." + s.Challenge
 }
 
-func (s *Session[acc, SessionAccountDetail]) Next() {
+func (s *Session[acc]) Next() {
 	stage := s.Flow.Stages[s.Flow.Pos.StageIndex]
 	step := stage.Steps[s.Flow.Pos.StepIndex]
 	if s.Flow.Pos.ActionIndex+1 >= len(step.Actions) {
@@ -54,6 +53,6 @@ func (s *Session[acc, SessionAccountDetail]) Next() {
 	}
 }
 
-func (s *Session[acc, SessionAccountDetail]) IsDone() bool {
+func (s *Session[acc]) IsDone() bool {
 	return s.Flow.Pos.StageIndex >= len(s.Flow.Stages)
 }

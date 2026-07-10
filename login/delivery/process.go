@@ -7,8 +7,8 @@ import (
 	"github.com/micro-ginger/oauth/login/session/domain/session"
 )
 
-func (h *lh[acc, SessionAccountDetail]) process(request gateway.Request,
-	sess *session.Session[acc, SessionAccountDetail]) (any, errors.Error) {
+func (h *lh[acc]) process(request gateway.Request,
+	sess *session.Session[acc]) (any, errors.Error) {
 	s, actionIdx := sess.Flow.GetCurrentStep()
 	sh := h.stepHandlers[s.Type]
 	if sh == nil {

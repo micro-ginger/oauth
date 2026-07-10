@@ -8,6 +8,6 @@ import (
 	ad "github.com/micro-ginger/oauth/account/domain/account"
 )
 
-type UseCase[T account.Model] interface {
+type UseCase[T account.ExtentedModel] interface {
 	GetById(ctx context.Context, id uint64) (*ad.Account[T], errors.Error)
 }

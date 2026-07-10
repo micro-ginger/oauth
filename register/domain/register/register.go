@@ -1,9 +1,13 @@
 package register
 
-import "time"
+import (
+	"time"
+
+	"github.com/ginger-core/gateway"
+)
 
 type Model interface {
-	GetDeliveryResult() any
+	gateway.ResultGetter
 }
 
 type Register[T Model] struct {

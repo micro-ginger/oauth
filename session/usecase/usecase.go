@@ -4,12 +4,12 @@ import (
 	"fmt"
 
 	"github.com/ginger-core/compound/registry"
-	"github.com/ginger-core/gateway"
 	"github.com/ginger-core/log"
+	a "github.com/micro-blonde/auth/account"
 	"github.com/micro-ginger/oauth/session/domain/session"
 )
 
-type useCase[AccountDetail gateway.ResultGetter] struct {
+type useCase[AccountDetail a.ExtentedModel] struct {
 	logger log.Logger
 	config session.Config
 	repo   session.Repository[AccountDetail]
@@ -17,7 +17,7 @@ type useCase[AccountDetail gateway.ResultGetter] struct {
 	handlerFuncs []session.SessionHandlerFunc[AccountDetail]
 }
 
-func New[AccountDetail gateway.ResultGetter](logger log.Logger, registry registry.Registry,
+func New[AccountDetail a.ExtentedModel](logger log.Logger, registry registry.Registry,
 	repo session.Repository[AccountDetail]) session.UseCase[AccountDetail] {
 	uc := &useCase[AccountDetail]{
 		logger:       logger,

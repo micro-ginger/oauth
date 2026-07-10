@@ -19,7 +19,7 @@ func (uc *useCase[T]) handleInternalStatus(ctx context.Context,
 				WithMatch(&query.Match{
 					Key:      "id",
 					Operator: query.Equal,
-					Value:    acc.Id,
+					Value:    acc.GetId(),
 				})
 			q = query.NewUpdate(q).
 				WithNot("internal_status", handledStatuses)
@@ -27,9 +27,9 @@ func (uc *useCase[T]) handleInternalStatus(ctx context.Context,
 		}
 	}()
 	for status, cfg := range uc.config.InternalStatus {
-		if acc.InternalStatus.Has(status) {
+		if acc.GetInternalStatus().Has(status) {
 			if len(cfg.AddRoles) > 0 {
-				err := uc.accountRole.Assign(ctx, acc.Id, cfg.AddRoles)
+				err := uc.accountRole.Assign(ctx, acc.GetId(), cfg.AddRoles)
 				if err != nil {
 					return err.WithTrace("accountRole.Assign")
 				}
@@ -38,11 +38,11 @@ func (uc *useCase[T]) handleInternalStatus(ctx context.Context,
 		}
 	}
 	if uc.manager != nil {
-		oldStatus := acc.InternalStatus
+		oldStatus := acc.GetInternalStatus()
 		if err := uc.manager.HandleInternalStatus(ctx, acc); err != nil {
 			return err.WithTrace("manager.HandleInternalStatus")
 		}
-		handledStatuses = oldStatus ^ acc.InternalStatus
+		handledStatuses = oldStatus ^ acc.GetInternalStatus()
 	}
 	return nil
 }

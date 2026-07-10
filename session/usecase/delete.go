@@ -34,7 +34,7 @@ func (uc *useCase[AccountDetail]) DeleteAll(
 	if err := uc.DeleteAccess(ctx, session.AccessToken); err != nil {
 		return err
 	}
-	if err := uc.Delete(ctx, session.Account.Id, session.Id); err != nil {
+	if err := uc.Delete(ctx, session.Account.GetId(), session.Id); err != nil {
 		return err
 	}
 	return nil

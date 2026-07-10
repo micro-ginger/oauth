@@ -5,10 +5,10 @@ import (
 	"time"
 
 	"github.com/ginger-core/errors"
-	"github.com/ginger-core/gateway"
+	a "github.com/micro-blonde/auth/account"
 )
 
-type Repository[AccountDetail gateway.ResultGetter] interface {
+type Repository[AccountDetail a.ExtentedModel] interface {
 	Create(ctx context.Context, id string,
 		session *Session[AccountDetail], exp time.Duration) errors.Error
 

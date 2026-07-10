@@ -11,8 +11,8 @@ type verifyBody struct {
 	Code string `json:"code" binding:"required"`
 }
 
-func (h *_handler[acc, SessionAccountDetail]) Process(request gateway.Request,
-	sess *session.Session[acc, SessionAccountDetail]) (response.Response, errors.Error) {
+func (h *_handler[acc]) Process(request gateway.Request,
+	sess *session.Session[acc]) (response.Response, errors.Error) {
 	ctx := request.GetContext()
 	if sess.Flow.Pos.ActionIndex == 0 {
 		return h.request(ctx, request, sess)

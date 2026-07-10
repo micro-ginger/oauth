@@ -11,8 +11,8 @@ type body struct {
 	Token string `json:"token" binding:"required"`
 }
 
-func (h *h[acc, SessionAccountDetail]) Process(
-	request gateway.Request, sess *session.Session[acc, SessionAccountDetail],
+func (h *h[acc]) Process(
+	request gateway.Request, sess *session.Session[acc],
 ) (response.Response, errors.Error) {
 	body := new(body)
 	if err := request.ProcessBody(body); err != nil {
@@ -30,7 +30,7 @@ func (h *h[acc, SessionAccountDetail]) Process(
 
 	sess.Info.SetTemp("session", session)
 
-	a, err := h.Account.GetById(ctx, session.Account.Id)
+	a, err := h.Account.GetById(ctx, session.Account.GetId())
 	if err != nil {
 		return nil, errors.Unauthorized(err)
 	}

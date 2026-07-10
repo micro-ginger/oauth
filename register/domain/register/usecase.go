@@ -4,10 +4,10 @@ import (
 	"context"
 
 	"github.com/ginger-core/errors"
-	"github.com/micro-ginger/oauth/account/domain/account"
+	a "github.com/micro-blonde/auth/account"
 )
 
-type UseCase[T Model, acc account.Model] interface {
+type UseCase[T Model, acc a.ExtentedModel] interface {
 	Base() UseCase[T, acc]
 	Wrap(uc UseCase[T, acc])
 

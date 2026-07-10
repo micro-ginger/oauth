@@ -8,12 +8,12 @@ import (
 	"github.com/ginger-gateway/ginger/grpc"
 	redisRepo "github.com/ginger-repository/redis/repository"
 	"github.com/ginger-repository/sql"
+	"github.com/micro-blonde/auth/account"
 	"github.com/micro-blonde/auth/authorization"
 	"github.com/micro-blonde/auth/profile"
 	"github.com/micro-blonde/file"
 	fileClient "github.com/micro-blonde/file/client"
 	a "github.com/micro-ginger/oauth/account"
-	"github.com/micro-ginger/oauth/account/domain/account"
 	"github.com/micro-ginger/oauth/captcha"
 	"github.com/micro-ginger/oauth/login"
 	"github.com/micro-ginger/oauth/monitoring"
@@ -31,9 +31,8 @@ type Application interface {
 	Start()
 }
 
-type App[acc account.Model, prof profile.Model,
-	regReq rdd.RequestModel, reg register.Model, f file.Model,
-	SessionAccountDetail gateway.ResultGetter] struct {
+type App[extendedAcc account.ExtentedModel, prof profile.Model,
+	regReq rdd.RequestModel, reg register.Model, f file.Model] struct {
 	Registry registry.Registry
 	Config   config
 	Logger   log.Handler
@@ -46,22 +45,22 @@ type App[acc account.Model, prof profile.Model,
 	File fileClient.Client[f]
 	/* modules */
 	Captcha    *captcha.Module
-	Account    *a.Module[acc, prof, f]
-	Permission *permission.Module[SessionAccountDetail]
-	Session    *session.Module[SessionAccountDetail]
-	Login      *login.Module[acc, SessionAccountDetail]
-	Register   *r.Module[regReq, reg, acc]
+	Account    *a.Module[extendedAcc, prof, f]
+	Permission *permission.Module[extendedAcc]
+	Session    *session.Module[extendedAcc]
+	Login      *login.Module[extendedAcc]
+	Register   *r.Module[regReq, reg, extendedAcc]
 	Monitoring *monitoring.Module
 	/* server */
-	Authenticator authorization.Authenticator[acc]
+	Authenticator authorization.Authenticator[extendedAcc]
 	HTTP          gateway.Server
 	GRPC          grpc.Server
 }
 
-func New[acc account.Model, prof profile.Model,
-	regReq rdd.RequestModel, reg register.Model, f file.Model,
-	SessionAccountDetail gateway.ResultGetter]() *App[acc, prof, regReq, reg, f, SessionAccountDetail] {
-	a := &App[acc, prof, regReq, reg, f, SessionAccountDetail]{
+func New[acc account.ExtentedModel, prof profile.Model,
+	regReq rdd.RequestModel, reg register.Model,
+	f file.Model]() *App[acc, prof, regReq, reg, f] {
+	a := &App[acc, prof, regReq, reg, f]{
 		Language: i18n.NewBundle(language.English),
 	}
 	a.loadConfig()
@@ -72,7 +71,7 @@ func New[acc account.Model, prof profile.Model,
 	return a
 }
 
-func (a *App[acc, prof, regReq, reg, f, SessionAccountDetail]) Initialize() {
+func (a *App[acc, prof, regReq, reg, f]) Initialize() {
 	a.initializeLogger()
 	a.initializeLanguage()
 	a.initializeServer()

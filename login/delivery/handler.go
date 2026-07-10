@@ -4,7 +4,7 @@ import (
 	"github.com/ginger-core/errors"
 	"github.com/ginger-core/gateway"
 	"github.com/ginger-core/log"
-	"github.com/micro-ginger/oauth/account/domain/account"
+	a "github.com/micro-blonde/auth/account"
 	"github.com/micro-ginger/oauth/login/authorization"
 	ad "github.com/micro-ginger/oauth/login/domain/account"
 	ld "github.com/micro-ginger/oauth/login/domain/delivery/login"
@@ -15,72 +15,72 @@ import (
 	"github.com/micro-ginger/oauth/session/domain/session"
 )
 
-type Handler[acc account.Model, SessionAccountDetail gateway.ResultGetter] interface {
+type Handler[acc a.ExtentedModel] interface {
 	gateway.Handler
 	Initialize(account ad.UseCase[acc],
-		loginSession s.Handler[acc, SessionAccountDetail], flows flow.Flows,
-		session session.UseCase[SessionAccountDetail],
+		loginSession s.Handler[acc], flows flow.Flows,
+		session session.UseCase[acc],
 	)
-	SetManager(manager authorization.Manager[acc, SessionAccountDetail])
-	RegisterHandler(t step.Type, sh handler.Handler[acc, SessionAccountDetail])
+	SetManager(manager authorization.Manager[acc])
+	RegisterHandler(t step.Type, sh handler.Handler[acc])
 }
 
-type lh[acc account.Model, SessionAccountDetail gateway.ResultGetter] struct {
+type lh[acc a.ExtentedModel] struct {
 	gateway.Responder
 	logger log.Logger
 
 	account ad.UseCase[acc]
 
-	loginSession s.Handler[acc, SessionAccountDetail]
+	loginSession s.Handler[acc]
 
 	flows   flow.Flows
-	session session.UseCase[SessionAccountDetail]
+	session session.UseCase[acc]
 
-	stepHandlers map[step.Type]handler.Handler[acc, SessionAccountDetail]
+	stepHandlers map[step.Type]handler.Handler[acc]
 
-	manager authorization.Manager[acc, SessionAccountDetail]
+	manager authorization.Manager[acc]
 }
 
-func NewLogin[acc account.Model, SessionAccountDetail gateway.ResultGetter](
+func NewLogin[acc a.ExtentedModel](
 	logger log.Logger, responder gateway.Responder,
-) Handler[acc, SessionAccountDetail] {
-	h := &lh[acc, SessionAccountDetail]{
+) Handler[acc] {
+	h := &lh[acc]{
 		Responder: responder,
 		logger:    logger,
 	}
 	return h
 }
 
-func (h *lh[acc, SessionAccountDetail]) Initialize(
-	account ad.UseCase[acc], loginSession s.Handler[acc, SessionAccountDetail],
-	flows flow.Flows, session session.UseCase[SessionAccountDetail]) {
+func (h *lh[acc]) Initialize(
+	account ad.UseCase[acc], loginSession s.Handler[acc],
+	flows flow.Flows, session session.UseCase[acc]) {
 	h.account = account
 	h.loginSession = loginSession
 	h.flows = flows
 	h.session = session
 }
 
-func (h *lh[acc, SessionAccountDetail]) SetManager(manager authorization.Manager[acc, SessionAccountDetail]) {
+func (h *lh[acc]) SetManager(manager authorization.Manager[acc]) {
 	h.manager = manager
 }
 
-func (h *lh[acc, SessionAccountDetail]) RegisterHandler(
-	t step.Type, sh handler.Handler[acc, SessionAccountDetail],
+func (h *lh[acc]) RegisterHandler(
+	t step.Type, sh handler.Handler[acc],
 ) {
 	if h.stepHandlers == nil {
-		h.stepHandlers = make(map[step.Type]handler.Handler[acc, SessionAccountDetail])
+		h.stepHandlers = make(map[step.Type]handler.Handler[acc])
 	}
 	h.stepHandlers[t] = sh
 }
 
-func (h *lh[acc, SessionAccountDetail]) Handle(request gateway.Request) (r any, err errors.Error) {
+func (h *lh[acc]) Handle(request gateway.Request) (r any, err errors.Error) {
 	if h.manager != nil {
 		// before handle request
 		if err = h.manager.BeforeHandle(request); err != nil {
 			return nil, err.WithTrace("manager.BeforeHandle")
 		}
 	}
-	var sess *s.Session[acc, SessionAccountDetail]
+	var sess *s.Session[acc]
 	challenge, ok := request.GetQuery("challenge")
 	if ok {
 		sess, r, err = h.challenge(request, challenge)
@@ -107,13 +107,13 @@ func (h *lh[acc, SessionAccountDetail]) Handle(request gateway.Request) (r any, 
 			return nil, err.WithTrace("validate")
 		}
 		// login
-		sessions := make([]*session.CreateRequest[SessionAccountDetail], len(sess.Flow.Login.Sessions))
+		sessions := make([]*session.CreateRequest[acc], len(sess.Flow.Login.Sessions))
 		for i, s := range sess.Flow.Login.Sessions {
-			sessions[i] = new(session.CreateRequest[SessionAccountDetail])
+			sessions[i] = new(session.CreateRequest[acc])
 			sessions[i].CreateConfig = s
 			sessions[i].CreateConfig.Section = sess.Info.Section
 			// populate account
-			sessions[i].Account.Id = sess.Info.AccountId
+			sessions[i].Account.SetId(sess.Info.AccountId)
 			// add requested roles
 			if len(sess.Info.RequestedRoles) > 0 {
 				if sessions[i].CreateConfig.IncludeRoles == nil {
@@ -125,17 +125,17 @@ func (h *lh[acc, SessionAccountDetail]) Handle(request gateway.Request) (r any, 
 			}
 		}
 		if s := sess.Info.GetTemp("session"); s != nil {
-			sess := s.(*session.Session[SessionAccountDetail])
+			sess := s.(*session.Session[acc])
 			sessions = append(sessions,
-				&session.CreateRequest[SessionAccountDetail]{
+				&session.CreateRequest[acc]{
 					CreateConfig: session.NewCreateConfigFromSession(sess),
 					Old:          sess,
 				},
 			)
 		}
 
-		resp := &ld.Response[SessionAccountDetail]{
-			Sessions: make(map[string]*ld.Session[SessionAccountDetail]),
+		resp := &ld.Response[acc]{
+			Sessions: make(map[string]*ld.Session[acc]),
 		}
 
 		if h.manager != nil {

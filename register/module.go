@@ -4,7 +4,7 @@ import (
 	"github.com/ginger-core/gateway"
 	"github.com/ginger-core/log"
 	"github.com/ginger-core/repository"
-	"github.com/micro-ginger/oauth/account/domain/account"
+	a "github.com/micro-blonde/auth/account"
 	"github.com/micro-ginger/oauth/register/delivery"
 	"github.com/micro-ginger/oauth/register/domain"
 	ra "github.com/micro-ginger/oauth/register/domain/account"
@@ -14,14 +14,14 @@ import (
 	"github.com/micro-ginger/oauth/register/usecase"
 )
 
-type Module[R rdd.RequestModel, T register.Model, acc account.Model] struct {
+type Module[R rdd.RequestModel, T register.Model, acc a.ExtentedModel] struct {
 	Repository register.Repository[T]
 	UseCase    domain.UseCase[T, acc]
 
 	RegisterHandler delivery.Handler[R, T, acc]
 }
 
-func New[R rdd.RequestModel, T register.Model, acc account.Model](logger log.Logger,
+func New[R rdd.RequestModel, T register.Model, acc a.ExtentedModel](logger log.Logger,
 	baseRepo repository.Transational, responder gateway.Responder) *Module[R, T, acc] {
 	repo := r.New[T](baseRepo)
 	uc := usecase.New[T, acc](logger, repo)

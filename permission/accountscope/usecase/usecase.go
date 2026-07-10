@@ -1,20 +1,20 @@
 package usecase
 
 import (
-	"github.com/ginger-core/gateway"
 	"github.com/ginger-core/log"
+	a "github.com/micro-blonde/auth/account"
 	"github.com/micro-ginger/oauth/permission/accountscope/domain"
 	"github.com/micro-ginger/oauth/permission/accountscope/domain/accountscope"
 )
 
-type useCase[SessionAccountDetail gateway.ResultGetter] struct {
+type useCase[SessionAccountDetail a.ExtentedModel] struct {
 	logger log.Logger
 	repo   domain.Repository
 
 	refreshScopeHandlers []accountscope.CreatedScopeEventHandle
 }
 
-func New[SessionAccountDetail gateway.ResultGetter](logger log.Logger,
+func New[SessionAccountDetail a.ExtentedModel](logger log.Logger,
 	repo domain.Repository) domain.UseCase[SessionAccountDetail] {
 	uc := &useCase[SessionAccountDetail]{
 		logger:               logger,

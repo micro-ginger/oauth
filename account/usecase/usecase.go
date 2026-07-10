@@ -11,7 +11,7 @@ import (
 	"github.com/micro-ginger/oauth/account/domain/permission"
 )
 
-type useCase[T account.Model] struct {
+type useCase[T account.ExtentedModel] struct {
 	logger log.Logger
 	config config
 
@@ -26,7 +26,7 @@ type useCase[T account.Model] struct {
 	manager a.Manager[T]
 }
 
-func New[T account.Model](logger log.Logger, registry registry.Registry,
+func New[T account.ExtentedModel](logger log.Logger, registry registry.Registry,
 	repo a.Repository[T]) domain.UseCase[T] {
 	uc := &useCase[T]{
 		logger:   logger,

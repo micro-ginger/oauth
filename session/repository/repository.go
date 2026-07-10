@@ -1,18 +1,18 @@
 package repository
 
 import (
-	"github.com/ginger-core/gateway"
 	"github.com/ginger-core/log"
 	"github.com/ginger-core/repository"
+	a "github.com/micro-blonde/auth/account"
 	"github.com/micro-ginger/oauth/session/domain/session"
 )
 
-type repo[AccountDetail gateway.ResultGetter] struct {
+type repo[AccountDetail a.ExtentedModel] struct {
 	logger log.Logger
 	cache  repository.Cache
 }
 
-func New[AccountDetail gateway.ResultGetter](logger log.Logger,
+func New[AccountDetail a.ExtentedModel](logger log.Logger,
 	cache repository.Cache) session.Repository[AccountDetail] {
 	repo := &repo[AccountDetail]{
 		logger: logger,

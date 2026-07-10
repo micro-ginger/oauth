@@ -49,7 +49,7 @@ func (uc *useCase[AccountDetail]) Create(
 		exp = conf.AccessTokenExp
 	}
 	if err := uc.repo.Create(ctx,
-		uc.getSessionKey(s.Account.Id, s.Id), s, exp); err != nil {
+		uc.getSessionKey(s.Account.GetId(), s.Id), s, exp); err != nil {
 		return nil, err
 	}
 	if err := uc.repo.Create(ctx,

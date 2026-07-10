@@ -10,9 +10,9 @@ import (
 	"github.com/micro-ginger/oauth/login/session/domain/session"
 )
 
-func (h *_handler[acc, SessionAccountDetail]) verify(
+func (h *_handler[acc]) verify(
 	ctx context.Context, request gateway.Request,
-	sess *session.Session[acc, SessionAccountDetail],
+	sess *session.Session[acc],
 ) (response.Response, errors.Error) {
 	body := new(verifyBody)
 	if err := request.ProcessBody(body); err != nil {

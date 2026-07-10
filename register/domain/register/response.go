@@ -1,8 +1,8 @@
 package register
 
 import (
-	"github.com/micro-ginger/oauth/account/domain/account"
+	a "github.com/micro-blonde/auth/account"
 )
 
-type Response[T Model, acc account.Model] struct {
+type Response[T Model, acc a.ExtentedModel] struct {
 }

@@ -10,9 +10,9 @@ import (
 	"github.com/micro-ginger/oauth/login/session/domain/session"
 )
 
-func (h *_handler[acc, SessionAccountDetail]) request(
+func (h *_handler[acc]) request(
 	ctx context.Context, request gateway.Request,
-	sess *session.Session[acc, SessionAccountDetail],
+	sess *session.Session[acc],
 ) (response.Response, errors.Error) {
 	_otp, err := h.getOtp(sess)
 	if err != nil {

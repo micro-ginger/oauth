@@ -10,11 +10,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type Model interface {
-	account.Model
-}
-
-type Account[T Model] struct {
+type Account[T account.ExtentedModel] struct {
 	account.Account[T] `gorm:"embedded" json:",inline"`
 
 	CreatedAt time.Time
@@ -23,7 +19,7 @@ type Account[T Model] struct {
 	HashedPassword []byte
 }
 
-func NewAccount[T Model]() *Account[T] {
+func NewAccount[T account.ExtentedModel]() *Account[T] {
 	return new(Account[T])
 }
 

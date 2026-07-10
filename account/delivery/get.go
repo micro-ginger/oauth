@@ -14,13 +14,13 @@ import (
 	"github.com/micro-ginger/oauth/global"
 )
 
-type get[T account.Model] struct {
+type get[T account.ExtentedModel] struct {
 	gateway.Responder
 	logger log.Logger
 	uc     a.UseCase[T]
 }
 
-func NewGet[T account.Model](logger log.Logger,
+func NewGet[T account.ExtentedModel](logger log.Logger,
 	uc a.UseCase[T], responder gateway.Responder) gateway.Handler {
 	h := &get[T]{
 		Responder: responder,
@@ -34,7 +34,7 @@ func (h *get[T]) Handle(request gateway.Request) (any, errors.Error) {
 	ctx := request.GetContext()
 
 	auth := request.GetAuthorization().(authorization.Authorization[T])
-	accId := auth.GetAccount().Id
+	accId := auth.GetAccount().GetId()
 
 	accIdStr := request.GetParam("account_id")
 	if accIdStr != "" {

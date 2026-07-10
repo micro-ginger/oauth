@@ -5,7 +5,7 @@ import (
 	a "github.com/micro-ginger/oauth/account/domain/account"
 )
 
-type Update[T a.Model] struct {
+type Update[T account.ExtentedModel] struct {
 	T T `json:"detail"`
 }
 

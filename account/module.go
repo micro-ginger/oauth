@@ -5,6 +5,7 @@ import (
 	"github.com/ginger-core/gateway"
 	"github.com/ginger-core/log"
 	"github.com/ginger-core/repository"
+	"github.com/micro-blonde/auth/account"
 	"github.com/micro-blonde/auth/profile"
 	"github.com/micro-blonde/file"
 	fileClient "github.com/micro-blonde/file/client"
@@ -18,7 +19,7 @@ import (
 	"github.com/micro-ginger/oauth/account/usecase"
 )
 
-type Module[Acc a.Model, Prof profile.Model, File file.Model] struct {
+type Module[Acc account.ExtentedModel, Prof profile.Model, File file.Model] struct {
 	Repository a.Repository[Acc]
 	UseCase    d.UseCase[Acc]
 
@@ -33,7 +34,7 @@ type Module[Acc a.Model, Prof profile.Model, File file.Model] struct {
 	Profile *p.Module[Prof, File]
 }
 
-func New[Acc a.Model, Prof profile.Model, File file.Model](logger log.Logger,
+func New[Acc account.ExtentedModel, Prof profile.Model, File file.Model](logger log.Logger,
 	registry registry.Registry, baseRepo repository.Repository,
 	responder gateway.Responder) *Module[Acc, Prof, File] {
 	repo := r.New[Acc](baseRepo)

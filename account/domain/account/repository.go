@@ -6,7 +6,7 @@ import (
 	"github.com/micro-blonde/auth/account"
 )
 
-type Repository[T account.Model] interface {
+type Repository[T account.ExtentedModel] interface {
 	Create(q query.Query, obj *Account[T]) errors.Error
 	Count(q query.Query) (uint64, errors.Error)
 	List(q query.Query) ([]*Account[T], errors.Error)

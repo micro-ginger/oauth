@@ -11,7 +11,7 @@ import (
 func (uc *useCase[SessionAccountDetail]) SessionRemoveUnauthorized(
 	ctx context.Context, session *session.Session[SessionAccountDetail]) errors.Error {
 	scopes, err := uc.GetAccountScopesFromScopes(ctx,
-		session.Account.Id, session.Scopes, false)
+		session.Account.GetId(), session.Scopes, false)
 	if err != nil {
 		return err.
 			WithTrace("SessionRemoveUnauthorized.GetAccountScopesFromScopes")
@@ -55,7 +55,7 @@ func (uc *useCase[SessionAccountDetail]) SessionAddRequestedRoleScopes(ctx conte
 	session.Scopes = removeDuplicate(session.Scopes)
 
 	if len(session.Scopes) == 1 && session.Scopes[0] == "*" {
-		scopes, err = uc.GetAllAccountScopes(ctx, session.Account.Id, false)
+		scopes, err = uc.GetAllAccountScopes(ctx, session.Account.GetId(), false)
 		if err != nil {
 			return err.
 				WithTrace("SessionAddRequestedRoleScopes.GetAllAccountScopes")
@@ -68,7 +68,7 @@ func (uc *useCase[SessionAccountDetail]) SessionAddRequestedRoleScopes(ctx conte
 			}
 		}
 		scopes, err = uc.GetAccountScopesFromRoles(ctx,
-			session.Account.Id, session.Roles, false)
+			session.Account.GetId(), session.Roles, false)
 		if err != nil {
 			return err.
 				WithTrace("SessionAddRequestedRoleScopes.GetAccountScopesFromRoles")

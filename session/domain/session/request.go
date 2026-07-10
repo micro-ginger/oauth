@@ -1,9 +1,12 @@
 package session
 
-import "github.com/ginger-core/gateway"
+import (
+	"github.com/micro-blonde/auth/account"
+	a "github.com/micro-blonde/auth/account"
+)
 
-type CreateRequest[AccountDetail gateway.ResultGetter] struct {
-	Account Account[AccountDetail]
+type CreateRequest[AccountDetail account.ExtentedModel] struct {
+	Account *a.Account[AccountDetail]
 
 	CreateConfig *CreateConfig
 	Old          *Session[AccountDetail]

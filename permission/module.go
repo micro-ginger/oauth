@@ -1,9 +1,9 @@
 package permission
 
 import (
-	"github.com/ginger-core/gateway"
 	"github.com/ginger-core/log"
 	dl "github.com/ginger-core/repository"
+	a "github.com/micro-blonde/auth/account"
 	"github.com/micro-ginger/oauth/permission/accountrole"
 	"github.com/micro-ginger/oauth/permission/accountscope"
 	"github.com/micro-ginger/oauth/permission/role"
@@ -11,7 +11,7 @@ import (
 	"github.com/micro-ginger/oauth/permission/scope"
 )
 
-type Module[SessionAccountDetail gateway.ResultGetter] struct {
+type Module[SessionAccountDetail a.ExtentedModel] struct {
 	Scope        *scope.Module
 	Role         *role.Module
 	RoleScope    *rs.Module
@@ -19,7 +19,7 @@ type Module[SessionAccountDetail gateway.ResultGetter] struct {
 	AccountRole  *accountrole.Module
 }
 
-func Initialize[SessionAccountDetail gateway.ResultGetter](
+func Initialize[SessionAccountDetail a.ExtentedModel](
 	logger log.Logger, baseDb dl.Repository,
 ) *Module[SessionAccountDetail] {
 	mod := &Module[SessionAccountDetail]{

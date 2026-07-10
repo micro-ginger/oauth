@@ -1,10 +1,11 @@
 package info
 
 import (
+	a "github.com/micro-blonde/auth/account"
 	"github.com/micro-ginger/oauth/account/domain/account"
 )
 
-type Info[acc account.Model] struct {
+type Info[acc a.ExtentedModel] struct {
 	AccountId uint64
 	Account   *account.Account[acc] `json:"-"`
 
@@ -15,20 +16,20 @@ type Info[acc account.Model] struct {
 }
 
 func (i *Info[acc]) PopulateAccount(a *account.Account[acc]) {
-	i.AccountId = a.Id
+	i.AccountId = a.GetId()
 	i.Account = a
 	// i.AccountStatus = a.Status.Uint64()
 }
 
-func NewFromAccount[acc account.Model](a *account.Account[acc]) *Info[acc] {
+func NewFromAccount[acc a.ExtentedModel](a *account.Account[acc]) *Info[acc] {
 	return &Info[acc]{
-		AccountId: a.Id,
+		AccountId: a.GetId(),
 		Account:   a,
 		// AccountStatus: a.Status.Uint64(),
 	}
 }
 
-func New[acc account.Model]() *Info[acc] {
+func New[acc a.ExtentedModel]() *Info[acc] {
 	return &Info[acc]{
 		Temp: make(Temp),
 	}

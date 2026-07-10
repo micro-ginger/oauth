@@ -32,7 +32,7 @@ type UpdatePassword struct {
 	New string
 }
 
-type Update[T account.Model] struct {
+type Update[T account.ExtentedModel] struct {
 	Account              *Account[T]
 	UpdateInternalStatus *UpdateInternalStatus
 
